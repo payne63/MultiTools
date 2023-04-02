@@ -1,0 +1,21 @@
+<TabViewItem
+    x:Class="SplittableDataGridSAmple.Tabs.OpenNewTab"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:SplittableDataGridSAmple.Elements"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Header="Ajouter un Onglet Outil" VerticalAlignment="Stretch">
+    <TabViewItem.IconSource>
+        <FontIconSource Glyph="&#xE8FC;"/>
+    </TabViewItem.IconSource>
+    <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Stretch">
+        <Border BorderBrush="{x:Null}" Height="100">
+            <TextBlock Text="Selectionner Un Nouvel Onglet" FontSize="30" FontWeight="Bold"
+                   HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        </Border>
+        <GridView ItemsSource="{x:Bind JobElements}"  />
+
+    </StackPanel>
+</TabViewItem>

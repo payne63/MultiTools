@@ -1,0 +1,214 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<OutputType>WinExe</OutputType>
+		<TargetFramework>net6.0-windows10.0.19041.0</TargetFramework>
+		<TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
+		<RootNamespace>SplittableDataGridSAmple</RootNamespace>
+		<ApplicationManifest>app.manifest</ApplicationManifest>
+		<Platforms>x86;x64;ARM64</Platforms>
+		<RuntimeIdentifiers>win10-x86;win10-x64;win10-arm64</RuntimeIdentifiers>
+		<PublishProfile>win10-$(Platform).pubxml</PublishProfile>
+		<UseWinUI>true</UseWinUI>
+		<EnableMsixTooling>true</EnableMsixTooling>
+		
+		<WindowsPackageType>None</WindowsPackageType>
+		<WindowsAppSDKSelfContained>true</WindowsAppSDKSelfContained>
+		
+	</PropertyGroup>
+	<ItemGroup>
+		<Compile Remove="Services\MarshalService.xaml.cs" />
+	</ItemGroup>
+	<ItemGroup>
+		<None Remove="DialogPage\NewCompanyDialogPage.xaml" />
+		<None Remove="DialogPage\UpdateContactDialogPage.xaml" />
+		<None Remove="Elements\DependencyControl.xaml" />
+		<None Remove="Elements\NewTabButton.xaml" />
+		<None Remove="Elements\OpenNewTab.xaml" />
+		<None Remove="Elements\ProjectExplorerElements.xaml" />
+		<None Remove="Elements\TestControlWithConverter.xaml" />
+		<None Remove="forms\MenuTabView.xaml" />
+		<None Remove="Pages\WelcomePage.xaml" />
+		<None Remove="Services\MarshalService.xaml" />
+		<None Remove="Services\PrintPage.xaml" />
+		<None Remove="Tabs\ContactsTab.xaml" />
+		<None Remove="Tabs\FolderProjectCreationTab.xaml" />
+		<None Remove="Tabs\InventorLaserTab.xaml" />
+		<None Remove="Tabs\InventorPrintTab.xaml" />
+		<None Remove="Tabs\ParameterTab.xaml" />
+		<None Remove="Tabs\Test1Tab.xaml" />
+		<None Remove="Tabs\Test2Tab.xaml" />
+		<None Remove="Tabs\Test3Tab.xaml" />
+	</ItemGroup>
+	<ItemGroup>
+		<Page Remove="Services\MarshalService.xaml" />
+	</ItemGroup>
+	<ItemGroup>
+		<COMReference Include="Microsoft.Office.Interop.Outlook">
+			<WrapperTool>tlbimp</WrapperTool>
+			<VersionMinor>6</VersionMinor>
+			<VersionMajor>9</VersionMajor>
+			<Guid>00062fff-0000-0000-c000-000000000046</Guid>
+			<Lcid>0</Lcid>
+			<Isolated>false</Isolated>
+			<EmbedInteropTypes>true</EmbedInteropTypes>
+		</COMReference>
+	</ItemGroup>
+
+	<ItemGroup>
+		<Content Include="Assets\SplashScreen.scale-200.png" />
+		<Content Include="Assets\LockScreenLogo.scale-200.png" />
+		<Content Include="Assets\Square150x150Logo.scale-200.png" />
+		<Content Include="Assets\Square44x44Logo.scale-200.png" />
+		<Content Include="Assets\Square44x44Logo.targetsize-24_altform-unplated.png" />
+		<Content Include="Assets\StoreLogo.png" />
+		<Content Include="Assets\Wide310x150Logo.scale-200.png" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="CommunityToolkit.WinUI.UI" Version="7.1.2" />
+		<PackageReference Include="CommunityToolkit.WinUI.UI.Controls" Version="7.1.2" />
+		<PackageReference Include="Microsoft.WindowsAppSDK" Version="1.2.221109.1" />
+		<PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22621.755" />
+		<PackageReference Include="MsgReader" Version="4.4.15" />
+		<PackageReference Include="QuestPDF" Version="2022.12.1" />
+		<PackageReference Include="stdole" Version="17.5.33428.366" />
+		<PackageReference Include="System.Drawing.Common" Version="7.0.0" />
+		<PackageReference Include="System.Management" Version="7.0.0" />
+		<Manifest Include="$(ApplicationManifest)" />
+	</ItemGroup>
+
+	<!-- 
+    Defining the "Msix" ProjectCapability here allows the Single-project MSIX Packaging
+    Tools extension to be activated for this project even if the Windows App SDK Nuget
+    package has not yet been restored.
+  -->
+	<ItemGroup Condition="'$(DisableMsixProjectCapabilityAddedByProject)'!='true' and '$(EnableMsixTooling)'=='true'">
+		<ProjectCapability Include="Msix" />
+	</ItemGroup>
+	<ItemGroup>
+		<Page Update="forms\MenuTabView.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+	</ItemGroup>
+	<ItemGroup>
+		<Folder Include="Themes\" />
+	</ItemGroup>
+	<ItemGroup>
+		<Reference Include="Autodesk.Inventor.Interop">
+			<HintPath>..\..\..\..\..\Program Files\Autodesk\Inventor 2019\Bin\Public Assemblies\Autodesk.Inventor.Interop.dll</HintPath>
+		</Reference>
+	</ItemGroup>
+	<ItemGroup>
+		<Page Update="Elements\NewTabButton.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Update="Elements\ProjectExplorerElements.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Update="DialogPage\UpdateContactDialogPage.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Update="DialogPage\NewCompanyDialogPage.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<None Update="JsonData\companys.json">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Images\assembly.ico">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Images\assembly.png">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Images\draw.ico">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Images\drawing.png">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Images\laserIcon.png">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Images\part.ico">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Images\part.png">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Images\removeUser.png">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Images\Welcome.png">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Images\Welcome2.png">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="JsonData\contacts.json">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="JsonData\users.json">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<Page Update="Tabs\FolderProjectCreationTab.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Update="Tabs\InventorLaserTab.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Update="Tabs\InventorPrintTab.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Update="Tabs\ContactsTab.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Update="Tabs\ParameterTab.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Update="Tabs\Test3Tab.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Update="Tabs\Test2Tab.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Update="Tabs\Test1Tab.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Update="Pages\WelcomePage.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Update="Services\PrintPage.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<None Update="test.dxf">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<Page Update="Window\ParameterWindow.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+	</ItemGroup>
+	<ItemGroup>
+		<Page Update="Elements\DependencyControl.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+	</ItemGroup>
+	<ItemGroup>
+		<Page Update="Elements\TestControlWithConverter.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+	</ItemGroup>
+	<ItemGroup>
+		<Page Update="Elements\OpenNewTab.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+	</ItemGroup>
+
+	<!-- 
+    Defining the "HasPackageAndPublishMenuAddedByProject" property here allows the Solution 
+    Explorer "Package and Publish" context menu entry to be enabled for this project even if 
+    the Windows App SDK Nuget package has not yet been restored.
+  -->
+	<PropertyGroup Condition="'$(DisableHasPackageAndPublishMenuAddedByProject)'!='true' and '$(EnableMsixTooling)'=='true'">
+		<HasPackageAndPublishMenu>true</HasPackageAndPublishMenu>
+	</PropertyGroup>
+</Project>

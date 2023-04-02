@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "SplittableDataGridSAmple (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "SplittableDataGridSAmple (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}

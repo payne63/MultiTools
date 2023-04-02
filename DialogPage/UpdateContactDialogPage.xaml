@@ -1,0 +1,111 @@
+﻿<!-- Copyright (c) Microsoft Corporation and Contributors. -->
+<!-- Licensed under the MIT License. -->
+
+<Page
+    x:Class="SplittableDataGridSAmple.DialogPage.UpdateContactDialogPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:SplittableDataGridSAmple.DialogPage"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:base="using:SplittableDataGridSAmple.Base"
+    mc:Ignorable="d"
+    Background="{ThemeResource AccentAcrylicBackgroundFillColorDefaultBrush}">
+    <Page.Resources>
+        <base:BoolColorGenderConverter x:Key="BoolColorGenderConverterKey"/>
+    </Page.Resources>
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="70"/>
+            <RowDefinition Height="70"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="150"/>
+            <ColumnDefinition Width="300"/>
+            <ColumnDefinition Width="250"/>
+            <ColumnDefinition Width="200"/>
+            <ColumnDefinition Width="200"/>
+        </Grid.ColumnDefinitions>
+        <StackPanel Grid.Column="0" Grid.RowSpan="2" HorizontalAlignment="Stretch" >
+            <Viewbox   Height="60"  Margin="10" HorizontalAlignment="Center" >
+                <SymbolIcon Symbol="Contact" 
+                            Foreground="{x:Bind toggleIsMale.IsOn ,
+                                                Converter={StaticResource BoolColorGenderConverterKey},
+                                                Mode=OneWay}"/>
+            </Viewbox>
+            <ToggleSwitch x:Name="toggleIsMale"
+                          OffContent="Madame"
+                          OnContent="Monsieur"
+                          IsOn="{x:Bind Path=contactContext.IsMale, Mode=TwoWay}" HorizontalAlignment="Stretch" Margin="10"
+                          />
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" Grid.Column="1">
+            <TextBox Grid.Column="1" x:Name="updateName" Header="Nom"
+                                   Text="{x:Bind Path=contactContext.Name,Mode=TwoWay}"
+                                   Style="{ThemeResource BaseTextBlockStyle}"
+                                   Margin="12,6,0,0" Width="150"/>
+            <TextBox Grid.Column="1" x:Name="updatePreName" Header="Prénom" 
+                                   Text="{x:Bind Path=_contactContext.PreName , Mode=TwoWay}"
+                                   Style="{ThemeResource BaseTextBlockStyle}"
+                                   Margin="6,6,0,0" Width="150" HorizontalAlignment="Stretch"/>
+        </StackPanel>
+        <TextBox Grid.Column="1" x:Name="updateJoDescription" Header="Poste"
+                                   Grid.Row="1"
+                                   Text="{x:Bind Path=contactContext.JobDescription,Mode=TwoWay}"
+                                   Style="{ThemeResource BodyTextBlockStyle}"
+                                   Margin="12,0,0,6"/>
+        <TextBox Grid.Column="2" x:Name="updateMail" Header="Mail" 
+                                   Grid.Row="0"
+                                   Text="{x:Bind contactContext.Mail , Mode=TwoWay}"
+                                   Margin="12,6,0,0"/>
+        <ComboBox Grid.Column="2" x:Name="updateCompany" Header="Compagnie" 
+                                   Grid.Row="1"
+                                   Margin="12,6,0,0"
+                                   ItemsSource="{x:Bind _companyObservable ,Mode=TwoWay}" 
+                                   DisplayMemberPath="Name"
+                                   SelectionChanged="updateCompany_SelectionChanged"
+                                   Loaded="updateCompany_Loaded">
+        </ComboBox>
+        <StackPanel Orientation="Horizontal"
+                    Grid.Column="3" Grid.Row="0"
+                    HorizontalAlignment="Stretch" Margin="10,0,0,0">
+            <TextBox x:Name="updatePhone1" 
+                     Text="{x:Bind contactContext.PhoneNumber, Mode=TwoWay}"
+                     Margin="5,6,0,0" MinWidth="150">
+                <TextBox.Header>
+                    <StackPanel Orientation="Horizontal">
+                        <SymbolIcon Symbol="Phone"/>
+                        <TextBlock Text="Téléphone 1" />
+                    </StackPanel>
+                </TextBox.Header>
+            </TextBox>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal"
+                    Grid.Column="3" Grid.Row="1"
+                    HorizontalAlignment="Stretch"  Margin="10,0,0,0">
+            <TextBox  x:Name="updatePhone2"  
+                      Text="{x:Bind contactContext.PhoneNumber2, Mode=TwoWay}" 
+                      Margin="5,6,0,0" MinWidth="150">
+                <TextBox.Header>
+                    <StackPanel Orientation="Horizontal">
+                        <SymbolIcon Symbol="Phone"/>
+                        <TextBlock Text="Téléphone 2"/>
+                    </StackPanel>
+                </TextBox.Header>
+            </TextBox>
+        </StackPanel>
+        <Button  CornerRadius="5"
+                Grid.Column="4" Grid.RowSpan="2"
+                Drop="TabViewItem_Drop" 
+                DragOver="TabViewItem_DragOver"
+                AllowDrop="True" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+            <StackPanel Orientation="Vertical" >
+                <Viewbox MaxHeight="40" MaxWidth="40" >
+                    <SymbolIcon Symbol="NewWindow"  />
+                </Viewbox>
+                <TextBlock Text="Drop contact Outlook" />
+                <TextBlock Text="(*msg)" HorizontalAlignment="Center"/>
+            </StackPanel>
+        </Button>
+    </Grid>
+</Page>

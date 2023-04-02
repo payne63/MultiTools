@@ -1,0 +1,105 @@
+﻿<!-- Copyright (c) Microsoft Corporation and Contributors. -->
+<!-- Licensed under the MIT License. -->
+
+<TabViewItem
+    x:Class="SplittableDataGridSAmple.Tabs.FolderProjectCreationTab"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:SplittableDataGridSAmple.Tabs"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Header="Nouveau Projet">
+    <TabViewItem.IconSource>
+        <FontIconSource Glyph="&#xE8F4;"/>
+    </TabViewItem.IconSource>
+
+    <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="500"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Border AutomationProperties.AccessibilityView="Raw"
+                CornerRadius="10,0,10,0"  Grid.Column="0" Grid.Row="0" 
+                HorizontalAlignment="Stretch" VerticalAlignment="Top"
+                Background="{ThemeResource AccentAcrylicBackgroundFillColorDefaultBrush}"
+                Margin="10">
+            <StackPanel Orientation="Vertical">
+                <Button
+                    Margin="10" 
+                    HorizontalAlignment="Stretch"
+                    Padding="15"
+                    Drop="TabViewItem_Drop" 
+                    DragOver="TabViewItem_DragOver"
+                    AllowDrop="True" 
+                    IsEnabled="{x:Bind IsInterfaceEnabled, Mode=OneWay}">
+                    <StackPanel Orientation="Vertical" >
+                        <Viewbox MaxHeight="40" MaxWidth="40" >
+                            <SymbolIcon Symbol="NewWindow"  />
+                        </Viewbox>
+                        <TextBlock Text="Glisser Deposer" HorizontalAlignment="Center" />
+                        <TextBlock Text="votre répertoire" HorizontalAlignment="Center" />
+                        <TextBlock Text="à renommer" HorizontalAlignment="Center"/>
+                    </StackPanel>
+                </Button>
+
+
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="150"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="40"/>
+                        <RowDefinition Height="40"/>
+                        <RowDefinition Height="40"/>
+                    </Grid.RowDefinitions>
+                    <TextBlock Grid.Column="0" Grid.Row="0" Text="Code Projet :" HorizontalAlignment="Right"  VerticalAlignment="Center"/>
+                    <TextBox Grid.Column="1" Grid.Row="0" Text="{x:Bind CodeProject, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" FontSize="15" HorizontalAlignment="Left" Margin="2" Width="100" />
+                    <TextBlock Grid.Column="0" Grid.Row="1" Text="Nom du Projet :" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                    <TextBox Grid.Column="1" Grid.Row="1" Text="{x:Bind ProjectName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" FontSize="15" HorizontalAlignment="Left" Margin="2" Width="300" />
+                    <TextBlock Grid.Column="0" Grid.Row="2" Text="Nom du Client :" HorizontalAlignment="Right"  VerticalAlignment="Center"/>
+                    <TextBox Grid.Column="1" Grid.Row="2" Text="{x:Bind CustomerName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" FontSize="15" HorizontalAlignment="Left" Margin="2" Width="300" />
+                </Grid>
+                <Button 
+                    Margin="10" 
+                    HorizontalAlignment="Stretch"
+                    Click="Button_Click_RenameFolder" 
+                    IsEnabled="{x:Bind IsInterfaceEnabled, Mode=OneWay}">
+                    <StackPanel Orientation="Vertical" >
+                        <Viewbox MaxHeight="30" MaxWidth="30" >
+                            <SymbolIcon Symbol="Play"/>
+                        </Viewbox>
+                        <TextBlock Text="Renommer le répertoire" HorizontalAlignment="Center"/>
+                        <TextBlock Text="et créer les sous-répertoires" HorizontalAlignment="Center"/>
+                    </StackPanel>
+                </Button>
+                <Button Margin="10" 
+                        HorizontalAlignment="Stretch"
+                        Click="Button_Click_ClearInfo"
+                        IsEnabled="{x:Bind IsInterfaceEnabled, Mode=OneWay}">
+                    <StackPanel Orientation="Vertical" >
+                        <Viewbox MaxHeight="30" MaxWidth="30" >
+                            <SymbolIcon Symbol="Delete"/>
+                        </Viewbox>
+                        <TextBlock Text="Effacer le répertoire cible" HorizontalAlignment="Center"/>
+                        <TextBlock Text="et les champs texte" HorizontalAlignment="Center"/>
+                    </StackPanel>
+                </Button>
+            </StackPanel>
+        </Border>
+        <Border AutomationProperties.AccessibilityView="Raw"
+                CornerRadius="10,0,10,0"  Grid.Column="0" Grid.Row="1" 
+                HorizontalAlignment="Stretch" VerticalAlignment="Top"
+                Background="{ThemeResource AccentAcrylicBackgroundFillColorDefaultBrush}"
+                Margin="10" Visibility="{x:Bind FolderSelectedVisibity, Mode=OneWay}">
+            <StackPanel Orientation="Vertical" Margin="10">
+                <TextBlock Text="Répertoire selectionner :" FontSize="15"/>
+                <TextBlock Text="{x:Bind FolderSelected, Mode=OneWay}" Margin="20,0,0,0" />
+            </StackPanel>
+        </Border>
+    </Grid>
+</TabViewItem>

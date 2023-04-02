@@ -1,0 +1,215 @@
+<!-- Copyright (c) Microsoft Corporation and Contributors. -->
+<!-- Licensed under the MIT License. -->
+
+<TabViewItem
+    x:Class="SplittableDataGridSAmple.Tabs.ContactsTab"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:SplittableDataGridSAmple.Tabs"
+    xmlns:base="using:SplittableDataGridSAmple.Base"
+    xmlns:derived ="using:SplittableDataGridSAmple.DerivedFrameworkElement"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Header="Contacts">
+    <TabViewItem.Resources>
+        <base:TypeEnumConverter x:Key="TypeEnumConverterKey"/>
+        <base:StringPhoneFormatConverter x:Key="StringPhoneFormatConverterKey"/>
+        <base:StringMailFormatConverter x:Key="StringMailFormatConverterKey"/>
+        <base:BoolColorGenderConverter x:Key="BoolColorGenderConverterKey"/>
+    </TabViewItem.Resources>
+    <TabViewItem.IconSource>
+        <FontIconSource Glyph="&#xE779;"/>
+    </TabViewItem.IconSource>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="300"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <ListView ItemsSource="{x:Bind CVS.View, Mode=OneWay}"
+                  Grid.Column="1"
+                  x:Name="listViewCustomer"
+                  ShowsScrollingPlaceholders="True"
+                  CanBeScrollAnchor="False"
+                  BorderThickness="2"
+                  BorderBrush="{StaticResource AccentAcrylicBackgroundFillColorBaseBrush}"
+                  CornerRadius="5"
+                  Margin="0,10,10,10">
+            <ListView.GroupStyle>
+                <GroupStyle>
+                    <GroupStyle.HeaderTemplate>
+                        <DataTemplate x:DataType="local:GroupInfoList">
+                            <Border AutomationProperties.AccessibilityView="Raw" CornerRadius="10,0,10,0"
+                                    Background="{ThemeResource AccentAcrylicBackgroundFillColorDefaultBrush}">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="{x:Bind Key}" 
+                                           Margin="20,0,20,0"
+                                           FontSize="22"
+                                           FontStyle="Italic"
+                                           AutomationProperties.AccessibilityView="Raw"
+                                           ToolTipService.ToolTip="Nom de l'entreprise"/>
+                                    <StackPanel>
+                                        <TextBlock Text="{x:Bind Type ,Converter={StaticResource TypeEnumConverterKey}}" VerticalAlignment="Bottom"
+                                           Margin="5,0,20,0"
+                                           FontSize="12"
+                                           FontStyle="Normal"
+                                           AutomationProperties.AccessibilityView="Raw"
+                                           ToolTipService.ToolTip="type de contact"/>
+                                        <TextBlock Text="{x:Bind Address}" VerticalAlignment="Bottom"
+                                           Margin="5,0,20,0"
+                                           FontSize="12"
+                                           FontStyle="Normal"
+                                           AutomationProperties.AccessibilityView="Raw"
+                                           ToolTipService.ToolTip="Adresse de l'entreprise"/>
+                                    </StackPanel>
+                                    <Button Click="Button_Click_EditCompany" ToolTipService.ToolTip="Edition de l'entreprise" Margin="2,0,2,0">
+                                        <SymbolIcon Symbol="Edit"/>
+                                    </Button>
+                                    <Button Click="Button_Click_Navigate" ToolTipService.ToolTip="Navigation Google Maps" Margin="2,0,2,0">
+                                        <SymbolIcon Symbol="Globe"/>
+                                    </Button>
+                                </StackPanel>
+                            </Border>
+                        </DataTemplate>
+                    </GroupStyle.HeaderTemplate>
+                </GroupStyle>
+            </ListView.GroupStyle>
+            <ListView.ItemTemplate >
+                <DataTemplate x:DataType="base:Contact">
+                    <ListViewItem>
+                        <Grid >
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="6"/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="250"/>
+                                <ColumnDefinition Width="300"/>
+                                <ColumnDefinition Width="200"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Viewbox Grid.Column="0" Grid.RowSpan="2"  Height="35" Width="35" Margin="5" >
+                                <SymbolIcon Symbol="Contact"
+                                        Foreground="{x:Bind IsMale ,Converter={StaticResource BoolColorGenderConverterKey},Mode=OneWay}" />
+                            </Viewbox>
+
+                            <StackPanel Orientation="Horizontal" Grid.Column="1" >
+                                <TextBlock Grid.Column="1"
+                                   Text="{x:Bind Name}"
+                                   Style="{ThemeResource BaseTextBlockStyle}"
+                                   Margin="12,6,0,0"/>
+                                <TextBlock Grid.Column="1"
+                                   Text="{x:Bind PreName}"
+                                   Style="{ThemeResource BaseTextBlockStyle}"
+                                   Margin="6,6,0,0"/>
+                            </StackPanel>
+                            <TextBlock Grid.Column="1"
+                                   Grid.Row="1"
+                                   Text="{x:Bind JobDescription}"
+                                   Style="{ThemeResource BodyTextBlockStyle}"
+                                   Margin="12,0,0,6"/>
+                            <TextBlock Grid.Column="2"
+                                   Grid.Row="0"
+                                   Text="{x:Bind Mail ,Converter={StaticResource StringMailFormatConverterKey}}"
+                                   Margin="12,6,0,0"/>
+                            <DropDownButton Grid.Column="2" Grid.Row="1"
+                                   Margin="12,6,0,0">
+                                <DropDownButton.Flyout>
+                                    <MenuFlyout Placement="Bottom">
+                                        <MenuFlyoutItem Text="Demande de prix" Click="Button_Click_MailQuotation"/>
+                                        <MenuFlyoutItem Text="Commande" Click="Button_Click_MailOrder"/>
+                                        <MenuFlyoutItem Text="Mail Standard" Click="Button_Click_Mail"/>
+                                    </MenuFlyout>
+                                </DropDownButton.Flyout>
+                                <StackPanel Orientation="Horizontal">
+                                    <SymbolIcon Symbol="Mail" Margin="0,0,10,0"/>
+                                    <TextBlock Text="Mail"/>
+                                </StackPanel>
+                            </DropDownButton>
+                            <StackPanel Orientation="Horizontal" Grid.Column="3" Grid.Row="0">
+                                <SymbolIcon Symbol="Phone"/>
+                                <TextBlock Text="1" Margin="2,0,5,0" VerticalAlignment="Center" FontSize="15"/>
+                                <TextBlock Text="{x:Bind PhoneNumber, Converter={StaticResource StringPhoneFormatConverterKey}}"
+                                       Margin="12,6,0,0"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Grid.Column="3" Grid.Row="1">
+                                <SymbolIcon Symbol="Phone"/>
+                                <TextBlock Text="2" Margin="2,0,5,0"  VerticalAlignment="Center" FontSize="15"/>
+                                <TextBlock Text="{x:Bind PhoneNumber2, Converter={StaticResource StringPhoneFormatConverterKey}}" 
+                                       Margin="12,6,0,0"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Grid.RowSpan="2" Grid.Column="4" HorizontalAlignment="Right">
+                                <Button  ToolTipService.ToolTip="Edition" Margin="3" Click="Button_Click_ContactAskToUpdate">
+                                    <SymbolIcon Symbol="Edit"/>
+                                </Button>
+                                <Button ToolTipService.ToolTip="Supprimer" Margin="3" Click="Button_Click_ContactAskToDelete">
+                                    <SymbolIcon Symbol="Delete"/>
+                                </Button>
+                            </StackPanel>
+                            <MenuFlyoutSeparator Grid.ColumnSpan="4" Grid.Column="1" Grid.Row="3" />
+                        </Grid>
+                    </ListViewItem>
+
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+        <Border AutomationProperties.AccessibilityView="Raw" CornerRadius="10,0,10,0"
+                Background="{ThemeResource AccentAcrylicBackgroundFillColorDefaultBrush}"
+                Grid.Column="0" Margin="10" VerticalAlignment="Top" Padding="0,5,0,5">
+            <StackPanel Orientation="Vertical"  Margin="20,0,20,0">
+                <Button Margin="5" Click="Button_Click_AddContact" HorizontalAlignment="Stretch">
+                    <StackPanel Orientation="Horizontal">
+                        <SymbolIcon Symbol="Contact" Margin="0,0,10,0"/>
+                        <TextBlock Text="Ajouter un Contact"/>
+                    </StackPanel>
+                </Button>
+                <Button Margin="5" Click="Button_Click_AddCompagny" HorizontalAlignment="Stretch">
+                    <StackPanel Orientation="Horizontal">
+                        <SymbolIcon Symbol="Home" Margin="0,0,10,0"/>
+                        <TextBlock Text="Ajouter une Entreprise"/>
+                    </StackPanel>
+                </Button>
+                <StackPanel Orientation="Horizontal">
+                    <SymbolIcon Symbol="Filter" Margin="10,2,10,0" />
+                    <TextBlock Text="Filtres" 
+                               Margin="00,0,20,0"
+                               FontSize="25"
+                               FontStyle="Italic"
+                               AutomationProperties.AccessibilityView="Raw"/>
+                </StackPanel>
+                <CheckBox x:Name="CheckCustomer" Content="Client" Checked="CheckBox_Checked" Unchecked="CheckBox_Checked" IsChecked="True"/>
+                <CheckBox x:Name="CheckSupplier" Content="Fournisseur" Checked="CheckBox_Checked" Unchecked="CheckBox_Checked" IsChecked="True"/>
+                <CheckBox x:Name="CheckIntern" Content="Interne" Checked="CheckBox_Checked" Unchecked="CheckBox_Checked" IsChecked="True"/>
+                <TextBox x:Name="FilterByNameOrPreName" Width="200" Header="Filtrer par le Nom ou Prenom" Margin="8"
+	                     HorizontalAlignment="Left" TextChanged="OnFilterChanged"/>
+                <TextBox x:Name="FilterByCompany" Width="200" Header="Filtrer par l'Entreprise" Margin="8"
+	                     HorizontalAlignment="Left" TextChanged="OnFilterChanged"/>
+            </StackPanel>
+        </Border>
+        <derived:TeachingTipContext x:Name="teachingTipDeleteContact" 
+                     Title="Etes vous sur de vouloir supprimer le contact?"
+	                 PreferredPlacement="Center"
+	                 PlacementMargin="20"
+	                 IsLightDismissEnabled="True"
+	                 ActionButtonClick="DeleteContact_Click" 
+	                 ActionButtonContent="Oui"
+	                 CloseButtonContent="Quitter">
+            <TeachingTip.IconSource>
+                <SymbolIconSource Symbol="Delete"/>
+            </TeachingTip.IconSource>
+        </derived:TeachingTipContext>
+        <TeachingTip x:Name="TeachingTipSelectUser"
+                     Title="Aucun utilisateur Selectionner"
+                     Subtitle="Pour l'envoie de mail, veuillez selectionner un utilisateur ci-dessus"
+                     PreferredPlacement="RightTop">
+            <TeachingTip.IconSource>
+                <SymbolIconSource Symbol="SetLockScreen" />
+            </TeachingTip.IconSource>
+        </TeachingTip>
+    </Grid>
+</TabViewItem>
