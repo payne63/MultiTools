@@ -21,23 +21,23 @@ namespace SplittableDataGridSAmple.Base
                 string.Empty,
                 (dataI)=> SeverityValidEnum.NoProblem ));
 
-            ValidationItems.Add(new ValidationItem("Présence Nom Dessinateur ?",
+            ValidationItems.Add(new ValidationItem("Absence Nom Dessinateur ?",
                 "Nom du dessinateur non renseigné",
                 (dataI) => { return dataI.Author == string.Empty ? SeverityValidEnum.Low : SeverityValidEnum.NoProblem; }));
 
-            ValidationItems.Add(new ValidationItem("Présence Description ?",
+            ValidationItems.Add(new ValidationItem("Absence Description ?",
                 "Description non renseignée",
                 (dataI) => { return dataI.Description == string.Empty ? SeverityValidEnum.Low : SeverityValidEnum.NoProblem; }));
 
-            ValidationItems.Add(new ValidationItem("Pésence Nom Client ?",
+            ValidationItems.Add(new ValidationItem("Absence Nom Client ?",
                 "Client non renseigné",
                 (dataI) => { return dataI.CostCenter == string.Empty ? SeverityValidEnum.Low : SeverityValidEnum.NoProblem; }));
 
-            ValidationItems.Add(new ValidationItem("Présence Nom projet?",
+            ValidationItems.Add(new ValidationItem("Absence Nom projet?",
                 "Projet non renseigné",
                 (dataI) => { return dataI.Project == string.Empty ? SeverityValidEnum.Low : SeverityValidEnum.NoProblem; }));
 
-            ValidationItems.Add(new ValidationItem("Présence plan ?",
+            ValidationItems.Add(new ValidationItem("Absence plan ?",
                 "Aucun Plan",
                 (dataI) => { return dataI.drawingDocuments.Count == 0 ? SeverityValidEnum.Medium : SeverityValidEnum.NoProblem; }));
 
