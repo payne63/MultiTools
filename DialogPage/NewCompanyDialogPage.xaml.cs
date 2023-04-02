@@ -30,11 +30,11 @@ namespace SplittableDataGridSAmple.DialogPage
     public sealed partial class NewCompanyDialogPage : Page
     {
 
-        private Company _companyContext;
-        public Company companyContext
+        private Company _CompanyContextCopy;
+        public Company CompanyContextCopy
         {
-            get { return _companyContext; }
-            set { _companyContext = value; }
+            get { return _CompanyContextCopy; }
+            set { _CompanyContextCopy = value; }
         }
         public NewCompanyDialogPage()
         {
@@ -43,18 +43,18 @@ namespace SplittableDataGridSAmple.DialogPage
         public NewCompanyDialogPage(Company company )
         {
             this.InitializeComponent();
-            //this.companyContext = company;
-            this.companyContext = company.CreateDeepCopy();
-            CheckCustomer.IsChecked = companyContext.Type.HasFlag(Company.TypeEnum.Client)? true : false;
-            CheckSupplier.IsChecked = companyContext.Type.HasFlag(Company.TypeEnum.Fournisseur) ? true : false;
-            CheckIntern.IsChecked = companyContext.Type.HasFlag(Company.TypeEnum.Interne) ? true : false;
+            this.CompanyContextCopy = company.CreateDeepCopy();
+            CheckCustomer.IsChecked = CompanyContextCopy.Type.HasFlag(Company.TypeEnum.Client)? true : false;
+            CheckSupplier.IsChecked = CompanyContextCopy.Type.HasFlag(Company.TypeEnum.Fournisseur) ? true : false;
+            CheckIntern.IsChecked = CompanyContextCopy.Type.HasFlag(Company.TypeEnum.Interne) ? true : false;
         }
 
         private void CheckBox_Checked(object sender, RoutedEventArgs e)
         {
-            _companyContext.Type |= CheckCustomer.IsChecked == true ? Company.TypeEnum.Client : Company.TypeEnum.Aucun;
-            _companyContext.Type |= CheckSupplier.IsChecked == true ? Company.TypeEnum.Fournisseur : Company.TypeEnum.Aucun;
-            _companyContext.Type |= CheckIntern.IsChecked == true ? Company.TypeEnum.Interne : Company.TypeEnum.Aucun;
+            CompanyContextCopy.Type = 0;
+            CompanyContextCopy.Type |= CheckCustomer.IsChecked == true ? Company.TypeEnum.Client : Company.TypeEnum.Aucun;
+            CompanyContextCopy.Type |= CheckSupplier.IsChecked == true ? Company.TypeEnum.Fournisseur : Company.TypeEnum.Aucun;
+            CompanyContextCopy.Type |= CheckIntern.IsChecked == true ? Company.TypeEnum.Interne : Company.TypeEnum.Aucun;
         }
     }
 }

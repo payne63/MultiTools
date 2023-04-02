@@ -10,18 +10,24 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    <StackPanel Orientation="Vertical">
 
-    <StackPanel Orientation="Horizontal" Background="{ThemeResource AccentAcrylicBackgroundFillColorDefaultBrush}" Padding="0,0,0,10">
-        <TextBox Grid.Column="1" x:Name="updateName" Header="Nom"
-                                   Text="{x:Bind Path=companyContext.Name,Mode=TwoWay}"
+        <StackPanel Orientation="Horizontal" Background="{ThemeResource AccentAcrylicBackgroundFillColorDefaultBrush}" Padding="0,0,0,10">
+
+            <TextBox Grid.Column="1" x:Name="updateName" Header="Nom"
+                                   Text="{x:Bind Path=CompanyContextCopy.Name,Mode=TwoWay}"
                                    Style="{ThemeResource BaseTextBlockStyle}"
                                    Margin="12,6,0,0" Width="150"/>
-        <TextBox Grid.Column="1" x:Name="updatePreName" Header="Adresse" 
-                                   Text="{x:Bind Path=companyContext.Address , Mode=TwoWay}"
+            <TextBox Grid.Column="1" x:Name="updatePreName" Header="Adresse" 
+                                   Text="{x:Bind Path=CompanyContextCopy.Address , Mode=TwoWay}"
                                    Style="{ThemeResource BaseTextBlockStyle}"
-                                   Margin="6,6,0,0" Width="150" HorizontalAlignment="Stretch"/>
-        <CheckBox x:Name="CheckCustomer" Content="Client" Checked="CheckBox_Checked" Unchecked="CheckBox_Checked" IsChecked="False" Margin="10,0,0,0"/>
-        <CheckBox x:Name="CheckSupplier" Content="Fournisseur" Checked="CheckBox_Checked" Unchecked="CheckBox_Checked" IsChecked="False"/>
-        <CheckBox x:Name="CheckIntern" Content="Interne" Checked="CheckBox_Checked" Unchecked="CheckBox_Checked" IsChecked="False"/>
+                                   Margin="6,6,0,0" Width="350" HorizontalAlignment="Stretch"/>
+        </StackPanel>
+        <AppBarSeparator/>
+        <StackPanel Orientation="Horizontal">
+            <CheckBox x:Name="CheckCustomer" Content="Client" Checked="CheckBox_Checked" Unchecked="CheckBox_Checked" IsChecked="False" Margin="10,0,0,0"/>
+            <CheckBox x:Name="CheckSupplier" Content="Fournisseur" Checked="CheckBox_Checked" Unchecked="CheckBox_Checked" IsChecked="False"/>
+            <CheckBox x:Name="CheckIntern" Content="Interne" Checked="CheckBox_Checked" Unchecked="CheckBox_Checked" IsChecked="False"/>
+        </StackPanel>
     </StackPanel>
 </Page>

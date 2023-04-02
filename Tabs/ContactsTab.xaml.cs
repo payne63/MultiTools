@@ -319,7 +319,7 @@ namespace SplittableDataGridSAmple.Tabs
             var result = await dialog.ShowAsync();
             if (result == ContentDialogResult.Primary)
             {
-                Companys.Add(updateContactDialogPage.companyContext);
+                Companys.Add(updateContactDialogPage.CompanyContextCopy);
                 UpdateCVS();
                 SaveCompanys();
             }
@@ -350,7 +350,7 @@ namespace SplittableDataGridSAmple.Tabs
             var result = await dialog.ShowAsync();
             if (result == ContentDialogResult.Primary)
             {
-                CompanySelect.Company.CopyData(updateCompagnyDialogPage.companyContext);
+                CompanySelect.Company.CopyData(updateCompagnyDialogPage.CompanyContextCopy);
                 UpdateCVS();
                 SaveCompanys();
             }
