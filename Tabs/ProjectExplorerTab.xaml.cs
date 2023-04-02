@@ -191,17 +191,21 @@ namespace SplittableDataGridSAmple.Tabs
             DeepMax = 0;
             var DataIDrop = appServer.Open((file.Path));
             DatasI.Add(new DataI(DataIDrop));
-            var directoryPathOfDrop = Path.GetDirectoryName(file.Path);
-            var drawsInPathOfDrop = Directory.GetFiles(directoryPathOfDrop, "*.idw", SearchOption.AllDirectories)
-                .ToList()
-                .Where(x => !x.Contains("OldVersions"))
-                .Select(x => new DataI(appServer.Open(x), DataI.RecursiveType.OneTime));
-            foreach (var dataIDrawing in drawsInPathOfDrop)
+
+            foreach (var dataIDrawing in GetDrawingsFromPath(Path.GetDirectoryName(file.Path), SearchOption.AllDirectories))
             {
                 _ = RecursiveCheckLink(DatasI[0], dataIDrawing);
             }
             RecursiveCategoryUpdate(DatasI.First());
             return Task.CompletedTask;
+        }
+
+        private IEnumerable<DataI> GetDrawingsFromPath(string directoryPathOfDrop, SearchOption searchOption)
+        {
+            return Directory.GetFiles(directoryPathOfDrop, "*.idw", searchOption)
+                .ToList()
+                .Where(x => !x.Contains("OldVersions"))
+                .Select(x => new DataI(appServer.Open(x), DataI.RecursiveType.OneTime));
         }
 
         private bool RecursiveCheckLink(DataI dataISource, DataI linkDraw)

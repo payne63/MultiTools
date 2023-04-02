@@ -119,7 +119,7 @@ namespace SplittableDataGridSAmple.Base
             set { _Category = value; NotifyPropertyChanged(); }
         }
 
-        public BitmapImage bitmapImage ;
+        public BitmapImage bitmapImage;
 
         public string GetIconBase()
         {
@@ -132,7 +132,7 @@ namespace SplittableDataGridSAmple.Base
         }
 
 
-        public  DataI(I.ApprenticeServerDocument document, RecursiveType recursive = RecursiveType.True, int deep = 0)
+        public DataI(I.ApprenticeServerDocument document, RecursiveType recursive = RecursiveType.True, int deep = 0)
         {
             Document = document;
             NameFile = document.DisplayName;
@@ -144,17 +144,7 @@ namespace SplittableDataGridSAmple.Base
             Deep = deep;
             instanceProjectExplorer.DeepMax = deep > instanceProjectExplorer.DeepMax ? deep : instanceProjectExplorer.DeepMax;
 
-
-            
-
-            //var imageBase = OleCreateConverter.PictureDispToImage(document.Thumbnail);
-            //BitmapImage bitmapImage = new BitmapImage();
-            //using (MemoryStream stream = new MemoryStream())
-            //{
-            //    imageBase.Save(stream, System.Drawing.Imaging.ImageFormat.Png);
-            //    stream.Position = 0;
-            //    bitmapImage.SetSource(stream.AsRandomAccessStream());
-            //}
+            if (document.DocumentType == DocumentTypeEnum.kPartDocumentObject) return; // si c'est une pièce => pas de recherche d'enfant
 
             if (recursive == RecursiveType.True)
             {
@@ -170,7 +160,6 @@ namespace SplittableDataGridSAmple.Base
                     ReferencedDataI.Add(new DataI(referencedDocument, RecursiveType.False));
                 }
             }
-            //Validation = new ValidationManager();
         }
 
         public void Update(List<string> drawingFileFound)
