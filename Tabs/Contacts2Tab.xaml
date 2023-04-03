@@ -1,83 +1,113 @@
-<TabViewItem
-    x:Class="SplittableDataGridSAmple.Tabs.ContactsTab"
+﻿<TabViewItem
+    x:Class="SplittableDataGridSAmple.Tabs.Contacts2Tab"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:SplittableDataGridSAmple.Tabs"
     xmlns:base="using:SplittableDataGridSAmple.Base"
-    xmlns:derived ="using:SplittableDataGridSAmple.DerivedFrameworkElement"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    Header="Contacts">
+    Header="Contacts2">
+    <TabViewItem.IconSource>
+        <FontIconSource Glyph="&#xE77B;"/>
+    </TabViewItem.IconSource>
     <TabViewItem.Resources>
         <base:TypeEnumConverter x:Key="TypeEnumConverterKey"/>
         <base:StringPhoneFormatConverter x:Key="StringPhoneFormatConverterKey"/>
         <base:StringMailFormatConverter x:Key="StringMailFormatConverterKey"/>
         <base:BoolColorGenderConverter x:Key="BoolColorGenderConverterKey"/>
     </TabViewItem.Resources>
-    <TabViewItem.IconSource>
-        <FontIconSource Glyph="&#xE779;"/>
-    </TabViewItem.IconSource>
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="300"/>
+            <ColumnDefinition Width="600"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
+            <RowDefinition Height="55"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <ListView ItemsSource="{x:Bind CVS.View, Mode=OneWay}"
-                  Grid.Column="1"
-                  x:Name="listViewCustomer"
-                  ShowsScrollingPlaceholders="True"
-                  CanBeScrollAnchor="False"
+        <Border Grid.ColumnSpan="2"  Grid.Row="0"  CornerRadius="10,0,10,0" 
+                                    Background="{ThemeResource AccentAcrylicBackgroundFillColorDefaultBrush}" Margin="10,2,10,2"/>
+        <StackPanel Orientation="Horizontal" Grid.Column="0" Grid.Row="0" Margin="40,0,0,0">
+            <FontIcon Glyph="&#xE71C;" />
+            <TextBox x:Name="FilterByCompany" Width="250"  Margin="10"
+	                     HorizontalAlignment="Left" TextChanged="OnFilterChangedCompagny" PlaceholderText="Nom"/>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="0" Margin="40,0,0,0">
+            <FontIcon Glyph="&#xE71C;" />
+            <TextBox x:Name="FilterByNameOrPreName" Width="250"  Margin="10"
+	                     HorizontalAlignment="Left" TextChanged="OnFilterChangedContact" PlaceholderText="Nom ou Prénom" />
+        </StackPanel>
+        <Button Grid.Column="0" Grid.Row="0" Content="test" Click="Button_Click" HorizontalAlignment="Center"/>
+        <ListView Grid.Column="0" Grid.Row="1" x:Name="ListViewCompanys" ItemsSource="{x:Bind CompanyFiltered, Mode=OneWay}"
                   BorderThickness="2"
                   BorderBrush="{StaticResource AccentAcrylicBackgroundFillColorBaseBrush}"
                   CornerRadius="5"
-                  Margin="0,10,10,10">
-            <ListView.GroupStyle>
-                <GroupStyle>
-                    <GroupStyle.HeaderTemplate>
-                        <DataTemplate x:DataType="local:GroupInfoList">
-                            <Border AutomationProperties.AccessibilityView="Raw" CornerRadius="10,0,10,0"
-                                    Background="{ThemeResource AccentAcrylicBackgroundFillColorDefaultBrush}">
-                                <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="{x:Bind Key}" 
-                                           Margin="20,0,20,0"
+                  SelectionMode="Single"
+                  ShowsScrollingPlaceholders="True"
+                  Margin="10,10,10,10"
+                  AllowDrop="True"
+                  DragItemsStarting="Source_DragItemsStarting"
+                  
+                  >
+            <ListView.ItemTemplate >
+                <DataTemplate x:DataType="base:Company">
+                    <ListViewItem >
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="400"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <Viewbox Grid.Column="0" Grid.RowSpan="2"  Height="35" Width="35" Margin="5">
+                                <FontIcon Glyph="&#xEC07;" />
+                            </Viewbox>
+                            <Border Grid.Column="1" Grid.RowSpan="2" CornerRadius="10,0,10,0"
+                                    Background="{ThemeResource AccentAcrylicBackgroundFillColorDefaultBrush}" Margin="0,2,0,2"/>
+                            <TextBlock Text="{x:Bind Name}" Grid.Column="1" Grid.Row="0"
+                                           Margin="5,0,20,0"
                                            FontSize="22"
                                            FontStyle="Italic"
-                                           AutomationProperties.AccessibilityView="Raw"
                                            ToolTipService.ToolTip="Nom de l'entreprise"/>
-                                    <StackPanel>
-                                        <TextBlock Text="{x:Bind Type ,Converter={StaticResource TypeEnumConverterKey}}" VerticalAlignment="Bottom"
-                                           Margin="5,0,20,0"
+                            <TextBlock Text="{x:Bind Address}"  Grid.Column="1" Grid.Row="1"
+                                           Margin="5,0,0,2"
                                            FontSize="12"
                                            FontStyle="Normal"
-                                           AutomationProperties.AccessibilityView="Raw"
-                                           ToolTipService.ToolTip="type de contact"/>
-                                        <TextBlock Text="{x:Bind Address}" VerticalAlignment="Bottom"
-                                           Margin="5,0,20,0"
-                                           FontSize="12"
-                                           FontStyle="Normal"
-                                           AutomationProperties.AccessibilityView="Raw"
                                            ToolTipService.ToolTip="Adresse de l'entreprise"/>
-                                    </StackPanel>
-                                    <Button Click="Button_Click_EditCompany" ToolTipService.ToolTip="Edition de l'entreprise" Margin="2,0,2,0">
-                                        <SymbolIcon Symbol="Edit"/>
-                                    </Button>
-                                    <Button Click="Button_Click_Navigate" ToolTipService.ToolTip="Navigation Google Maps" Margin="2,0,2,0">
-                                        <SymbolIcon Symbol="Globe"/>
-                                    </Button>
-                                </StackPanel>
-                            </Border>
-                        </DataTemplate>
-                    </GroupStyle.HeaderTemplate>
-                </GroupStyle>
-            </ListView.GroupStyle>
+                            <TextBlock Text="{x:Bind Type ,Converter={StaticResource TypeEnumConverterKey}}"  Grid.Column="2" Grid.Row="1"
+                                           Margin="5,0,20,0"
+                                           FontSize="12"
+                                           FontStyle="Normal"
+                                           ToolTipService.ToolTip="type de contact"/>
+                            <StackPanel Orientation="Horizontal"  Grid.Column="2" Grid.Row="0" Margin="0,2,0,0">
+                                <Button Click="Button_Click_EditCompany" ToolTipService.ToolTip="Edition de l'entreprise" Margin="2,0,2,0">
+                                    <SymbolIcon Symbol="Edit"/>
+                                </Button>
+                                <Button Click="Button_Click_Navigate" ToolTipService.ToolTip="Navigation Google Maps" Margin="2,0,2,0">
+                                    <SymbolIcon Symbol="Globe"/>
+                                </Button>
+                            </StackPanel>
+                        </Grid>
+                    </ListViewItem>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+        <ListView Grid.Column="1" Grid.Row="1" x:Name="ListViewContacts" ItemsSource="{x:Bind ContactsFiltered, Mode=OneWay}" 
+                  BorderThickness="2"
+                  BorderBrush="{StaticResource AccentAcrylicBackgroundFillColorBaseBrush}"
+                  SelectionMode="Single"
+                  CanDragItems="True"
+                  ShowsScrollingPlaceholders="True"
+                  CornerRadius="5"
+                  Margin="0,10,10,10">
             <ListView.ItemTemplate >
                 <DataTemplate x:DataType="base:Contact">
-                    <ListViewItem>
-                        <Grid >
+                    <ListViewItem  >
+                        <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="*"/>
                                 <RowDefinition Height="*"/>
@@ -97,11 +127,11 @@
 
                             <StackPanel Orientation="Horizontal" Grid.Column="1" >
                                 <TextBlock Grid.Column="1"
-                                   Text="{x:Bind Name}"
+                                   Text="{x:Bind Name ,Mode=OneWay}" DoubleTapped="ListViewItemContact_DoubleTapped" 
                                    Style="{ThemeResource BaseTextBlockStyle}"
                                    Margin="12,6,0,0"/>
                                 <TextBlock Grid.Column="1"
-                                   Text="{x:Bind PreName}"
+                                   Text="{x:Bind PreName}" 
                                    Style="{ThemeResource BaseTextBlockStyle}"
                                    Margin="6,6,0,0"/>
                             </StackPanel>
@@ -151,62 +181,17 @@
                             <MenuFlyoutSeparator Grid.ColumnSpan="4" Grid.Column="1" Grid.Row="3" />
                         </Grid>
                     </ListViewItem>
-
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
-        <Border AutomationProperties.AccessibilityView="Raw" CornerRadius="10,0,10,0"
-                Background="{ThemeResource AccentAcrylicBackgroundFillColorDefaultBrush}"
-                Grid.Column="0" Margin="10" VerticalAlignment="Top" Padding="0,5,0,5">
-            <StackPanel Orientation="Vertical"  Margin="20,0,20,0">
-                <Button Margin="5" Click="Button_Click_AddContact" HorizontalAlignment="Stretch">
-                    <StackPanel Orientation="Horizontal">
-                        <SymbolIcon Symbol="Contact" Margin="0,0,10,0"/>
-                        <TextBlock Text="Ajouter un Contact"/>
-                    </StackPanel>
-                </Button>
-                <Button Margin="5" Click="Button_Click_AddCompagny" HorizontalAlignment="Stretch">
-                    <StackPanel Orientation="Horizontal">
-                        <SymbolIcon Symbol="Home" Margin="0,0,10,0"/>
-                        <TextBlock Text="Ajouter une Entreprise"/>
-                    </StackPanel>
-                </Button>
-                <StackPanel Orientation="Horizontal">
-                    <SymbolIcon Symbol="Filter" Margin="10,2,10,0" />
-                    <TextBlock Text="Filtres" 
-                               Margin="00,0,20,0"
-                               FontSize="25"
-                               FontStyle="Italic"
-                               AutomationProperties.AccessibilityView="Raw"/>
-                </StackPanel>
-                <CheckBox x:Name="CheckCustomer" Content="Client" Checked="CheckBox_Checked" Unchecked="CheckBox_Checked" IsChecked="True"/>
-                <CheckBox x:Name="CheckSupplier" Content="Fournisseur" Checked="CheckBox_Checked" Unchecked="CheckBox_Checked" IsChecked="True"/>
-                <CheckBox x:Name="CheckIntern" Content="Interne" Checked="CheckBox_Checked" Unchecked="CheckBox_Checked" IsChecked="True"/>
-                <TextBox x:Name="FilterByNameOrPreName" Width="200" Header="Filtrer par le Nom ou Prenom" Margin="8"
-	                     HorizontalAlignment="Left" TextChanged="OnFilterChanged"/>
-                <TextBox x:Name="FilterByCompany" Width="200" Header="Filtrer par l'Entreprise" Margin="8"
-	                     HorizontalAlignment="Left" TextChanged="OnFilterChanged"/>
-            </StackPanel>
-        </Border>
-        <derived:TeachingTipContext x:Name="teachingTipDeleteContact" 
-                     Title="Etes vous sur de vouloir supprimer le contact?"
-	                 PreferredPlacement="Center"
-	                 PlacementMargin="20"
-	                 IsLightDismissEnabled="True"
-	                 ActionButtonClick="DeleteContact_Click" 
-	                 ActionButtonContent="Oui"
-	                 CloseButtonContent="Quitter">
+        <TeachingTip x:Name="EditTip"
+            Title="Edit">
             <TeachingTip.IconSource>
-                <SymbolIconSource Symbol="Delete"/>
+                <SymbolIconSource Symbol="Edit" />
             </TeachingTip.IconSource>
-        </derived:TeachingTipContext>
-        <TeachingTip x:Name="TeachingTipSelectUser"
-                     Title="Aucun utilisateur Selectionner"
-                     Subtitle="Pour l'envoie de mail, veuillez selectionner un utilisateur ci-dessus"
-                     PreferredPlacement="RightTop">
-            <TeachingTip.IconSource>
-                <SymbolIconSource Symbol="SetLockScreen" />
-            </TeachingTip.IconSource>
+            <TeachingTip.Content>
+                <TextBox x:Name="EditTipTextBox"/>
+            </TeachingTip.Content>
         </TeachingTip>
     </Grid>
 </TabViewItem>

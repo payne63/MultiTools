@@ -44,11 +44,10 @@
                             <SymbolIcon Symbol="NewWindow"  />
                         </Viewbox>
                         <TextBlock Text="Glisser Deposer" HorizontalAlignment="Center" />
-                        <TextBlock Text="vos fichiers" HorizontalAlignment="Center" />
-                        <TextBlock Text="(répertoire ou fichiers)" HorizontalAlignment="Center"/>
+                        <TextBlock Text="votre Assemblage" HorizontalAlignment="Center" />
+                        <TextBlock Text="(Assemblage uniquement)" HorizontalAlignment="Center"/>
                     </StackPanel>
                 </Button>
-                <Button Content="print info" Click="Button_Click_Info" Margin="10" />
                 <Button Margin="10" 
                         HorizontalAlignment="Stretch"
                         Click="Button_Click_RemoveData"    
@@ -77,10 +76,10 @@
             </Border>
             <Rectangle Width="1" Height="60" Fill="{StaticResource AccentTextFillColorTertiaryBrush}"/>
             <TextBox x:Name="FilterByPartNumber" Width="100" Header="Code" Margin="8" PlaceholderText="Filtre" 
-	                     HorizontalAlignment="Left" TextChanged="OnFilterDescriptionChanged" />
+	                     HorizontalAlignment="Left" TextChanged="OnFilterChanged" />
             <Rectangle Width="1" Height="60" Fill="{StaticResource AccentTextFillColorTertiaryBrush}"/>
             <TextBox x:Name="FilterByDescription" Width="300" Header="Description" Margin="8" PlaceholderText="Filtre"
-	                     HorizontalAlignment="Left" TextChanged="OnFilterDescriptionChanged" />
+	                     HorizontalAlignment="Left" TextChanged="OnFilterChanged" />
             <Rectangle Width="1" Height="60" Fill="{StaticResource AccentTextFillColorTertiaryBrush}"/>
             <TextBlock Text="Projet" Width="150" VerticalAlignment="Top" Margin="5,8,5,0" />
             <Rectangle Width="1" Height="60" Fill="{StaticResource AccentTextFillColorTertiaryBrush}"/>
@@ -89,7 +88,7 @@
             <TextBlock Text="Auteur" Width="100" VerticalAlignment="Top" Margin="5,8,5,0" />
             <Rectangle Width="1" Height="60" Fill="{StaticResource AccentTextFillColorTertiaryBrush}"/>
             <ComboBox x:Name="ComboBoxCategory" Header="Categorie" Margin="5,0,5,0"
-                              ItemsSource="{x:Bind getListCategory, Mode=OneWay}"
+                              ItemsSource="{x:Bind GetListCategory(), Mode=OneWay}"
                               SelectionChanged="ComboBox_SelectionChanged"
                               PlaceholderText="Filtre"
                               VerticalAlignment="Center" 
@@ -99,8 +98,8 @@
             <TextBlock Text="Plan" Width="60" VerticalAlignment="Top" Margin="5,8,5,0" />
             <Rectangle Width="1" Height="60" Fill="{StaticResource AccentTextFillColorTertiaryBrush}"/>
             <ComboBox x:Name="ComboBoxValidationItem" Header="Erreur" Margin="5,0,5,0"
-                              ItemsSource="{x:Bind getListValidationManager, Mode=OneWay}"
-                              DisplayMemberPath="Description"
+                              ItemsSource="{x:Bind GetListValidationManager(), Mode=OneWay}"
+                              
                               SelectionChanged="ComboBox_SelectionChanged"
                               PlaceholderText="Filtre"
                               VerticalAlignment="Center" 
@@ -153,7 +152,7 @@
                                         <DropDownButton
                                             Height="21"  Padding="0" Width="150"  Margin="5,0,5,0"
                                             ToolTipService.ToolTip="Cliquez pour voir les erreurs" CornerRadius="10"
-                                            Background="{StaticResource SystemFillColorCriticalBrush}"
+                                            Background="{x:Bind GetErrorColorBrush()}"
                                             Flyout="{x:Bind GetFlyoutErrors()}"
                                             Foreground="{StaticResource SolidBackgroundFillColorBaseAltBrush}">
                                             <StackPanel Orientation="Horizontal">

@@ -1,10 +1,13 @@
-﻿using AvitechTools.Models;
+﻿using ABI.Windows.UI;
+using AvitechTools.Models;
 using Inventor;
 using Microsoft.Office.Interop.Outlook;
+using Microsoft.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Imaging;
+using SixLabors.ImageSharp;
 using SplittableDataGridSAmple.Helper;
 using SplittableDataGridSAmple.Models;
 using SplittableDataGridSAmple.Tabs;
@@ -28,7 +31,7 @@ namespace SplittableDataGridSAmple.Base
     {
         public static ProjectExplorerTab instanceProjectExplorer;
         public enum RecursiveType { True, False, OneTime }
-        public enum CategoryType { Inconnu, Laser, Commerce, Profile, MecanoSoudure, Assemblage }
+        public enum CategoryType { Inconnu, Laser, Commerce, Profile, MecanoSoudure, Assemblage, ElementClient }
 
         #region Inotify_Business
         public event PropertyChangedEventHandler PropertyChanged;
@@ -162,17 +165,10 @@ namespace SplittableDataGridSAmple.Base
             }
         }
 
-        public void Update(List<string> drawingFileFound)
-        {
-            foreach (var drawing in drawingFileFound)
-            {
-
-            }
-        }
-
         public string GetNbErrorMessage()
         {
             var sum = 0;
+            Trace.WriteLine($"errormessageCheck => {Category}");
             foreach (var item in Validation.ValidationItems)
             {
                 var resultValidation = item.CheckValidation(this);
@@ -195,7 +191,7 @@ namespace SplittableDataGridSAmple.Base
         }
 
 
-        public IEnumerable<string> GetErrorsMessage()
+        public IEnumerable<string> GetErrorsDescriptionMessage()
         {
             foreach (var item in Validation.ValidationItems)
             {
@@ -207,12 +203,34 @@ namespace SplittableDataGridSAmple.Base
             }
         }
 
+        public IEnumerable<string> GetErrorsMessage()
+        {
+            foreach (var item in Validation.ValidationItems)
+            {
+                var resultValidation = item.CheckValidation(this);
+                if (resultValidation != ValidationItem.SeverityValidEnum.NoProblem)
+                {
+                    yield return item.Description;
+                }
+            }
+        }
+
         public MenuFlyout GetFlyoutErrors()
         {
             var menuFlyout = new MenuFlyout() { Placement = Microsoft.UI.Xaml.Controls.Primitives.FlyoutPlacementMode.Bottom };
-            foreach (var error in GetErrorsMessage())
+            foreach (var error in GetErrorsDescriptionMessage())
                 menuFlyout.Items.Add(new MenuFlyoutItem { Text = error, Icon = new FontIcon { Glyph = "\uE783" } });
             return menuFlyout;
+        }
+
+        public Brush GetErrorColorBrush()
+        {
+            return GetNbErrorMessage() switch
+            {
+                "0" => App.Current.Resources["SystemFillColorSuccessBrush"] as SolidColorBrush,
+                "1" => App.Current.Resources["SystemFillColorCautionBrush"] as SolidColorBrush,
+                _ => App.Current.Resources["SystemFillColorCriticalBrush"] as SolidColorBrush,
+            };
         }
 
         public void RecursiveClearData()

@@ -13,14 +13,10 @@ namespace SplittableDataGridSAmple.Base
     public class ValidationManager
     {
         public static ValidationManager Instance = new ValidationManager();
-        public ObservableCollection<ValidationItem> ValidationItems = new();
+        public List<ValidationItem> ValidationItems = new();
 
         public ValidationManager()
         {
-            ValidationItems.Add( new ValidationItem("Aucun Filtre",
-                string.Empty,
-                (dataI)=> SeverityValidEnum.NoProblem ));
-
             ValidationItems.Add(new ValidationItem("Absence Nom Dessinateur ?",
                 "Nom du dessinateur non renseigné",
                 (dataI) => { return dataI.Author == string.Empty ? SeverityValidEnum.Low : SeverityValidEnum.NoProblem; }));
@@ -39,11 +35,16 @@ namespace SplittableDataGridSAmple.Base
 
             ValidationItems.Add(new ValidationItem("Absence plan ?",
                 "Aucun Plan",
-                (dataI) => { return dataI.drawingDocuments.Count == 0 ? SeverityValidEnum.Medium : SeverityValidEnum.NoProblem; }));
+                (dataI) =>
+                {
+                    if (dataI.Category == DataI.CategoryType.Commerce || dataI.Category == DataI.CategoryType.ElementClient)
+                        return SeverityValidEnum.NoProblem;
+                    return dataI.drawingDocuments.Count == 0 ? SeverityValidEnum.Medium : SeverityValidEnum.NoProblem;
+                }));
 
             ValidationItems.Add(new ValidationItem("Code = Nom du fichier ?",
                 "Code pièce différent du nom de fichier",
-                (dataI) => { return dataI.PartNumber != System.IO.Path.GetFileNameWithoutExtension(dataI.FullPathName)  ? SeverityValidEnum.High : SeverityValidEnum.NoProblem; }));
+                (dataI) => { return dataI.PartNumber != System.IO.Path.GetFileNameWithoutExtension(dataI.FullPathName) ? SeverityValidEnum.High : SeverityValidEnum.NoProblem; }));
         }
     }
 }

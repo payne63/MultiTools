@@ -147,9 +147,23 @@ namespace SplittableDataGridSAmple.Tabs
             set { _DeepMax = value; OnPropertyChanged(); }
         }
 
-        public ObservableCollection<ValidationItem> getListValidationManager => ValidationManager.Instance.ValidationItems;
+        //public IEnumerable<string> getListValidationManager => ValidationManager.Instance.ValidationItems.Select(x=> x.Description);
 
-        public List<string> getListCategory => Enum.GetNames(typeof(DataI.CategoryType)).ToList();
+        public List<string> GetListValidationManager()
+        {
+            var list = ValidationManager.Instance.ValidationItems.Select(x => x.Description).ToList();
+            list.Add("Aucun Filtre");
+            return list;
+        }
+
+        //public List<string> getListCategory => Enum.GetNames(typeof(DataI.CategoryType)).ToList();
+        public List<string> GetListCategory()
+        {
+            var list = Enum.GetNames(typeof(DataI.CategoryType)).ToList();
+            list.Add("Aucun Filtre");
+            return list;
+        }
+
         private async void treeViewPanelDataI_Drop(object sender, DragEventArgs e)
         {
             if (!e.DataView.Contains(StandardDataFormats.StorageItems))
@@ -238,7 +252,8 @@ namespace SplittableDataGridSAmple.Tabs
         public DataI.CategoryType GetCategoryType(DataI dataISource)
         {
             if (dataISource.FullPathName.IndexOf("composants", StringComparison.OrdinalIgnoreCase) >= 0) return DataI.CategoryType.Commerce;
-            if (dataISource.Description.IndexOf("laser") >= 0) return DataI.CategoryType.Laser;
+            if (dataISource.FullPathName.IndexOf("Elements client", StringComparison.OrdinalIgnoreCase) >= 0) return DataI.CategoryType.ElementClient;
+            if (dataISource.Description.IndexOf("laser", StringComparison.OrdinalIgnoreCase) >= 0) return DataI.CategoryType.Laser;
             if (dataISource.ReferencedDataI.Count > 0)
             {
                 if (dataISource.ReferencedDataI.First().PartNumber[0..7] == dataISource.PartNumber[0..7])
@@ -276,36 +291,29 @@ namespace SplittableDataGridSAmple.Tabs
             DatasI.Clear();
         }
 
-        private void Button_Click_Info(object sender, RoutedEventArgs e)
-        {
-            Trace.WriteLine(DatasI.First().PartNumber);
-            DatasI.First().IsVisibility = Visibility.Collapsed;
-        }
-
-        private void OnFilterDescriptionChanged(object sender, TextChangedEventArgs args)
+        private void OnFilterChanged(object sender, TextChangedEventArgs args)
         {
             if (DatasI.Count == 0) return;
-            RecursiveFilterDescriptionChanged(DatasI.First(),
-                FilterByPartNumber.Text,
-                FilterByDescription.Text,
-                 ComboBoxValidationItem.SelectedItem != null ? (ComboBoxValidationItem.SelectedItem as ValidationItem).Description : "Aucun Filtre");
+            RecursiveFilterChanged(DatasI.First());
         }
-        private void RecursiveFilterDescriptionChanged(DataI dataISource, string filterPartNumber, string filterDescription, string filterCategory)
+        private void RecursiveFilterChanged(DataI dataISource)
         {
-            var filterErrorDetail = ValidationManager.Instance.ValidationItems.FirstOrDefault(x => x.Description == filterCategory).ErrorDescription;
+            var filterPartNumber = FilterByPartNumber.Text;
+            var filterDescription = FilterByDescription.Text;
+            bool FilterCategory = ComboBoxCategory.SelectedItem == null ? true :
+                ((string)ComboBoxCategory.SelectedItem) == "Aucun Filtre" ? true :
+                ((string)ComboBoxCategory.SelectedItem) == dataISource.Category.ToString()? true: false ;
+
+            bool FilterError = ComboBoxValidationItem.SelectedItem == null ? true :
+                ((string)ComboBoxValidationItem.SelectedItem) == "Aucun Filtre" ? true :
+                dataISource.GetErrorsMessage().ToList().Contains((string)ComboBoxValidationItem.SelectedItem) ? true : false;
+
+
             if (dataISource.PartNumber.IndexOf(filterPartNumber, StringComparison.OrdinalIgnoreCase) >= 0 &&
                 dataISource.Description.IndexOf(filterDescription, StringComparison.OrdinalIgnoreCase) >= 0 &&
-                (ComboBoxCategory.SelectedItem != null ? dataISource.Category.ToString() == ComboBoxCategory.SelectedItem.ToString() : true) &&
-                (filterErrorDetail != string.Empty ? dataISource.GetErrorsMessage().Contains(filterErrorDetail) : true))
+                (FilterCategory ) &&
+                (FilterError ))
             {
-                Trace.Write(dataISource.NameFile);
-                Trace.Write("-");
-                Trace.Write(dataISource.PartNumber.IndexOf(filterPartNumber, StringComparison.OrdinalIgnoreCase) >= 0);
-                Trace.Write("-");
-                Trace.Write(dataISource.Description.IndexOf(filterDescription, StringComparison.OrdinalIgnoreCase) >= 0);
-                Trace.Write("-");
-                Trace.Write(filterErrorDetail != string.Empty ? dataISource.GetErrorsMessage().Contains(filterErrorDetail) : true);
-                Trace.WriteLine("");
                 dataISource.IsVisibility = Visibility.Visible;
             }
             else
@@ -315,13 +323,13 @@ namespace SplittableDataGridSAmple.Tabs
             Trace.WriteLine("--------------------------------------------");
             foreach (var child in dataISource.ReferencedDataI)
             {
-                RecursiveFilterDescriptionChanged(child, filterPartNumber, filterDescription, filterCategory);
+                RecursiveFilterChanged(child);
             }
         }
 
         private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            OnFilterDescriptionChanged(sender, null);
+            OnFilterChanged(sender, null);
         }
 
         private void Button_Click_ResetFilter(object sender, RoutedEventArgs e)
@@ -366,5 +374,6 @@ namespace SplittableDataGridSAmple.Tabs
                 InventorManagerHelper.GetActualInventorApp()?.Documents.Open(contextDataI.FullPathName);
             }
         }
+       
     }
 }
