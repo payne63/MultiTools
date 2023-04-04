@@ -122,12 +122,13 @@
                   >
                 <TreeView.ItemTemplate >
                     <DataTemplate x:DataType="base:DataI" >
-                        <TreeViewItem IsExpanded="True" ItemsSource="{x:Bind ReferencedDataI}" CanDrag="False" Visibility="{x:Bind IsVisibility,Mode=OneWay}" >
+                        <TreeViewItem IsExpanded="True" ItemsSource="{x:Bind ReferencedDataI}" 
+                                      CanDrag="False" Visibility="{x:Bind IsVisibility,Mode=OneWay}">
                             <Border  >
-                                <StackPanel Orientation="Vertical">
+                                <StackPanel Orientation="Vertical" >
                                     <StackPanel Orientation="Horizontal">
                                         <Viewbox HorizontalAlignment="Left" Width="{x:Bind GetWidthFromDeep}" Height="20">
-                                            <FontIcon Glyph="{x:Bind GetIconBase()}"  Foreground="{StaticResource AccentTextFillColorTertiaryBrush}"/>
+                                            <FontIcon Glyph="{x:Bind GetIconBase()}"  Foreground="{StaticResource SystemFillColorAttentionBrush}"/>
                                         </Viewbox>
                                         <TextBlock Text="{x:Bind PartNumber}" Width="108" ToolTipService.ToolTip="{x:Bind PartNumber}" Margin="5,0,5,0"/>
                                         <TextBlock Text="{x:Bind Description}" Width="308" ToolTipService.ToolTip="{x:Bind Description}" Margin="5,0,5,0"/>
@@ -143,7 +144,6 @@
                                             Flyout="{x:Bind GetFlyoutDrawings()}"
                                             Foreground="{StaticResource SolidBackgroundFillColorBaseAltBrush}">
                                             <StackPanel Orientation="Horizontal">
-                                                <FontIcon Glyph="&#xEC88;" FontSize="12" Foreground="{StaticResource SolidBackgroundFillColorBaseAltBrush}"/>
                                                 <TextBlock Text="{x:Bind GetNbDrawing}"  Margin="5,0,5,0"
                                                            Foreground="{StaticResource SolidBackgroundFillColorBaseAltBrush}"/>
                                             </StackPanel>
@@ -156,7 +156,6 @@
                                             Flyout="{x:Bind GetFlyoutErrors()}"
                                             Foreground="{StaticResource SolidBackgroundFillColorBaseAltBrush}">
                                             <StackPanel Orientation="Horizontal">
-                                                <FontIcon Glyph="&#xE783;" Foreground="{StaticResource SolidBackgroundFillColorBaseAltBrush}"/>
                                                 <TextBlock Text="{x:Bind GetNbErrorMessage()}"  Margin="5,0,5,0"
                                                            Foreground="{StaticResource SolidBackgroundFillColorBaseAltBrush}"/>
                                             </StackPanel>

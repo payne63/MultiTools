@@ -146,8 +146,8 @@ namespace SplittableDataGridSAmple.Base
             CostCenter = (string)document.PropertySets["Design Tracking Properties"].ItemByPropId[9].Value;
             Deep = deep;
             instanceProjectExplorer.DeepMax = deep > instanceProjectExplorer.DeepMax ? deep : instanceProjectExplorer.DeepMax;
-
-            if (document.DocumentType == DocumentTypeEnum.kPartDocumentObject) return; // si c'est une pièce => pas de recherche d'enfant
+           
+            Category = GetCategoryType();
 
             if (recursive == RecursiveType.True)
             {
@@ -163,6 +163,20 @@ namespace SplittableDataGridSAmple.Base
                     ReferencedDataI.Add(new DataI(referencedDocument, RecursiveType.False));
                 }
             }
+        }
+
+        public CategoryType GetCategoryType()
+        {
+            if (FullPathName.IndexOf("composants", StringComparison.OrdinalIgnoreCase) >= 0) return CategoryType.Commerce;
+            if (FullPathName.IndexOf("Elements client", StringComparison.OrdinalIgnoreCase) >= 0) return CategoryType.ElementClient;
+            if (Description.IndexOf("laser", StringComparison.OrdinalIgnoreCase) >= 0) return CategoryType.Laser;
+            if (ReferencedDataI.Count > 0)
+            {
+                if (ReferencedDataI.First().PartNumber[0..7] == PartNumber[0..7])
+                    return CategoryType.MecanoSoudure;
+                else return CategoryType.Assemblage;
+            }
+            return CategoryType.Inconnu;
         }
 
         public string GetNbErrorMessage()
@@ -219,7 +233,8 @@ namespace SplittableDataGridSAmple.Base
         {
             var menuFlyout = new MenuFlyout() { Placement = Microsoft.UI.Xaml.Controls.Primitives.FlyoutPlacementMode.Bottom };
             foreach (var error in GetErrorsDescriptionMessage())
-                menuFlyout.Items.Add(new MenuFlyoutItem { Text = error, Icon = new FontIcon { Glyph = "\uE783" } });
+                menuFlyout.Items.Add(new MenuFlyoutItem { Text = error, Icon = new FontIcon { Glyph = "\uE783" } }); 
+            if (menuFlyout.Items.Count == 0) menuFlyout.Items.Add(new MenuFlyoutItem { Text = "Pas d'erreur", Icon = new FontIcon { Glyph = "\uE8E1" } });
             return menuFlyout;
         }
 

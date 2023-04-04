@@ -38,6 +38,7 @@ using System.Text;
 using Windows.Storage.FileProperties;
 using AvitechTools.Models;
 using SplittableDataGridSAmple.Models;
+using Inventor;
 
 namespace SplittableDataGridSAmple.Tabs
 {
@@ -76,7 +77,7 @@ namespace SplittableDataGridSAmple.Tabs
                 DetailStackPanel.Children.Add(new Image { Source = renderTargetBitmap });
 
 
-                var document = Document.Create(container =>
+                var document = QuestPDF.Fluent.Document.Create(container =>
                 {
                     container.Page(page =>
                     {
@@ -204,15 +205,17 @@ namespace SplittableDataGridSAmple.Tabs
             DatasI.Clear();
             DeepMax = 0;
             var DataIDrop = appServer.Open((file.Path));
+
             DatasI.Add(new DataI(DataIDrop));
 
-            foreach (var dataIDrawing in GetDrawingsFromPath(Path.GetDirectoryName(file.Path), SearchOption.AllDirectories))
+            foreach (var dataIDrawing in GetDrawingsFromPath(System.IO.Path.GetDirectoryName(file.Path), SearchOption.AllDirectories))
             {
                 _ = RecursiveCheckLink(DatasI[0], dataIDrawing);
             }
-            RecursiveCategoryUpdate(DatasI.First());
+            RecursiveRemoveSpecificChildren(DatasI.First());
             return Task.CompletedTask;
         }
+
 
         private IEnumerable<DataI> GetDrawingsFromPath(string directoryPathOfDrop, SearchOption searchOption)
         {
@@ -239,28 +242,16 @@ namespace SplittableDataGridSAmple.Tabs
             }
             return false;
         }
-
-        private void RecursiveCategoryUpdate(DataI dataISource)
+        private void RecursiveRemoveSpecificChildren(DataI dataISource)
         {
-            dataISource.Category = GetCategoryType(dataISource);
-            foreach (var child in dataISource.ReferencedDataI)
-            {
-                RecursiveCategoryUpdate(child);
-            }
-        }
+            // les pièces ou assemblages du commerce n'ont pas d'enfant
+            if (dataISource.Category == DataI.CategoryType.Commerce) dataISource.ReferencedDataI.Clear(); 
+            // les pièces ou assemblages du commerce n'ont pas d'enfant
+            if (dataISource.Category == DataI.CategoryType.Commerce) dataISource.ReferencedDataI.Clear(); 
+            // les pièces n'ont pas d'enfant (pièce mirroire et dérivée)
+            if (dataISource.DocumentType == DocumentTypeEnum.kPartDocumentObject) dataISource.ReferencedDataI.Clear(); 
 
-        public DataI.CategoryType GetCategoryType(DataI dataISource)
-        {
-            if (dataISource.FullPathName.IndexOf("composants", StringComparison.OrdinalIgnoreCase) >= 0) return DataI.CategoryType.Commerce;
-            if (dataISource.FullPathName.IndexOf("Elements client", StringComparison.OrdinalIgnoreCase) >= 0) return DataI.CategoryType.ElementClient;
-            if (dataISource.Description.IndexOf("laser", StringComparison.OrdinalIgnoreCase) >= 0) return DataI.CategoryType.Laser;
-            if (dataISource.ReferencedDataI.Count > 0)
-            {
-                if (dataISource.ReferencedDataI.First().PartNumber[0..7] == dataISource.PartNumber[0..7])
-                    return DataI.CategoryType.MecanoSoudure;
-                else return DataI.CategoryType.Assemblage;
-            }
-            return DataI.CategoryType.Inconnu;
+            dataISource.ReferencedDataI.ForEach(RecursiveRemoveSpecificChildren);
         }
 
         private void treeViewPanelDataI_DragOver(object sender, DragEventArgs e)
