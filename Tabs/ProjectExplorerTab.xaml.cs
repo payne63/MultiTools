@@ -54,7 +54,6 @@ namespace SplittableDataGridSAmple.Tabs
         }
         #endregion
 
-        I.ApprenticeServerComponent appServer;
         public ProjectExplorerTab()
         {
             this.InitializeComponent();
@@ -148,8 +147,6 @@ namespace SplittableDataGridSAmple.Tabs
             set { _DeepMax = value; OnPropertyChanged(); }
         }
 
-        //public IEnumerable<string> getListValidationManager => ValidationManager.Instance.ValidationItems.Select(x=> x.Description);
-
         public List<string> GetListValidationManager()
         {
             var list = ValidationManager.Instance.ValidationItems.Select(x => x.Description).ToList();
@@ -157,7 +154,6 @@ namespace SplittableDataGridSAmple.Tabs
             return list;
         }
 
-        //public List<string> getListCategory => Enum.GetNames(typeof(DataI.CategoryType)).ToList();
         public List<string> GetListCategory()
         {
             var list = Enum.GetNames(typeof(DataI.CategoryType)).ToList();
@@ -187,13 +183,6 @@ namespace SplittableDataGridSAmple.Tabs
             if (!file.Name.EndsWith(".ipt") || !file.Name.EndsWith(".iam"))
             {
                 IsInterfaceEnabled = false;
-                if (appServer != null)
-                {
-                    appServer.Close();
-                    appServer = null;
-                    GC.Collect();
-                }
-                appServer = new I.ApprenticeServerComponent();
                 await LoadData(file);
                 IsInterfaceEnabled = true;
             }
@@ -204,9 +193,8 @@ namespace SplittableDataGridSAmple.Tabs
             DatasI.FirstOrDefault()?.RecursiveClearData();
             DatasI.Clear();
             DeepMax = 0;
-            var DataIDrop = appServer.Open((file.Path));
 
-            DatasI.Add(new DataI(DataIDrop));
+            DatasI.Add(new DataI(file.Path));
 
             foreach (var dataIDrawing in GetDrawingsFromPath(System.IO.Path.GetDirectoryName(file.Path), SearchOption.AllDirectories))
             {
@@ -216,13 +204,12 @@ namespace SplittableDataGridSAmple.Tabs
             return Task.CompletedTask;
         }
 
-
         private IEnumerable<DataI> GetDrawingsFromPath(string directoryPathOfDrop, SearchOption searchOption)
         {
             return Directory.GetFiles(directoryPathOfDrop, "*.idw", searchOption)
                 .ToList()
-                .Where(x => !x.Contains("OldVersions"))
-                .Select(x => new DataI(appServer.Open(x), DataI.RecursiveType.OneTime));
+                .Where(pathDrawing => !pathDrawing.Contains("OldVersions"))
+                .Select(pathDrawing => new DataI(pathDrawing, DataI.RecursiveType.OneTime));
         }
 
         private bool RecursiveCheckLink(DataI dataISource, DataI linkDraw)
@@ -232,7 +219,7 @@ namespace SplittableDataGridSAmple.Tabs
             {
                 if (dataISource.FullPathName == linkPart.FullPathName)
                 {
-                    dataISource.drawingDocuments.Add(new DataI(linkDraw.Document, DataI.RecursiveType.False));
+                    dataISource.drawingDocuments.Add(new DataI(linkDraw.FullPathName, DataI.RecursiveType.False));
                     return true;
                 }
             }
@@ -245,11 +232,11 @@ namespace SplittableDataGridSAmple.Tabs
         private void RecursiveRemoveSpecificChildren(DataI dataISource)
         {
             // les pièces ou assemblages du commerce n'ont pas d'enfant
-            if (dataISource.Category == DataI.CategoryType.Commerce) dataISource.ReferencedDataI.Clear(); 
+            if (dataISource.Category == DataI.CategoryType.Commerce) dataISource.ReferencedDataI.Clear();
             // les pièces ou assemblages du commerce n'ont pas d'enfant
-            if (dataISource.Category == DataI.CategoryType.Commerce) dataISource.ReferencedDataI.Clear(); 
+            if (dataISource.Category == DataI.CategoryType.Commerce) dataISource.ReferencedDataI.Clear();
             // les pièces n'ont pas d'enfant (pièce mirroire et dérivée)
-            if (dataISource.DocumentType == DocumentTypeEnum.kPartDocumentObject) dataISource.ReferencedDataI.Clear(); 
+            if (dataISource.DocumentType == DocumentTypeEnum.kPartDocumentObject) dataISource.ReferencedDataI.Clear();
 
             dataISource.ReferencedDataI.ForEach(RecursiveRemoveSpecificChildren);
         }
@@ -272,13 +259,6 @@ namespace SplittableDataGridSAmple.Tabs
 
         private void Button_Click_RemoveData(object sender, RoutedEventArgs e)
         {
-            if (appServer != null)
-            {
-                appServer.Close();
-                appServer = null;
-            }
-            GC.Collect();
-
             DatasI.Clear();
         }
 
@@ -293,7 +273,7 @@ namespace SplittableDataGridSAmple.Tabs
             var filterDescription = FilterByDescription.Text;
             bool FilterCategory = ComboBoxCategory.SelectedItem == null ? true :
                 ((string)ComboBoxCategory.SelectedItem) == "Aucun Filtre" ? true :
-                ((string)ComboBoxCategory.SelectedItem) == dataISource.Category.ToString()? true: false ;
+                ((string)ComboBoxCategory.SelectedItem) == dataISource.Category.ToString() ? true : false;
 
             bool FilterError = ComboBoxValidationItem.SelectedItem == null ? true :
                 ((string)ComboBoxValidationItem.SelectedItem) == "Aucun Filtre" ? true :
@@ -302,8 +282,8 @@ namespace SplittableDataGridSAmple.Tabs
 
             if (dataISource.PartNumber.IndexOf(filterPartNumber, StringComparison.OrdinalIgnoreCase) >= 0 &&
                 dataISource.Description.IndexOf(filterDescription, StringComparison.OrdinalIgnoreCase) >= 0 &&
-                (FilterCategory ) &&
-                (FilterError ))
+                (FilterCategory) &&
+                (FilterError))
             {
                 dataISource.IsVisibility = Visibility.Visible;
             }
@@ -365,6 +345,6 @@ namespace SplittableDataGridSAmple.Tabs
                 InventorManagerHelper.GetActualInventorApp()?.Documents.Open(contextDataI.FullPathName);
             }
         }
-       
+
     }
 }

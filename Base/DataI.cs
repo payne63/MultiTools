@@ -43,6 +43,20 @@ namespace SplittableDataGridSAmple.Base
 
         public ValidationManager Validation { get { return ValidationManager.Instance; } }
 
+        private static I.ApprenticeServerComponent AppServer;
+
+        private I.ApprenticeServerComponent GetAppServer
+        {
+            get
+            {
+                if (AppServer == null)
+                {
+                    AppServer = new ApprenticeServerComponent();
+                }
+                return AppServer;
+            }
+        }
+
         private Visibility _Visibility = Visibility.Visible;
         public Visibility IsVisibility
         {
@@ -99,8 +113,8 @@ namespace SplittableDataGridSAmple.Base
         public int Deep;
         public int GetWidthFromDeep => (30 + instanceProjectExplorer._DeepMax * 15) - Deep * 15;
         public string DeepS => Deep.ToString();
-        public string FullPathName => Document.FullDocumentName;
-        public I.DocumentTypeEnum DocumentType => Document.DocumentType;
+        public string FullPathName ;
+        public I.DocumentTypeEnum DocumentType;
 
         public List<DataI> ReferencedDataI = new();
         public ObservableCollection<DataI> drawingDocuments { get; set; } = new();
@@ -135,10 +149,13 @@ namespace SplittableDataGridSAmple.Base
         }
 
 
-        public DataI(I.ApprenticeServerDocument document, RecursiveType recursive = RecursiveType.True, int deep = 0)
+        public DataI(string fullPathDocument, RecursiveType recursive = RecursiveType.True, int deep = 0)
         {
+            I.ApprenticeServerDocument document = GetAppServer.Open(fullPathDocument);
             Document = document;
             NameFile = document.DisplayName;
+            FullPathName = Document.FullDocumentName;
+            DocumentType = Document.DocumentType;
             Author = (string)document.PropertySets["Inventor Summary Information"].ItemByPropId[4].Value;
             Project = (string)document.PropertySets["Design Tracking Properties"].ItemByPropId[7].Value;
             Description = (string)document.PropertySets["Design Tracking Properties"].ItemByPropId[29].Value;
@@ -146,21 +163,23 @@ namespace SplittableDataGridSAmple.Base
             CostCenter = (string)document.PropertySets["Design Tracking Properties"].ItemByPropId[9].Value;
             Deep = deep;
             instanceProjectExplorer.DeepMax = deep > instanceProjectExplorer.DeepMax ? deep : instanceProjectExplorer.DeepMax;
-           
+            
             Category = GetCategoryType();
+            var referencedDocuments = document.ReferencedDocuments.Cast<ApprenticeServerDocument>().Select(rd => rd.FullFileName).ToList();
+            GetAppServer.Close();
 
             if (recursive == RecursiveType.True)
             {
-                foreach (I.ApprenticeServerDocument referencedDocument in document.ReferencedDocuments)
+                foreach (var fullFileName in referencedDocuments)
                 {
-                    ReferencedDataI.Add(new DataI(referencedDocument, RecursiveType.True, deep + 1));
+                    ReferencedDataI.Add(new DataI(fullFileName, RecursiveType.True, deep + 1));
                 }
             }
             if (recursive == RecursiveType.OneTime)
             {
-                foreach (I.ApprenticeServerDocument referencedDocument in document.ReferencedDocuments)
+                foreach (var fullFileName in referencedDocuments)
                 {
-                    ReferencedDataI.Add(new DataI(referencedDocument, RecursiveType.False));
+                    ReferencedDataI.Add(new DataI(fullFileName, RecursiveType.False));
                 }
             }
         }
@@ -233,7 +252,7 @@ namespace SplittableDataGridSAmple.Base
         {
             var menuFlyout = new MenuFlyout() { Placement = Microsoft.UI.Xaml.Controls.Primitives.FlyoutPlacementMode.Bottom };
             foreach (var error in GetErrorsDescriptionMessage())
-                menuFlyout.Items.Add(new MenuFlyoutItem { Text = error, Icon = new FontIcon { Glyph = "\uE783" } }); 
+                menuFlyout.Items.Add(new MenuFlyoutItem { Text = error, Icon = new FontIcon { Glyph = "\uE783" } });
             if (menuFlyout.Items.Count == 0) menuFlyout.Items.Add(new MenuFlyoutItem { Text = "Pas d'erreur", Icon = new FontIcon { Glyph = "\uE8E1" } });
             return menuFlyout;
         }
