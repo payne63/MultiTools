@@ -39,12 +39,17 @@ using Windows.Storage.FileProperties;
 using AvitechTools.Models;
 using SplittableDataGridSAmple.Models;
 using Inventor;
+using Microsoft.VisualBasic.FileIO;
+using RtfPipe.Tokens;
+using System.Threading;
 
 namespace SplittableDataGridSAmple.Tabs
 {
     public sealed partial class ProjectExplorerTab : TabViewItem, Interfaces.IInitTab, INotifyPropertyChanged
     {
         public ObservableCollection<DataI> DatasI { get; private set; } = new();
+
+        private FileSystemWatcher Watcher;
 
         #region PropertyChanged
         public event PropertyChangedEventHandler PropertyChanged;
@@ -126,26 +131,58 @@ namespace SplittableDataGridSAmple.Tabs
             DetailStackPanel.Children.Add(new TextBlock { Text = data.Code });
             var s = new SymbolIcon();
         }
-        public bool _IsInterfaceEnabled = true;
+        private bool _IsInterfaceEnabled = true;
         public bool IsInterfaceEnabled
         {
             get { return _IsInterfaceEnabled; }
             set { _IsInterfaceEnabled = value; OnPropertyChanged(); }
         }
 
+        private bool _IsAutoUpdate;
+        public bool IsAutoUpdate
+        {
+            get { return _IsAutoUpdate; }
+            set
+            {
+                _IsAutoUpdate = value;
+                OnPropertyChanged();
+            }
+        }
+
+
         public void InitTab()
         {
             DataI.instanceProjectExplorer = this;
-
             KeyDown += ProjectExplorerElements_KeyDown;
         }
 
-        public int _DeepMax;
+        private int _DeepMax;
         public int DeepMax
         {
             get { return _DeepMax; }
             set { _DeepMax = value; OnPropertyChanged(); }
         }
+
+        private IEnumerable<DataI> _DrawingsFindInRoot;
+
+        public IEnumerable<DataI> DrawingsFindInRoot
+        {
+            get
+            {
+                if (DatasI == null) return null;
+                if (_DrawingsFindInRoot == null)
+                {
+                    var folderPathRoot = System.IO.Path.GetDirectoryName(DatasI.First().FullPathName);
+                    _DrawingsFindInRoot = Directory.GetFiles(folderPathRoot, "*.idw", System.IO.SearchOption.AllDirectories)
+                        .ToList()
+                        .Where(pathDrawing => !pathDrawing.Contains("OldVersions")) // remove drawing from oldVersions folder
+                        .Select(pathDrawing => new DataI(pathDrawing, null, DataI.RecursiveType.OneTime));
+                }
+                return _DrawingsFindInRoot;
+            }
+            set { _DrawingsFindInRoot = value; }
+        }
+
 
         public List<string> GetListValidationManager()
         {
@@ -174,58 +211,81 @@ namespace SplittableDataGridSAmple.Tabs
                 OpenSimpleMessage("Déposer 1 seul fichier à la fois");
                 return;
             }
-            var file = items[0];
-            if (file.Name.EndsWith(".idw"))
+            var storageItemDrop = items[0];
+            if (storageItemDrop.Name.EndsWith(".idw"))
             {
                 OpenSimpleMessage("Déposer un assemblage ou une pièce, mais pas de plan");
                 return;
             }
-            if (!file.Name.EndsWith(".ipt") || !file.Name.EndsWith(".iam"))
+            if (!storageItemDrop.Name.EndsWith(".ipt") || !storageItemDrop.Name.EndsWith(".iam"))
             {
                 IsInterfaceEnabled = false;
-                await LoadData(file);
+                InitWatcher(System.IO.Path.GetDirectoryName(storageItemDrop.Path));
+                await LoadData(storageItemDrop.Path);
                 IsInterfaceEnabled = true;
             }
         }
 
-        private Task LoadData(IStorageItem file)
+        private void InitWatcher(string folderPathToWatch)
         {
+            Watcher = new FileSystemWatcher(folderPathToWatch)
+            {
+                IncludeSubdirectories = true,
+                EnableRaisingEvents = true,
+                NotifyFilter = NotifyFilters.LastWrite,
+            };
+            Watcher.Changed += Watcher_Changed;
+        }
+
+        private void Watcher_Changed(object sender, FileSystemEventArgs e)
+        {
+            if (!_IsAutoUpdate) return;
+            //Trace.WriteLine(e.FullPath);
+            var extensionOfChangeFile = System.IO.Path.GetExtension(e.FullPath);
+            if (extensionOfChangeFile == ".ipt" || extensionOfChangeFile == ".iam" || extensionOfChangeFile == ".idw")
+                DispatcherQueue.TryEnqueue( delegate ()
+                {
+                    Task.Delay(100).Wait();
+                    UpdateLocalDocument(DataI.linkFullPathToData[e.FullPath]);
+                });
+        }
+
+        private Task LoadData(string PrimaryFullPath)
+        {
+            DataI.linkFullPathToData.Clear();
             DatasI.FirstOrDefault()?.RecursiveClearData();
             DatasI.Clear();
             DeepMax = 0;
 
-            DatasI.Add(new DataI(file.Path));
-
-            foreach (var dataIDrawing in GetDrawingsFromPath(System.IO.Path.GetDirectoryName(file.Path), SearchOption.AllDirectories))
-            {
-                _ = RecursiveCheckLink(DatasI[0], dataIDrawing);
-            }
+            DatasI.Add(new DataI(PrimaryFullPath, null));
+            CheckLinkDraw();
             RecursiveRemoveSpecificChildren(DatasI.First());
             return Task.CompletedTask;
         }
 
-        private IEnumerable<DataI> GetDrawingsFromPath(string directoryPathOfDrop, SearchOption searchOption)
+        private void CheckLinkDraw()
         {
-            return Directory.GetFiles(directoryPathOfDrop, "*.idw", searchOption)
-                .ToList()
-                .Where(pathDrawing => !pathDrawing.Contains("OldVersions"))
-                .Select(pathDrawing => new DataI(pathDrawing, DataI.RecursiveType.OneTime));
+            foreach (var dataIDrawing in DrawingsFindInRoot)
+            {
+                _ = RecursiveCheckLinkDraw(DatasI[0], dataIDrawing);
+            }
         }
 
-        private bool RecursiveCheckLink(DataI dataISource, DataI linkDraw)
+
+        private bool RecursiveCheckLinkDraw(DataI dataISource, DataI linkDraw)
         {
             if (linkDraw == null || dataISource == null) throw new ArgumentNullException("gros bug");
             foreach (var linkPart in linkDraw.ReferencedDataI)
             {
                 if (dataISource.FullPathName == linkPart.FullPathName)
                 {
-                    dataISource.drawingDocuments.Add(new DataI(linkDraw.FullPathName, DataI.RecursiveType.False));
+                    dataISource.drawingDocuments.Add(new DataI(linkDraw.FullPathName, null, DataI.RecursiveType.False));
                     return true;
                 }
             }
             foreach (var child in dataISource.ReferencedDataI)
             {
-                RecursiveCheckLink(child, linkDraw);
+                RecursiveCheckLinkDraw(child, linkDraw);
             }
             return false;
         }
@@ -238,7 +298,7 @@ namespace SplittableDataGridSAmple.Tabs
             // les pièces n'ont pas d'enfant (pièce mirroire et dérivée)
             if (dataISource.DocumentType == DocumentTypeEnum.kPartDocumentObject) dataISource.ReferencedDataI.Clear();
 
-            dataISource.ReferencedDataI.ForEach(RecursiveRemoveSpecificChildren);
+            dataISource.ReferencedDataI.ToList().ForEach(RecursiveRemoveSpecificChildren);
         }
 
         private void treeViewPanelDataI_DragOver(object sender, DragEventArgs e)
@@ -346,5 +406,30 @@ namespace SplittableDataGridSAmple.Tabs
             }
         }
 
+        private void Button_Click_UpdateAllData(object sender, RoutedEventArgs e)
+        {
+            if (DatasI.Count == 0) return;
+            var PrimaryFullPath = DatasI.First().FullPathName;
+            DatasI.Clear();
+            LoadData(PrimaryFullPath);
+            OnFilterChanged(sender, null);
+
+        }
+        private void Button_Click_UpdateLocalDocument(object sender, RoutedEventArgs e)
+        {
+            var data = ((FrameworkElement)sender).DataContext as DataI;
+            if (data == null) return;
+            UpdateLocalDocument(data);
+        }
+
+        private void UpdateLocalDocument(DataI data)
+        {
+            var index = data.Parent.ReferencedDataI.IndexOf(data);
+            data.Parent.ReferencedDataI.Remove(data);
+            DataI.linkFullPathToData.Remove(data.FullPathName);
+            data.Parent.ReferencedDataI.Insert(index, new DataI(data.FullPathName, data.Parent, DataI.RecursiveType.True, data.Deep));
+            CheckLinkDraw();
+            RecursiveRemoveSpecificChildren(DatasI.First());
+        }
     }
 }

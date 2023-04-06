@@ -23,6 +23,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.FileProperties;
+using static System.Collections.Specialized.BitVector32;
 using I = Inventor;
 
 namespace SplittableDataGridSAmple.Base
@@ -30,6 +31,8 @@ namespace SplittableDataGridSAmple.Base
     public class DataI : INotifyPropertyChanged
     {
         public static ProjectExplorerTab instanceProjectExplorer;
+
+        public static Dictionary<string, DataI> linkFullPathToData = new();
         public enum RecursiveType { True, False, OneTime }
         public enum CategoryType { Inconnu, Laser, Commerce, Profile, MecanoSoudure, Assemblage, ElementClient }
 
@@ -56,6 +59,8 @@ namespace SplittableDataGridSAmple.Base
                 return AppServer;
             }
         }
+
+        public DataI Parent;
 
         private Visibility _Visibility = Visibility.Visible;
         public Visibility IsVisibility
@@ -111,12 +116,14 @@ namespace SplittableDataGridSAmple.Base
         public static int DeepMax2;
 
         public int Deep;
-        public int GetWidthFromDeep => (30 + instanceProjectExplorer._DeepMax * 15) - Deep * 15;
+        public int GetWidthFromDeep => (30 + instanceProjectExplorer.DeepMax * 15) - Deep * 15;
         public string DeepS => Deep.ToString();
-        public string FullPathName ;
+
+        public string FullPathName;
+
         public I.DocumentTypeEnum DocumentType;
 
-        public List<DataI> ReferencedDataI = new();
+        public ObservableCollection<DataI> ReferencedDataI = new();
         public ObservableCollection<DataI> drawingDocuments { get; set; } = new();
         public int GetNbDrawing => drawingDocuments.Count;
 
@@ -149,8 +156,9 @@ namespace SplittableDataGridSAmple.Base
         }
 
 
-        public DataI(string fullPathDocument, RecursiveType recursive = RecursiveType.True, int deep = 0)
+        public DataI(string fullPathDocument, DataI parent, RecursiveType recursive = RecursiveType.True, int deep = 0)
         {
+            Parent = parent;
             I.ApprenticeServerDocument document = GetAppServer.Open(fullPathDocument);
             Document = document;
             NameFile = document.DisplayName;
@@ -163,23 +171,26 @@ namespace SplittableDataGridSAmple.Base
             CostCenter = (string)document.PropertySets["Design Tracking Properties"].ItemByPropId[9].Value;
             Deep = deep;
             instanceProjectExplorer.DeepMax = deep > instanceProjectExplorer.DeepMax ? deep : instanceProjectExplorer.DeepMax;
-            
+
             Category = GetCategoryType();
             var referencedDocuments = document.ReferencedDocuments.Cast<ApprenticeServerDocument>().Select(rd => rd.FullFileName).ToList();
             GetAppServer.Close();
 
-            if (recursive == RecursiveType.True)
+            if (!linkFullPathToData.ContainsKey(fullPathDocument))
+                linkFullPathToData.Add(fullPathDocument, this);
+
+            if (recursive == RecursiveType.True) // Used for Add childrens
             {
                 foreach (var fullFileName in referencedDocuments)
                 {
-                    ReferencedDataI.Add(new DataI(fullFileName, RecursiveType.True, deep + 1));
+                    ReferencedDataI.Add(new DataI(fullFileName, this, RecursiveType.True, deep + 1));
                 }
             }
-            if (recursive == RecursiveType.OneTime)
+            if (recursive == RecursiveType.OneTime) // Used for Add Drawings
             {
                 foreach (var fullFileName in referencedDocuments)
                 {
-                    ReferencedDataI.Add(new DataI(fullFileName, RecursiveType.False));
+                    ReferencedDataI.Add(new DataI(fullFileName, this, RecursiveType.False));
                 }
             }
         }
@@ -275,5 +286,8 @@ namespace SplittableDataGridSAmple.Base
             }
             ReferencedDataI.Clear();
         }
+
+        
+
     }
 }
