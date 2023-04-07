@@ -138,7 +138,7 @@ namespace SplittableDataGridSAmple.Tabs
             set { _IsInterfaceEnabled = value; OnPropertyChanged(); }
         }
 
-        private bool _IsAutoUpdate;
+        private bool _IsAutoUpdate = true;
         public bool IsAutoUpdate
         {
             get { return _IsAutoUpdate; }
@@ -239,12 +239,19 @@ namespace SplittableDataGridSAmple.Tabs
 
         private void Watcher_Changed(object sender, FileSystemEventArgs e)
         {
+
+            Trace.WriteLine(e.FullPath);
+            Trace.WriteLine(e.Name);
+            Trace.WriteLine(e.ChangeType);
+            Trace.WriteLine(DateTime.Now.Millisecond.ToString());
             if (!_IsAutoUpdate) return;
-            //Trace.WriteLine(e.FullPath);
+            if (e.FullPath.Contains("OldVersions")) return;
+            if (e.Name.Contains("newVer")) return; // TRICK INVENTOR ON SAVE FILE
             var extensionOfChangeFile = System.IO.Path.GetExtension(e.FullPath);
             if (extensionOfChangeFile == ".ipt" || extensionOfChangeFile == ".iam" || extensionOfChangeFile == ".idw")
-                DispatcherQueue.TryEnqueue( delegate ()
+                DispatcherQueue.TryEnqueue(delegate ()
                 {
+                    if(!DataI.linkFullPathToData.ContainsKey(e.FullPath)) return;
                     Task.Delay(100).Wait();
                     UpdateLocalDocument(DataI.linkFullPathToData[e.FullPath]);
                 });
@@ -412,7 +419,7 @@ namespace SplittableDataGridSAmple.Tabs
             var PrimaryFullPath = DatasI.First().FullPathName;
             DatasI.Clear();
             LoadData(PrimaryFullPath);
-            OnFilterChanged(sender, null);
+            OnFilterChanged(null, null);
 
         }
         private void Button_Click_UpdateLocalDocument(object sender, RoutedEventArgs e)
@@ -424,6 +431,11 @@ namespace SplittableDataGridSAmple.Tabs
 
         private void UpdateLocalDocument(DataI data)
         {
+            if (data.Parent == null)
+            {
+                Button_Click_UpdateAllData(null,null);
+                return;
+            }
             var index = data.Parent.ReferencedDataI.IndexOf(data);
             data.Parent.ReferencedDataI.Remove(data);
             DataI.linkFullPathToData.Remove(data.FullPathName);

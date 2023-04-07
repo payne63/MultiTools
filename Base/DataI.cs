@@ -123,8 +123,10 @@ namespace SplittableDataGridSAmple.Base
 
         public I.DocumentTypeEnum DocumentType;
 
+        public IEnumerable<DataI> GetReferencedDataI => ReferencedDataI;
         public ObservableCollection<DataI> ReferencedDataI = new();
-        public ObservableCollection<DataI> drawingDocuments { get; set; } = new();
+        public IEnumerable<DataI> GetdrawingDocument => drawingDocuments;
+        public ObservableCollection<DataI> drawingDocuments  = new();
         public int GetNbDrawing => drawingDocuments.Count;
 
         private string _PartNumber;

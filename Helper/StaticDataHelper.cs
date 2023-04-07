@@ -33,7 +33,7 @@ namespace SplittableDataGridSAmple.Helper
             }
         }
 
-        private static async void SaveContacts()
+        public static async void SaveContacts()
             => await JsonHelper.SaveArray<Base.Contact>(_Allcontacts.ToArray(), MainWindow.ContactsDataPath);
 
 
@@ -46,7 +46,7 @@ namespace SplittableDataGridSAmple.Helper
             }
         }
 
-        private static async void SaveCompanys()
+        public static async void SaveCompanys()
             => await JsonHelper.SaveArray<Base.Company>(_AllCompany.ToArray(), MainWindow.CompanyDataPath);
 
     }

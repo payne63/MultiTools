@@ -19,7 +19,7 @@
     </TabViewItem.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="600"/>
+            <ColumnDefinition Width="625"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
@@ -43,12 +43,11 @@
                   BorderThickness="2"
                   BorderBrush="{StaticResource AccentAcrylicBackgroundFillColorBaseBrush}"
                   CornerRadius="5"
-                  SelectionMode="Single"
+                  SelectionMode="Multiple"
                   ShowsScrollingPlaceholders="True"
                   Margin="10,10,10,10"
                   AllowDrop="True"
                   DragItemsStarting="Source_DragItemsStarting"
-                  
                   >
             <ListView.ItemTemplate >
                 <DataTemplate x:DataType="base:Company">
@@ -102,7 +101,7 @@
                   SelectionMode="Single"
                   CanDragItems="True"
                   ShowsScrollingPlaceholders="True"
-                  CornerRadius="5"
+                  CornerRadius="5" 
                   Margin="0,10,10,10">
             <ListView.ItemTemplate >
                 <DataTemplate x:DataType="base:Contact">
@@ -126,23 +125,23 @@
                             </Viewbox>
 
                             <StackPanel Orientation="Horizontal" Grid.Column="1" >
-                                <TextBlock Grid.Column="1"
-                                   Text="{x:Bind Name ,Mode=OneWay}" DoubleTapped="ListViewItemContact_DoubleTapped" 
+                                <TextBlock Grid.Column="1" 
+                                   Text="{x:Bind Name ,Mode=TwoWay}" DoubleTapped="ListViewItemContact_DoubleTapped" 
                                    Style="{ThemeResource BaseTextBlockStyle}"
-                                   Margin="12,6,0,0"/>
+                                   Margin="12,6,3,0"/>
                                 <TextBlock Grid.Column="1"
-                                   Text="{x:Bind PreName}" 
+                                   Text="{x:Bind PreName}" DoubleTapped="ListViewItemContact_DoubleTapped" 
                                    Style="{ThemeResource BaseTextBlockStyle}"
                                    Margin="6,6,0,0"/>
                             </StackPanel>
-                            <TextBlock Grid.Column="1"
+                            <TextBlock Grid.Column="1" VerticalAlignment="Center"
                                    Grid.Row="1"
-                                   Text="{x:Bind JobDescription}"
+                                   Text="{x:Bind JobDescription}" DoubleTapped="ListViewItemContact_DoubleTapped" 
                                    Style="{ThemeResource BodyTextBlockStyle}"
                                    Margin="12,0,0,6"/>
                             <TextBlock Grid.Column="2"
-                                   Grid.Row="0"
-                                   Text="{x:Bind Mail ,Converter={StaticResource StringMailFormatConverterKey}}"
+                                   Grid.Row="0" DoubleTapped="ListViewItemContact_DoubleTapped" 
+                                   Text="{x:Bind Mail ,Converter={StaticResource StringMailFormatConverterKey}}" 
                                    Margin="12,6,0,0"/>
                             <DropDownButton Grid.Column="2" Grid.Row="1"
                                    Margin="12,6,0,0">
@@ -162,13 +161,13 @@
                                 <SymbolIcon Symbol="Phone"/>
                                 <TextBlock Text="1" Margin="2,0,5,0" VerticalAlignment="Center" FontSize="15"/>
                                 <TextBlock Text="{x:Bind PhoneNumber, Converter={StaticResource StringPhoneFormatConverterKey}}"
-                                       Margin="12,6,0,0"/>
+                                       Margin="12,6,0,0" DoubleTapped="ListViewItemContact_DoubleTapped" />
                             </StackPanel>
                             <StackPanel Orientation="Horizontal" Grid.Column="3" Grid.Row="1">
                                 <SymbolIcon Symbol="Phone"/>
                                 <TextBlock Text="2" Margin="2,0,5,0"  VerticalAlignment="Center" FontSize="15"/>
                                 <TextBlock Text="{x:Bind PhoneNumber2, Converter={StaticResource StringPhoneFormatConverterKey}}" 
-                                       Margin="12,6,0,0"/>
+                                       Margin="12,6,0,0" DoubleTapped="ListViewItemContact_DoubleTapped" />
                             </StackPanel>
                             <StackPanel Orientation="Horizontal" Grid.RowSpan="2" Grid.Column="4" HorizontalAlignment="Right">
                                 <Button  ToolTipService.ToolTip="Edition" Margin="3" Click="Button_Click_ContactAskToUpdate">

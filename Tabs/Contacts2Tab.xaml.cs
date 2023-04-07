@@ -46,12 +46,21 @@ namespace SplittableDataGridSAmple.Tabs
             this.InitializeComponent();
             EditTipTextBox.KeyDown += delegate (object sender, KeyRoutedEventArgs e)
             {
-                var contact =  ((FrameworkElement)sender).DataContext as Contact;
+                Trace.WriteLine("sender; "+sender);
+                var EditTipTextBox =  sender as TextBox;
+                var doubleTappedTextBlock = EditTipTextBox.DataContext as TextBlock;
                 if (e.Key == Windows.System.VirtualKey.Enter)
                 {
-                    contact.Name = EditTipTextBox.Text;
+                    if (doubleTappedTextBlock.Text != EditTipTextBox.Text)
+                    {
+                        doubleTappedTextBlock.Text = EditTipTextBox.Text;
+                        //var be = doubleTappedTextBlock.GetBindingExpression(TextBox.TextProperty);
+                        //Trace.WriteLine(be.ToString());
+                        //if (be != null) be.UpdateSource();
+                        StaticDataHelper.SaveContacts();
+                    }
                     EditTip.IsOpen = false;
-                    IsEnabled = false;
+                    EditTip.IsEnabled = false;
                     return;
                 }
             };
@@ -227,19 +236,16 @@ namespace SplittableDataGridSAmple.Tabs
         private async void ListViewItemContact_DoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
         {
             var contact = ((FrameworkElement)sender).DataContext as Contact;
-            EditTip.Target = ((FrameworkElement)sender);
-            EditTipTextBox.Text = contact.Name;
-            //EditTipTextBox.KeyDown += delegate (object sender, KeyRoutedEventArgs e)
-            //{
-            //    if (e.Key == Windows.System.VirtualKey.Enter)
-            //    {
-            //        contact.Name = EditTipTextBox.Text;
-            //        EditTip.IsOpen = false;
-            //        IsEnabled = false;
-            //        return;
-            //    }
-            //};
-            IsEnabled = true;
+            var textBlockDoubleTapped = sender as TextBlock;
+            if (textBlockDoubleTapped == null) return;
+            EditTipTextBox.Text = textBlockDoubleTapped.Text;//contact.Name;
+            EditTip.Target = ((TextBlock)sender);
+            EditTipTextBox.DataContext = textBlockDoubleTapped;
+            var binding = new Binding();
+            binding.Mode = BindingMode.TwoWay;
+            binding.Source = contact.Name;
+            EditTipTextBox.SetBinding(TextBox.TextProperty, binding);
+            EditTip.IsEnabled = true;
             EditTip.IsOpen = true;
             await Task.Delay(100);
             EditTipTextBox.Focus(FocusState.Programmatic);

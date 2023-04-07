@@ -48,9 +48,10 @@
                         <TextBlock Text="(Assemblage uniquement)" HorizontalAlignment="Center"/>
                     </StackPanel>
                 </Button>
-                <StackPanel Orientation="Horizontal" Margin="10,0,10,0">
-                    <TextBlock Text="Mise à jour auto" VerticalAlignment="Center"/>
-                    <CheckBox IsChecked="{x:Bind IsAutoUpdate, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Margin="10" VerticalAlignment="Center"/>
+                <StackPanel Orientation="Horizontal" Margin="10,0,10,0" HorizontalAlignment="Stretch">
+                    <TextBlock Text="Mise à jour auto" VerticalAlignment="Center" Margin="30,0,0,0"/>
+                    <CheckBox IsChecked="{x:Bind IsAutoUpdate, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                              Margin="10" VerticalAlignment="Center"/>
                 </StackPanel>
                     
                 <Button Margin="10" 
