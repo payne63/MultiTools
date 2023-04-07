@@ -8,22 +8,28 @@
     mc:Ignorable="d"
     Click="Button_Click" MinWidth="370"  CornerRadius="15" Margin="10" MinHeight="90"
     Background="{ThemeResource AccentAcrylicBackgroundFillColorDefaultBrush}" >
+    <Grid>
 
-    <StackPanel Orientation="Horizontal" Margin="0,6,12,6" HorizontalAlignment="Stretch" >
-        <Viewbox MaxHeight="60" MaxWidth="60" HorizontalAlignment="Stretch">
-            <FontIcon Glyph="{x:Bind GlyphsIconTab}"/>
-        </Viewbox>
-        <StackPanel Margin="20,0,0,0" HorizontalAlignment="Stretch">
-            <TextBlock Text="{x:Bind Title}" 
+        <StackPanel Orientation="Horizontal" Margin="0,6,12,6" HorizontalAlignment="Stretch" >
+            <Viewbox MaxHeight="60" MaxWidth="60" HorizontalAlignment="Stretch">
+                <FontIcon Glyph="{x:Bind GlyphsIconTab}"/>
+
+            </Viewbox>
+            <StackPanel Margin="20,0,0,0" HorizontalAlignment="Stretch">
+                <TextBlock Text="{x:Bind Title}" 
                        Style="{StaticResource SubtitleTextBlockStyle}"
                        TextWrapping="Wrap"
                        TextTrimming="WordEllipsis"
                        />
-            <TextBlock Text="{x:Bind Description}" 
+                <TextBlock Text="{x:Bind Description}" 
                        TextWrapping="Wrap" 
                        HorizontalAlignment="Left" 
                        Style="{StaticResource BodyTextBlockStyle}"
                        Width="200"/>
+            </StackPanel>
         </StackPanel>
-    </StackPanel>
+        <TextBlock Text="BETA VERSION" Rotation="45" 
+                   Foreground="{StaticResource SystemFillColorCritical}"
+                   FontWeight="Bold" Visibility="{x:Bind isBetaVersion}"/>
+    </Grid>
 </Button>

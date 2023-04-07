@@ -41,9 +41,9 @@ namespace SplittableDataGridSAmple.Tabs
         {
             JobElements.Add(new NewTabButton(typeof(Tabs.WelcomeTab), "Page d'Acceuil"));
             JobElements.Add(new NewTabButton(typeof(Tabs.ProjectExplorerTab), "Exploration d'un assemblage"));
-            JobElements.Add(new NewTabButton(typeof(Tabs.ParameterTab), "Réglage des options"));
-            JobElements.Add(new NewTabButton(typeof(Tabs.ContactsTab), "Contacts"));
-            JobElements.Add(new NewTabButton(typeof(Tabs.Contacts2Tab), "Contacts 2"));
+            JobElements.Add(new NewTabButton(typeof(Tabs.ParameterTab), "Réglage des options", true));
+            JobElements.Add(new NewTabButton(typeof(Tabs.ContactsTab), "Contacts",true));
+            JobElements.Add(new NewTabButton(typeof(Tabs.Contacts2Tab), "Contacts 2",true));
             JobElements.Add(new NewTabButton(typeof(Tabs.InventorLaserTab), "Creation DXF PDF"));
             JobElements.Add(new NewTabButton(typeof(Tabs.InventorPrintTab), "Impression des plans Inventor"));
             JobElements.Add(new NewTabButton(typeof(Tabs.FolderProjectCreationTab),"Permet la creation d'un nouveau répertoire Projet"));

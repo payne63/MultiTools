@@ -27,7 +27,9 @@ namespace SplittableDataGridSAmple.Elements
         public RoutedEventHandler ClickMethod { get; set; }
         private TabViewItem _tabViewItemToLoad;
 
-        public NewTabButton(Type tabType, string description = null)
+        public bool isBetaVersion { get; set; }
+
+        public NewTabButton(Type tabType, string description = null, bool isBetaVersion = false)
         {
             this.InitializeComponent();
 
@@ -44,6 +46,7 @@ namespace SplittableDataGridSAmple.Elements
                 MainWindow.tabViewRef.SelectedItem = _tabViewItemToLoad;
                 MainWindow.tabViewRef.TabItems.Remove(selectedTabItem);
             };
+            this.isBetaVersion = isBetaVersion;
         }
         private void Button_Click(object sender, RoutedEventArgs e)
         {
