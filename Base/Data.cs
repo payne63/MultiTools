@@ -14,9 +14,7 @@ namespace SplittableDataGridSAmple.Base
         public string NewNameFile { get; set; } = String.Empty;
         public string FullPathName { get; set; } = String.Empty;
         public string NewFullPathName { get; set; } = String.Empty;
-        //public string Directory { get; set; } = String.Empty;
         public string Author { get; set; }
-        //public string PartNumber { get; set; }
         public string Compagny { get; set; }
         public string Project { get; set; }
         public List<string> ReferenceDocument { get; set; } = new List<string>();

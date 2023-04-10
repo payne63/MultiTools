@@ -217,7 +217,7 @@ namespace SplittableDataGridSAmple.Tabs
                 OpenSimpleMessage("Déposer un assemblage ou une pièce, mais pas de plan");
                 return;
             }
-            if (!storageItemDrop.Name.EndsWith(".ipt") || !storageItemDrop.Name.EndsWith(".iam"))
+            if (storageItemDrop.Name.EndsWith(".ipt") || storageItemDrop.Name.EndsWith(".iam"))
             {
                 IsInterfaceEnabled = false;
                 InitWatcher(System.IO.Path.GetDirectoryName(storageItemDrop.Path));
@@ -266,7 +266,7 @@ namespace SplittableDataGridSAmple.Tabs
 
             DatasI.Add(new DataI(PrimaryFullPath, null));
             CheckLinkDraw();
-            RecursiveRemoveSpecificChildren(DatasI.First());
+            RecursiveRemoveSpecificChildren(DatasI.First()); // remove children of part and children inside composants folder
             return Task.CompletedTask;
         }
 

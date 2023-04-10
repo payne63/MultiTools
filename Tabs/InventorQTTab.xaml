@@ -1,0 +1,119 @@
+<TabViewItem
+    x:Class="SplittableDataGridSAmple.Tabs.InventorQTTab"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:SplittableDataGridSAmple.Tabs"
+    xmlns:base="using:SplittableDataGridSAmple.Base"
+    xmlns:c ="using:CommunityToolkit.WinUI.UI.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Header="Inventor Nommenclature">
+    <TabViewItem.IconSource>
+        <FontIconSource Glyph="&#xE719;"/>
+    </TabViewItem.IconSource>
+    <TabViewItem.Resources>
+        <base:DeepMaxToWidthConverter x:Key="DeepMaxToWidthConverter"/>
+        <base:CategoryTypeEnumConverter x:Key="CategoryTypeEnumConverter"/>
+    </TabViewItem.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="250"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Border AutomationProperties.AccessibilityView="Raw"
+                CornerRadius="10,0,10,0"  Grid.Column="0" Grid.Row="1"  Grid.RowSpan="1"
+                HorizontalAlignment="Stretch" VerticalAlignment="Top"
+                Background="{ThemeResource AccentAcrylicBackgroundFillColorDefaultBrush}"
+                Margin="10">
+            <StackPanel Orientation="Vertical">
+                <Button
+                    Margin="10" 
+                    HorizontalAlignment="Stretch"
+                    Padding="15"
+                    Drop="PanelDataI_Drop" 
+                    DragOver="PanelDataI_DragOver"
+                    AllowDrop="True" 
+                    IsEnabled="{x:Bind IsInterfaceEnabled, Mode=OneWay}">
+                    <StackPanel Orientation="Vertical" >
+                        <Viewbox MaxHeight="40" MaxWidth="40" >
+                            <SymbolIcon Symbol="NewWindow"  />
+                        </Viewbox>
+                        <TextBlock Text="Glisser Deposer" HorizontalAlignment="Center" />
+                        <TextBlock Text="votre Assemblage" HorizontalAlignment="Center" />
+                        <TextBlock Text="(Assemblage uniquement)" HorizontalAlignment="Center"/>
+                    </StackPanel>
+                </Button>
+                <Button Margin="10" 
+                    HorizontalAlignment="Stretch"
+                    Padding="15"
+                    IsEnabled="{x:Bind IsInterfaceEnabled, Mode=OneWay}"
+                        Click="Button_Click_ExportData">
+                    <StackPanel Orientation="Vertical" >
+                        <StackPanel Orientation="Horizontal">
+                            <Viewbox MaxHeight="25" MaxWidth="25" >
+                                <FontIcon Glyph="&#xEDE1;" />
+                            </Viewbox>
+                            <Viewbox MaxHeight="30" MaxWidth="30" >
+                                <FontIcon Glyph="&#xE9F9;" />
+                            </Viewbox>
+                        </StackPanel>
+                        <TextBlock Text="Exporter (xls)" HorizontalAlignment="Center" />
+                    </StackPanel>
+
+                </Button>
+                <Button Margin="10" 
+                        Padding="15"
+                        HorizontalAlignment="Stretch"
+                        Click="Button_Click_RemoveData"    
+                        IsEnabled="{x:Bind IsInterfaceEnabled, Mode=OneWay}">
+                    <StackPanel Orientation="Vertical">
+                        <Viewbox MaxHeight="30" MaxWidth="30" >
+                            <SymbolIcon Symbol="Delete"/>
+                        </Viewbox>
+                        <TextBlock Text="Supprimer tout" HorizontalAlignment="Center"/>
+                    </StackPanel>
+                </Button>
+            </StackPanel>
+        </Border>
+        <Border AutomationProperties.AccessibilityView="Raw"
+                CornerRadius="10,0,10,0"  Grid.Column="1" Grid.Row="0" 
+                HorizontalAlignment="Stretch" VerticalAlignment="Top"
+                Background="{ThemeResource AccentAcrylicBackgroundFillColorDefaultBrush}"
+                Margin="10">
+            <c:DataGrid x:Name="dataGrid" 
+                        ItemsSource="{x:Bind DatasIQT ,Mode=TwoWay}" 
+                        AutoGenerateColumns="False"
+                        CanUserSortColumns="True"
+                        CanUserReorderColumns="True"
+                        CanUserResizeColumns="True"
+                        SelectionMode="Extended"
+                        GridLinesVisibility="Vertical"
+                        Sorting="dataGrid_Sorting" 
+                        HeadersVisibility="Column" 
+                        AlternatingRowBackground="{StaticResource AccentAAFillColorDisabled}">
+                <c:DataGrid.Columns>
+                    <!--<c:DataGridTemplateColumn Header="Nom"  CanUserSort="True" >-->
+                    <!--<c:DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding NameFile, Mode=TwoWay}"/>
+                            </DataTemplate>
+                        </c:DataGridTemplateColumn.CellTemplate>
+                        <c:DataGridTemplateColumn.CellEditingTemplate>
+                            <DataTemplate>
+                                <ComboBox/>
+                            </DataTemplate>
+                        </c:DataGridTemplateColumn.CellEditingTemplate>
+                    </c:DataGridTemplateColumn>-->
+                    <c:DataGridTextColumn Header="Nom" Binding="{Binding NameFile, Mode=TwoWay}" CanUserSort="True" IsReadOnly="True" Tag="Name" />
+                    <c:DataGridTextColumn Header="Description" Binding="{Binding Description, Mode=TwoWay}" IsReadOnly="True" Tag="Description"/>
+                    <c:DataGridTextColumn Header="Categorie" Binding="{Binding Category, Mode=TwoWay}" Tag="Category"/>
+                    <c:DataGridTextColumn Header="Qt" Binding="{Binding Qt, Mode=TwoWay}" Tag="Qt" />
+                </c:DataGrid.Columns>
+            </c:DataGrid>
+        </Border>
+    </Grid>
+</TabViewItem>
