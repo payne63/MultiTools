@@ -37,10 +37,9 @@ namespace SplittableDataGridSAmple.Base
             var obomViewPartOnly = Bom.BOMViews[1];// 1 - bom standard - 2 structured - 3 part only (2 et 3 need activation)
             foreach (BOMRow bomrowPartOnly in obomViewPartOnly.BOMRows)
             {
+                if (bomrowPartOnly.BOMStructure == BOMStructureEnum.kPhantomBOMStructure || bomrowPartOnly.BOMStructure == BOMStructureEnum.kReferenceBOMStructure) continue;
                 var DisplayName = ((ApprenticeServerDocument)((ComponentDefinition)bomrowPartOnly.ComponentDefinitions[1]).Document).FullDocumentName;
                 var qt = bomrowPartOnly.TotalQuantity;
-                Trace.WriteLine("ItemNumber :" + DisplayName);
-                Trace.WriteLine("totalQuantity :" + qt);
                 var identityData = dataIQTs.FirstOrDefault(x => x.FullPathName == DisplayName);
                 if (identityData == null) throw new Exception("pas de correspondance enfant");
                 identityData.Qt += int.Parse(qt);

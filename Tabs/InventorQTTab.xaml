@@ -22,7 +22,7 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <Border AutomationProperties.AccessibilityView="Raw"
                 CornerRadius="10,0,10,0"  Grid.Column="0" Grid.Row="1"  Grid.RowSpan="1"
@@ -94,6 +94,8 @@
                         GridLinesVisibility="Vertical"
                         Sorting="dataGrid_Sorting" 
                         HeadersVisibility="Column" 
+                        ScrollViewer.VerticalScrollBarVisibility="Auto"
+                        ScrollViewer.HorizontalScrollBarVisibility="Auto"
                         AlternatingRowBackground="{StaticResource AccentAAFillColorDisabled}">
                 <c:DataGrid.Columns>
                     <!--<c:DataGridTemplateColumn Header="Nom"  CanUserSort="True" >-->

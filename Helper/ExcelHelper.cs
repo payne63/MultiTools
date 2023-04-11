@@ -12,9 +12,10 @@ namespace SplittableDataGridSAmple.Helper
 {
     internal static class ExcelHelper
     {
-        public static void ExportData( List<DataIQT> datas, string fullFileNameExport = @"E:\testPlan\Nommenclature")
+        public static void ExportData( List<DataIQT> datas )
         {
-            fullFileNameExport += Path.GetFileNameWithoutExtension(datas[0].NameFile);
+            string fullFileNameExport = Path.GetDirectoryName(datas[0].FullPathName);
+            fullFileNameExport += @"\"+Path.GetFileNameWithoutExtension(datas[0].NameFile);
             Excel.Application excel = new Excel.Application();
             Excel.Workbook workbook = excel.Workbooks.Add(Type.Missing);
             Excel.Worksheet sheet = (Excel.Worksheet)workbook.ActiveSheet;
