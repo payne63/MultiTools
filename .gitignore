@@ -35,6 +35,7 @@ bld/
 
 #Add Bin release
 !bin/x64/Release/
+!bin/x64/Release/*
 
 # Visual Studio 2015/2017 cache/options directory
 .vs/
