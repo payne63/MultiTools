@@ -94,6 +94,10 @@
                         GridLinesVisibility="Vertical"
                         Sorting="dataGrid_Sorting" 
                         HeadersVisibility="Column" 
+                        BorderThickness="2"
+                        Margin="3"
+                        BorderBrush="{StaticResource AccentAcrylicBackgroundFillColorBaseBrush}"
+                        CornerRadius="10,0,10,0"
                         ScrollViewer.VerticalScrollBarVisibility="Auto"
                         ScrollViewer.HorizontalScrollBarVisibility="Auto"
                         AlternatingRowBackground="{StaticResource AccentAAFillColorDisabled}">
