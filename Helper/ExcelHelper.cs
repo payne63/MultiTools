@@ -16,7 +16,15 @@ namespace SplittableDataGridSAmple.Helper
         {
             string fullFileNameExport = Path.GetDirectoryName(datas[0].FullPathName);
             fullFileNameExport += @"\"+Path.GetFileNameWithoutExtension(datas[0].NameFile);
-            Excel.Application excel = new Excel.Application();
+            Excel.Application excel;
+            try
+            {
+                 excel = new Excel.Application() { Visible = true };
+            }
+            catch (Exception)
+            {
+                throw new Exception("ouverture d'excel crash");
+            }
             Excel.Workbook workbook = excel.Workbooks.Add(Type.Missing);
             Excel.Worksheet sheet = (Excel.Worksheet)workbook.ActiveSheet;
             var rowIndex = 1;
