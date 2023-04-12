@@ -35,10 +35,14 @@ namespace SplittableDataGridSAmple.Base
             Description = (string)document.PropertySets["Design Tracking Properties"].ItemByPropId[29].Value;
             PartNumber = (string)document.PropertySets["Design Tracking Properties"].ItemByPropId[5].Value;
             //if (DocumentType == DocumentTypeEnum.kAssemblyDocumentObject)
-            {
+            //{
                 ReferencedDocuments = document.ReferencedDocuments.Cast<ApprenticeServerDocument>().Select(rd => (rd.FullFileName, rd.DisplayName)).ToList();
-            }
+            //}
             Category = GetCategoryType();
+            if (Category == CategoryType.Commerce || Category == CategoryType.ElementClient) 
+            {
+                ReferencedDocuments = new ();
+            }
 
             GetAppServer.Close();
         }
@@ -53,7 +57,7 @@ namespace SplittableDataGridSAmple.Base
         {
             var dataIQT = new DataIQT(fullPathDocumentRoot);
             result.Add(dataIQT);
-            //if (dataIQT.DocumentType == DocumentTypeEnum.kAssemblyDocumentObject)
+            if (dataIQT.DocumentType == DocumentTypeEnum.kAssemblyDocumentObject)
             {
                 foreach (var childData in dataIQT.ReferencedDocuments)
                 {
@@ -76,6 +80,10 @@ namespace SplittableDataGridSAmple.Base
                 else return CategoryType.Assemblage;
             }
             return CategoryType.Inconnu;
+        }
+        public override string ToString()
+        {
+            return $"name:{NameFile} description:{Description} qt:{Qt} nbChild:{ReferencedDocuments.Count}";
         }
     }
 }
