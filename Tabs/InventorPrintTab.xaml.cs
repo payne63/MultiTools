@@ -297,6 +297,7 @@ namespace SplittableDataGridSAmple.Tabs
 
         private void nbPDFDXFPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
+            OnPropertyChanged(nameof(NbDrawing));
             OnPropertyChanged(nameof(NbA4Drawing));
             OnPropertyChanged(nameof(NbA3Drawing));
             OnPropertyChanged(nameof(NbA2Drawing));
