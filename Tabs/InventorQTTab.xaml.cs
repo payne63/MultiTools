@@ -83,18 +83,12 @@ namespace SplittableDataGridSAmple.Tabs
             if (storageItemDrop.Name.EndsWith(".ipt") || storageItemDrop.Name.EndsWith(".iam"))
             {
                 IsInterfaceEnabled = false;
-                DatasIQT = new ObservableCollection<DataIQT>(await LoadData(storageItemDrop.Path)); // get all files informations
+                //DatasIQT = new ObservableCollection<DataIQT>(await LoadData(storageItemDrop.Path)); // get all files informations
+                DatasIQT = new ObservableCollection<DataIQT>(QtManager.GetQtDatas(storageItemDrop.Path));
                 IsInterfaceEnabled = true;
             }
         }
 
-        private async Task<List<DataIQT>> LoadData(string path)
-        {
-            await Task.Delay(1);
-            var result = DataIQT.GetDatadIQT(path);
-            QtManager.AssignQtToPart(result);
-            return result;
-        }
 
         private void Button_Click_RemoveData(object sender, RoutedEventArgs e)
         {

@@ -10,6 +10,7 @@ using static SplittableDataGridSAmple.Base.DataI;
 using System.Xml.Linq;
 using I = Inventor;
 using System.Diagnostics;
+using System.IO;
 
 namespace SplittableDataGridSAmple.Base
 {
@@ -18,6 +19,8 @@ namespace SplittableDataGridSAmple.Base
 
         public List<(string FullFileName, string DisplayName)> ReferencedDocuments { get; set; }
 
+        public List<(string fullFileName, int Qt)> bom = new();
+
         private int _Qt;
         public int Qt
         {
@@ -25,7 +28,7 @@ namespace SplittableDataGridSAmple.Base
             set { _Qt = value; }
         }
 
-        private DataIQT(string fullPathDocument)
+        public DataIQT(string fullPathDocument, int qt)
         {
             I.ApprenticeServerDocument document = GetAppServer.Open(fullPathDocument);
             Document = document;
@@ -34,53 +37,44 @@ namespace SplittableDataGridSAmple.Base
             DocumentType = Document.DocumentType;
             Description = (string)document.PropertySets["Design Tracking Properties"].ItemByPropId[29].Value;
             PartNumber = (string)document.PropertySets["Design Tracking Properties"].ItemByPropId[5].Value;
-            //if (DocumentType == DocumentTypeEnum.kAssemblyDocumentObject)
-            //{
-                ReferencedDocuments = document.ReferencedDocuments.Cast<ApprenticeServerDocument>().Select(rd => (rd.FullFileName, rd.DisplayName)).ToList();
-            //}
-            Category = GetCategoryType();
-            if (Category == CategoryType.Commerce || Category == CategoryType.ElementClient) 
+            Qt = qt;
+            if (IsCommerceType) { Category = CategoryType.Commerce; GetAppServer.Close(); return; };
+            if (IsElementClientType) { Category = CategoryType.ElementClient; GetAppServer.Close(); return; };
+            if (IsLaserType) { Category = CategoryType.Laser; GetAppServer.Close(); return; };
+            if (IsProfileType) { Category = CategoryType.Profile; GetAppServer.Close(); return; };
+            if (IsMecaniqueType) { Category = CategoryType.Mecanique; GetAppServer.Close(); return; };
+
+            if (DocumentType == DocumentTypeEnum.kAssemblyDocumentObject) 
             {
-                ReferencedDocuments = new ();
+                AssemblyComponentDefinition ass = document.ComponentDefinition as AssemblyComponentDefinition; //convertion en assemblage
+                var Bom = ass.BOM;
+                var obomViewStandard = Bom.BOMViews[1];// 1 - bom standard - 2 structured - 3 part only (2 et 3 need activation)
+                foreach (BOMRow row in obomViewStandard.BOMRows)
+                {
+                    if (row.BOMStructure == BOMStructureEnum.kPhantomBOMStructure || row.BOMStructure == BOMStructureEnum.kReferenceBOMStructure) continue;
+                    var FullDocumentName = ((ApprenticeServerDocument)(row.ComponentDefinitions[1]).Document).FullDocumentName;
+                    var qtPart = int.Parse(row.TotalQuantity);
+                    bom.Add((FullDocumentName, qtPart));
+                }
+                if (bom.Count == 0) { return; } // no children?
+                if (System.IO.Path.GetFileNameWithoutExtension( bom[0].fullFileName)[0..7] == PartNumber[0..7]) { Category = CategoryType.MecanoSoudure; GetAppServer.Close(); return; }
+
+                Category = CategoryType.Assemblage;
+                GetAppServer.Close();
+                return;
             }
 
+            Category = CategoryType.Inconnu;
             GetAppServer.Close();
         }
-        public static List<DataIQT> GetDatadIQT(string fullPathDocumentRoot)
-        {
-            var result = new List<DataIQT>();
-            RecursiveGetDataIQT(fullPathDocumentRoot, result);
-            return result.DistinctBy(data => data.FullPathName).ToList();
-        }
 
-        private static void RecursiveGetDataIQT(string fullPathDocumentRoot, List<DataIQT> result)
-        {
-            var dataIQT = new DataIQT(fullPathDocumentRoot);
-            result.Add(dataIQT);
-            if (dataIQT.DocumentType == DocumentTypeEnum.kAssemblyDocumentObject)
-            {
-                foreach (var childData in dataIQT.ReferencedDocuments)
-                {
-                    RecursiveGetDataIQT(childData.FullFileName, result);
-                }
-            }
-        }
+        private bool IsCommerceType => FullPathName.IndexOf("composants", StringComparison.OrdinalIgnoreCase) >= 0;
+        private bool IsElementClientType => FullPathName.IndexOf("Elements client", StringComparison.OrdinalIgnoreCase) >= 0;
+        private bool IsLaserType => Description.IndexOf("laser", StringComparison.OrdinalIgnoreCase) >= 0;
+        private bool IsMecaniqueType => Description.IndexOf("#M", StringComparison.OrdinalIgnoreCase) >= 0;
+        private bool IsProfileType => Description.IndexOf("#P", StringComparison.OrdinalIgnoreCase) >= 0;
 
-        private CategoryType GetCategoryType()
-        {
-            if (FullPathName.IndexOf("composants", StringComparison.OrdinalIgnoreCase) >= 0) return CategoryType.Commerce;
-            if (FullPathName.IndexOf("Elements client", StringComparison.OrdinalIgnoreCase) >= 0) return CategoryType.ElementClient;
-            if (Description.IndexOf("laser", StringComparison.OrdinalIgnoreCase) >= 0) return CategoryType.Laser;
-            if (Description.IndexOf("#M", StringComparison.OrdinalIgnoreCase) >= 0) return CategoryType.Mecanique;
-            if (Description.IndexOf("#P", StringComparison.OrdinalIgnoreCase) >= 0) return CategoryType.Profile;
-            if (ReferencedDocuments.Count > 0 && DocumentType == DocumentTypeEnum.kAssemblyDocumentObject)
-            {
-                if (ReferencedDocuments.First().DisplayName[0..7] == PartNumber[0..7])
-                    return CategoryType.MecanoSoudure;
-                else return CategoryType.Assemblage;
-            }
-            return CategoryType.Inconnu;
-        }
+
         public override string ToString()
         {
             return $"name:{NameFile} description:{Description} qt:{Qt} nbChild:{ReferencedDocuments.Count}";
