@@ -27,6 +27,13 @@ namespace SplittableDataGridSAmple.Base
             get { return _Qt; }
             set { _Qt = value; }
         }
+        private string _Material;
+        public string Material
+        {
+            get { return _Material; }
+            set { _Material = value; }
+        }
+
 
         public DataIQT(string fullPathDocument, int qt)
         {
@@ -37,6 +44,7 @@ namespace SplittableDataGridSAmple.Base
             DocumentType = Document.DocumentType;
             Description = (string)document.PropertySets["Design Tracking Properties"].ItemByPropId[29].Value;
             PartNumber = (string)document.PropertySets["Design Tracking Properties"].ItemByPropId[5].Value;
+            Material = (string)document.PropertySets["Design Tracking Properties"].ItemByPropId[20].Value;
             Qt = qt;
             if (IsCommerceType) { Category = CategoryType.Commerce; GetAppServer.Close(); return; };
             if (IsElementClientType) { Category = CategoryType.ElementClient; GetAppServer.Close(); return; };
@@ -73,7 +81,6 @@ namespace SplittableDataGridSAmple.Base
         private bool IsLaserType => Description.IndexOf("laser", StringComparison.OrdinalIgnoreCase) >= 0;
         private bool IsMecaniqueType => Description.IndexOf("#M", StringComparison.OrdinalIgnoreCase) >= 0;
         private bool IsProfileType => Description.IndexOf("#P", StringComparison.OrdinalIgnoreCase) >= 0;
-
 
         public override string ToString()
         {

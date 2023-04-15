@@ -117,6 +117,7 @@
                     <c:DataGridTextColumn Header="Description" Binding="{Binding Description, Mode=TwoWay}" IsReadOnly="True" Tag="Description"/>
                     <c:DataGridTextColumn Header="Categorie" Binding="{Binding Category, Mode=TwoWay}" Tag="Category"/>
                     <c:DataGridTextColumn Header="Qt" Binding="{Binding Qt, Mode=TwoWay}" Tag="Qt" />
+                    <c:DataGridTextColumn Header="Matiere" Binding="{Binding Material, Mode=TwoWay}" Tag="Material" />
                 </c:DataGrid.Columns>
             </c:DataGrid>
         </Border>
