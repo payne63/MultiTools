@@ -11,10 +11,14 @@ using System.Xml.Linq;
 using I = Inventor;
 using System.Diagnostics;
 using System.IO;
+using Microsoft.UI.Xaml.Media.Imaging;
+using Windows.Storage.FileProperties;
+using System.Drawing;
+using System.ComponentModel;
 
 namespace SplittableDataGridSAmple.Base
 {
-    class DataIQT : DataIBase
+    public class DataIQT : DataIBase
     {
 
         public List<(string FullFileName, string DisplayName)> ReferencedDocuments { get; set; }
@@ -25,22 +29,30 @@ namespace SplittableDataGridSAmple.Base
         public int Qt
         {
             get { return _Qt; }
-            set { _Qt = value; }
+            set { _Qt = value; NotifyPropertyChanged(); }
         }
         private string _Material;
         public string Material
         {
             get { return _Material; }
-            set { _Material = value; }
+            set { _Material = value; NotifyPropertyChanged(); }
+        }
+        private BitmapImage _BitmapImage;
+
+        public BitmapImage BitmapImage
+        {
+            get { return _BitmapImage; }
+            set { _BitmapImage = value; NotifyPropertyChanged(); }
         }
 
+        public IList<CategoryType> GetCategoryTypes => Enum.GetValues(typeof(CategoryType)).Cast<CategoryType>().ToList();
 
         public DataIQT(string fullPathDocument, int qt)
         {
             I.ApprenticeServerDocument document = GetAppServer.Open(fullPathDocument);
             Document = document;
-            NameFile = document.DisplayName;
-            FullPathName = Document.FullDocumentName;
+            NameFile = document.DisplayName; 
+            FullPathName = Document.FullFileName;
             DocumentType = Document.DocumentType;
             Description = (string)document.PropertySets["Design Tracking Properties"].ItemByPropId[29].Value;
             PartNumber = (string)document.PropertySets["Design Tracking Properties"].ItemByPropId[5].Value;
@@ -86,5 +98,21 @@ namespace SplittableDataGridSAmple.Base
         {
             return $"name:{NameFile} description:{Description} qt:{Qt} nbChild:{ReferencedDocuments.Count}";
         }
+
+        public async Task UpdateThumbnail()
+        {
+            if (BitmapImage != null) return;
+            if (FullPathName == string.Empty) return;
+            var file = await Windows.Storage.StorageFile.GetFileFromPathAsync(FullPathName);
+            var iconThumbnail = await file.GetThumbnailAsync(ThumbnailMode.SingleItem, 256);
+            var bitmapImage = new BitmapImage();
+            bitmapImage.SetSource(iconThumbnail);
+            if (bitmapImage != null)
+            {
+                //return bitmapImage;
+                BitmapImage = bitmapImage;
+            }
+        }
+
     }
 }

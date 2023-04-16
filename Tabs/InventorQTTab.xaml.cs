@@ -26,6 +26,10 @@ using CommunityToolkit.WinUI.UI.Controls;
 using Microsoft.Office.Interop.Outlook;
 using System.Globalization;
 using SplittableDataGridSAmple.Helper;
+using CommunityToolkit.WinUI.Helpers;
+using Inventor;
+using Windows.Graphics.Printing;
+using SplittableDataGridSAmple.Elements;
 
 namespace SplittableDataGridSAmple.Tabs
 {
@@ -39,8 +43,8 @@ namespace SplittableDataGridSAmple.Tabs
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
         #endregion
-        private ObservableCollection<DataIQT> _DatasIQT;
-        private ObservableCollection<DataIQT> DatasIQT { get { return _DatasIQT; } set { _DatasIQT = value; OnPropertyChanged(); } }
+        
+
 
         private bool _IsInterfaceEnabled = true;
         public bool IsInterfaceEnabled
@@ -84,7 +88,18 @@ namespace SplittableDataGridSAmple.Tabs
             {
                 IsInterfaceEnabled = false;
                 //DatasIQT = new ObservableCollection<DataIQT>(await LoadData(storageItemDrop.Path)); // get all files informations
-                DatasIQT = new ObservableCollection<DataIQT>(QtManager.GetQtDatas(storageItemDrop.Path));
+                //DatasIQT = new ObservableCollection<DataIQT>(QtManager.GetQtDatas(storageItemDrop.Path));
+
+                var groups = QtManager.GetQtDatas(storageItemDrop.Path).GroupBy(data => data.Category);
+                foreach (var group in groups)
+                {
+                    var dataGridInstance = new Elements.DataGridQT(group.Key) { Datas = new ObservableCollection<DataIQT>(group), Title = group.Key.ToString() };
+                    StackPanelOfBom.Children.Add(dataGridInstance);
+                    //dataGridCollection.Add(dataGridInstance);
+                }
+
+
+
                 IsInterfaceEnabled = true;
             }
         }
@@ -92,7 +107,9 @@ namespace SplittableDataGridSAmple.Tabs
 
         private void Button_Click_RemoveData(object sender, RoutedEventArgs e)
         {
-            DatasIQT.Clear();
+            //DatasIQT.Clear();
+            DataGridQT.ClearAllData();
+            StackPanelOfBom.Children.Clear();
         }
 
         private async void OpenSimpleMessage(string Message)
@@ -107,67 +124,12 @@ namespace SplittableDataGridSAmple.Tabs
             _ = await dialog.ShowAsync();
         }
 
-        private void dataGrid_Sorting(object sender, CommunityToolkit.WinUI.UI.Controls.DataGridColumnEventArgs e)
-        {
-            if (e.Column.Tag.ToString() == "Name")
-            {
-                //Implement sort on the column "Range" using LINQ
-                if (e.Column.SortDirection == null || e.Column.SortDirection == DataGridSortDirection.Descending)
-                {
-                    dataGrid.ItemsSource = new ObservableCollection<DataIQT>(from item in DatasIQT orderby item.NameFile ascending select item);
-                    e.Column.SortDirection = DataGridSortDirection.Ascending;
-                }
-                else
-                {
-                    dataGrid.ItemsSource = new ObservableCollection<DataIQT>(from item in DatasIQT orderby item.NameFile descending select item);
-                    e.Column.SortDirection = DataGridSortDirection.Descending;
-                }
-            }
-            if (e.Column.Tag.ToString() == "Description")
-            {
-                //Implement sort on the column "Range" using LINQ
-                if (e.Column.SortDirection == null || e.Column.SortDirection == DataGridSortDirection.Descending)
-                {
-                    dataGrid.ItemsSource = new ObservableCollection<DataIQT>(from item in DatasIQT orderby item.Description ascending select item);
-                    e.Column.SortDirection = DataGridSortDirection.Ascending;
-                }
-                else
-                {
-                    dataGrid.ItemsSource = new ObservableCollection<DataIQT>(from item in DatasIQT orderby item.Description descending select item);
-                    e.Column.SortDirection = DataGridSortDirection.Descending;
-                }
-            }
-
-            if (e.Column.Tag.ToString() == "Category")
-            {
-                //Implement sort on the column "Range" using LINQ
-                if (e.Column.SortDirection == null || e.Column.SortDirection == DataGridSortDirection.Descending)
-                {
-                    dataGrid.ItemsSource = new ObservableCollection<DataIQT>(from item in DatasIQT orderby item.Category.ToString() ascending select item);
-                    e.Column.SortDirection = DataGridSortDirection.Ascending;
-                }
-                else
-                {
-                    dataGrid.ItemsSource = new ObservableCollection<DataIQT>(from item in DatasIQT orderby item.Category.ToString() descending select item);
-                    e.Column.SortDirection = DataGridSortDirection.Descending;
-                }
-            }
-
-
-            // Remove sorting indicators from other columns
-            foreach (var dgColumn in dataGrid.Columns)
-            {
-                if (dgColumn.Tag.ToString() != e.Column.Tag.ToString()) dgColumn.SortDirection = null;
-            }
-
-        }
-
         private void Button_Click_ExportData(object sender, RoutedEventArgs e)
         {
-            if (DatasIQT.Count == 0) return;
-            ExcelHelper.ExportData(DatasIQT.ToList());
+            List<DataIQT> fulldata = DataGridQT.dataGridCollection.Where(x=>x.IsVisible == true).SelectMany(data => data.Datas).ToList();
+            if (fulldata.Count == 0) return;
+            ExcelHelper.ExportData(fulldata);
         }
-
 
     }
 }

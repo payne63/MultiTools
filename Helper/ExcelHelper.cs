@@ -19,7 +19,7 @@ namespace SplittableDataGridSAmple.Helper
             Excel.Application excel;
             try
             {
-                 excel = new Excel.Application() { Visible = true };
+                excel = new Excel.Application(); //{ Visible = true };
             }
             catch (Exception)
             {

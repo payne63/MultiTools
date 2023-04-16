@@ -21,6 +21,7 @@
 	<ItemGroup>
 		<None Remove="DialogPage\NewCompanyDialogPage.xaml" />
 		<None Remove="DialogPage\UpdateContactDialogPage.xaml" />
+		<None Remove="Elements\DataGridQT.xaml" />
 		<None Remove="Elements\DependencyControl.xaml" />
 		<None Remove="Elements\NewTabButton.xaml" />
 		<None Remove="Elements\OpenNewTab.xaml" />
@@ -598,6 +599,9 @@
 		</Page>
 		<Page Update="DialogPage\NewCompanyDialogPage.xaml">
 			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Update="Elements\DataGridQT.xaml">
+		  <Generator>MSBuild:Compile</Generator>
 		</Page>
 		<None Update="JsonData\companys.json">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:SplittableDataGridSAmple.Tabs"
     xmlns:base="using:SplittableDataGridSAmple.Base"
+    xmlns:el="using:SplittableDataGridSAmple.Elements"
     xmlns:c ="using:CommunityToolkit.WinUI.UI.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -79,47 +80,11 @@
                 </Button>
             </StackPanel>
         </Border>
-        <Border AutomationProperties.AccessibilityView="Raw"
-                CornerRadius="10,0,10,0"  Grid.Column="1" Grid.Row="0" 
-                HorizontalAlignment="Stretch" VerticalAlignment="Top"
-                Background="{ThemeResource AccentAcrylicBackgroundFillColorDefaultBrush}"
-                Margin="10">
-            <c:DataGrid x:Name="dataGrid" 
-                        ItemsSource="{x:Bind DatasIQT ,Mode=TwoWay}" 
-                        AutoGenerateColumns="False"
-                        CanUserSortColumns="True"
-                        CanUserReorderColumns="True"
-                        CanUserResizeColumns="True"
-                        SelectionMode="Extended"
-                        GridLinesVisibility="All"
-                        Sorting="dataGrid_Sorting" 
-                        HeadersVisibility="Column" 
-                        BorderThickness="2"
-                        Margin="3"
-                        BorderBrush="{StaticResource AccentAcrylicBackgroundFillColorBaseBrush}"
-                        CornerRadius="10,0,10,0"
-                        ScrollViewer.VerticalScrollBarVisibility="Auto"
-                        ScrollViewer.HorizontalScrollBarVisibility="Auto" >
-                <c:DataGrid.Columns>
-                    <!--<c:DataGridTemplateColumn Header="Nom"  CanUserSort="True" >-->
-                    <!--<c:DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                                <TextBlock Text="{Binding NameFile, Mode=TwoWay}"/>
-                            </DataTemplate>
-                        </c:DataGridTemplateColumn.CellTemplate>
-                        <c:DataGridTemplateColumn.CellEditingTemplate>
-                            <DataTemplate>
-                                <ComboBox/>
-                            </DataTemplate>
-                        </c:DataGridTemplateColumn.CellEditingTemplate>
-                    </c:DataGridTemplateColumn>-->
-                    <c:DataGridTextColumn Header="Nom" Binding="{Binding NameFile, Mode=TwoWay}" CanUserSort="True" IsReadOnly="True" Tag="Name" />
-                    <c:DataGridTextColumn Header="Description" Binding="{Binding Description, Mode=TwoWay}" IsReadOnly="True" Tag="Description"/>
-                    <c:DataGridTextColumn Header="Categorie" Binding="{Binding Category, Mode=TwoWay}" Tag="Category"/>
-                    <c:DataGridTextColumn Header="Qt" Binding="{Binding Qt, Mode=TwoWay}" Tag="Qt" />
-                    <c:DataGridTextColumn Header="Matiere" Binding="{Binding Material, Mode=TwoWay}" Tag="Material" />
-                </c:DataGrid.Columns>
-            </c:DataGrid>
-        </Border>
+
+        <ScrollViewer Grid.Column="1" Grid.Row="0" >
+            
+                <StackPanel x:Name="StackPanelOfBom" Margin="0,0,10,0">
+                </StackPanel>
+        </ScrollViewer>
     </Grid>
 </TabViewItem>
