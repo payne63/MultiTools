@@ -128,7 +128,8 @@ namespace SplittableDataGridSAmple.Tabs
         {
             List<DataIQT> fulldata = DataGridQT.dataGridCollection.Where(x=>x.IsVisible == true).SelectMany(data => data.Datas).ToList();
             if (fulldata.Count == 0) return;
-            ExcelHelper.ExportData(fulldata);
+            //ExcelHelper.ExportData(fulldata);
+            EPPlusHelper.ExportData(fulldata);
         }
 
     }
