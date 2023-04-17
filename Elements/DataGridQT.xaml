@@ -33,7 +33,7 @@
                 SelectionMode="Single" Tapped="dataGrid_Tapped" 
                 >
         <c:DataGrid.Columns>
-            <c:DataGridTextColumn Header="Nom" Binding="{Binding NameFile, Mode=TwoWay}" CanUserSort="True" IsReadOnly="True" Tag="Name" Width="200" />
+            <c:DataGridTextColumn Header="Nom" Binding="{Binding NameFile, Mode=TwoWay}" CanUserSort="True" IsReadOnly="True" Tag="Name" Width="250" />
             <c:DataGridTextColumn Header="Description" Binding="{Binding Description, Mode=TwoWay}" IsReadOnly="True" Tag="Description" Width="500"/>
             <c:DataGridTextColumn Header="Qt" Binding="{Binding Qt, Mode=TwoWay}" Tag="Qt" Width="80" />
             <c:DataGridTextColumn Header="Matiere" Binding="{Binding Material, Mode=TwoWay}" Tag="Material" Width="200" />
@@ -44,19 +44,16 @@
                     <StackPanel Orientation="Horizontal" Tapped="dataGrid_Tapped">
                         <Image Source="{Binding BitmapImage ,Mode=OneWay}" Width="128" Height="128" />
                         <StackPanel Orientation="Vertical">
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock  Text="Nom du fichier : " Margin="0,0,5,0" />
+                            <StackPanel Orientation="Horizontal" Margin="8">
+                                <TextBlock  Text="Chemin du fichier : " Margin="0,0,5,0" />
                                 <TextBlock  Text="{Binding NameFile}"  />
                             </StackPanel>
-                            <StackPanel Orientation="Horizontal">
+                            <StackPanel Orientation="Horizontal" Margin="8">
                                 <TextBlock Text="nom complet : " Margin="0,0,5,0" />
                                 <TextBlock Text="{Binding FullPathName}"  />
                             </StackPanel>
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="Categorie : " Margin="0,0,5,0" />
-                                <TextBlock Text="{Binding Category}"  />
-                            </StackPanel>
-                            <Button Content="Modifier la categorie" Click="Button_Click_ChangeCategory"/>
+                            <StackPanel Orientation="Horizontal" Margin="8">
+                                <TextBlock Text="Categorie : " Margin="0,0,5,0" VerticalAlignment="Center" />
                             <ComboBox x:Name="ComboBoxCategory"
                                         ItemsSource="{Binding GetCategoryTypes}"
                                         SelectedItem="{Binding Category}"
@@ -64,6 +61,7 @@
                                         PlaceholderText="Modifier la categorie"
                                         Width="250">
                             </ComboBox>
+                            </StackPanel>
                         </StackPanel>
                     </StackPanel>
                 </Border>

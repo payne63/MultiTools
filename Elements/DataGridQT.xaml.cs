@@ -170,6 +170,8 @@ namespace SplittableDataGridSAmple.Elements
             var oldDateGridQT =  dataGridCollection.Where(x => x.category == (CategoryType)e.RemovedItems[0]).FirstOrDefault();
             newDateGridQT.Datas.Add(dataIQT);
             oldDateGridQT.Datas.Remove(dataIQT);
+            newDateGridQT.OnPropertyChanged(nameof(QtElement));
+            oldDateGridQT.OnPropertyChanged(nameof(QtElement));
             dataIQT.Category = (CategoryType)e.AddedItems[0];
         }
     }
