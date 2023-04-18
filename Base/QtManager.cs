@@ -13,46 +13,33 @@ namespace SplittableDataGridSAmple.Base
 {
     static class QtManager
     {
-
-        public static void AssignQtToPart(List<DataIQT> dataIQTs)
+        private static List< DataIQT> Datas;
+        public static List<DataIQT> GetQtDatas(string firstPathFullName)
         {
-            if (dataIQTs.Count == 0) return;
-            var rootDocument = dataIQTs.First();
-            rootDocument.Qt = 1;
-
-            RecursiveAssignQtToPart(dataIQTs, rootDocument.FullPathName, rootDocument.Qt);
+            Datas = new();
+            RecursiveQtdatas(firstPathFullName,1);
+            var dic = new Dictionary<string, DataIQT>();
+            foreach ( DataIQT data in Datas )
+            {
+                if (dic.ContainsKey(data.FullPathName))
+                {
+                    dic[data.FullPathName].Qt += data.Qt;
+                    continue;
+                }
+                dic.Add(data.FullPathName, data);
+            }
+            return dic.Select(x=>x.Value).ToList() ; 
         }
 
-        private static void RecursiveAssignQtToPart(List<DataIQT> dataIQTs, string fullPathName, int qtParent)
+        private static void RecursiveQtdatas(string PathFullName, int qt)
         {
-            var CurrentData = dataIQTs.FirstOrDefault(x => x.FullPathName == fullPathName);
-            if (CurrentData == null) throw new Exception("current Data non exist");
-            if (CurrentData.DocumentType != DocumentTypeEnum.kAssemblyDocumentObject) return;
-
-            I.ApprenticeServerDocument document = DataIBase.GetAppServer.Open(CurrentData.FullPathName);
-            Trace.WriteLine($"Parent {System.IO.Path.GetFileName(fullPathName)}");
-            AssemblyComponentDefinition ass = document.ComponentDefinition as AssemblyComponentDefinition; //convertion en assemblage
-            var Bom = ass.BOM;
-            var obomViewStandard = Bom.BOMViews[1];// 1 - bom standard - 2 structured - 3 part only (2 et 3 need activation)
-            var BomData = new List<(string FullDisplayName,DataIQT identityData)>();
-            foreach (BOMRow row in obomViewStandard.BOMRows)
+            var data = new DataIQT(PathFullName,qt);
+            Datas.Add(data);
+            if (data.bom.Count == 0 ) return; 
+            foreach ( var bomElement in data.bom )
             {
-                if (row.BOMStructure == BOMStructureEnum.kPhantomBOMStructure || row.BOMStructure == BOMStructureEnum.kReferenceBOMStructure) continue;
-                var FullDisplayName = ((ApprenticeServerDocument)(row.ComponentDefinitions[1]).Document).FullDocumentName;
-                var identityData = dataIQTs.FirstOrDefault(x => x.FullPathName == FullDisplayName);
-                if (identityData == null) continue;
-                identityData.Qt += int.Parse(row.TotalQuantity) * qtParent;
-                BomData.Add((FullDisplayName,identityData));
+                RecursiveQtdatas(bomElement.fullFileName, bomElement.Qt*qt);
             }
-            
-            DataIBase.GetAppServer.Close();
-
-            foreach (var child in BomData)
-            {
-                RecursiveAssignQtToPart(dataIQTs, child.FullDisplayName, child.identityData.Qt);
-            }
-
         }
-
     }
 }

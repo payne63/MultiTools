@@ -32,7 +32,12 @@ namespace SplittableDataGridSAmple
             set { _NameFile = value; NotifyPropertyChanged(); }
         }
 
-        public string FullPathName;
+        public string _FullPathName;
+        public string FullPathName
+        {
+            get { return _FullPathName; }
+            set { _FullPathName = value; NotifyPropertyChanged(); }
+        }
 
         private string _Description;
         public string Description
