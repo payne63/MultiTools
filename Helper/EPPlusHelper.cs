@@ -33,14 +33,22 @@ namespace SplittableDataGridSAmple.Helper
                 sheet.Cells["A1"].Value = datas[0].FullPathName;
 
                 var rowIndex = 1;
+                var mergeTitleRow =sheet.Cells[rowIndex, 1, rowIndex, 5];
+                mergeTitleRow.Merge = true;
+                mergeTitleRow.Value = "Fiche de Lancement";
+                mergeTitleRow.Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
+                mergeTitleRow.Style.Font.Size = 20;
+                mergeTitleRow.Style.Font.Bold = true;
+                rowIndex+=3;
+                var rowOfTitleTable = rowIndex;
 
-                sheet.Cells[rowIndex, 1].Value = "Nom";
-                sheet.Cells[rowIndex, 2].Value = "Description";
-                sheet.Cells[rowIndex, 3].Value = "Categorie";
-                sheet.Cells[rowIndex, 4].Value = "Qt";
-                sheet.Cells[rowIndex, 1].EntireRow.Style.Font.Bold = true;
-                sheet.Cells[rowIndex, 1].EntireRow.Style.Font.Size = 13;
-                sheet.Cells[1,1,1,4].AutoFilter = true;
+                sheet.Cells[rowOfTitleTable, 1].Value = "Nom";
+                sheet.Cells[rowOfTitleTable, 2].Value = "Description";
+                sheet.Cells[rowOfTitleTable, 3].Value = "Categorie";
+                sheet.Cells[rowOfTitleTable, 4].Value = "Qt";
+                sheet.Cells[rowOfTitleTable, 1].EntireRow.Style.Font.Bold = true;
+                sheet.Cells[rowOfTitleTable, 1].EntireRow.Style.Font.Size = 13;
+                sheet.Cells[rowOfTitleTable, 1, rowOfTitleTable, 4].AutoFilter = true;
                 rowIndex++;
                 foreach (var data in datas)
                 {
@@ -52,7 +60,7 @@ namespace SplittableDataGridSAmple.Helper
                 }
 
                 sheet.Columns.AutoFit();
-                var rangeStyle = sheet.Cells[1, 1, sheet.Dimension.Rows, sheet.Dimension.Columns].Style;
+                var rangeStyle = sheet.Cells[rowOfTitleTable, 1, sheet.Dimension.Rows, sheet.Dimension.Columns].Style;
                 rangeStyle.Border.Top.Style = OfficeOpenXml.Style.ExcelBorderStyle.Thin;
                 rangeStyle.Border.Left.Style = OfficeOpenXml.Style.ExcelBorderStyle.Thin;
                 rangeStyle.Border.Right.Style = OfficeOpenXml.Style.ExcelBorderStyle.Thin;
