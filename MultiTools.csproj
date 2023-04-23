@@ -13,6 +13,7 @@
 		
 		<WindowsPackageType>None</WindowsPackageType>
 		<WindowsAppSDKSelfContained>true</WindowsAppSDKSelfContained>
+		<ApplicationIcon>Images\cropped-copietravail-evolution6.ico</ApplicationIcon>
 		
 	</PropertyGroup>
 	<ItemGroup>
@@ -80,7 +81,7 @@
 		<Content Include="bin\x64\Release\net6.0-windows10.0.19041.0\win10-x64\Images\draw.ico" />
 		<Content Include="bin\x64\Release\net6.0-windows10.0.19041.0\win10-x64\Images\drawing.png" />
 		<Content Include="bin\x64\Release\net6.0-windows10.0.19041.0\win10-x64\Images\laserIcon.png" />
-		<Content Include="bin\x64\Release\net6.0-windows10.0.19041.0\win10-x64\Images\part.ico" />
+		<Content Include="Images\cropped-copietravail-evolution6.ico" />
 		<Content Include="bin\x64\Release\net6.0-windows10.0.19041.0\win10-x64\Images\part.png" />
 		<Content Include="bin\x64\Release\net6.0-windows10.0.19041.0\win10-x64\Images\removeUser.png" />
 		<Content Include="bin\x64\Release\net6.0-windows10.0.19041.0\win10-x64\Images\Welcome.png" />
@@ -92,6 +93,7 @@
 		<Content Include="bin\x64\Release\net6.0-windows10.0.19041.0\win10-x64\MultiTools.deps.json" />
 		<Content Include="bin\x64\Release\net6.0-windows10.0.19041.0\win10-x64\MultiTools.runtimeconfig.json" />
 		<Content Include="bin\x64\Release\net6.0-windows10.0.19041.0\win10-x64\WindowsAppRuntime.png" />
+		<Content Include="Images\part.ico" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -596,6 +598,17 @@
 		<Page Update="Elements\DataGridQT.xaml">
 		  <Generator>MSBuild:Compile</Generator>
 		</Page>
+		<None Update="Images\AvitechLogo.png">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Images\cropped-copietravail-evolution6.jpg">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Images\smallLogo.png">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		  <Pack>True</Pack>
+		  <PackagePath>\</PackagePath>
+		</None>
 		<None Update="JsonData\companys.json">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</None>
@@ -616,6 +629,8 @@
 		</None>
 		<None Update="Images\part.ico">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
 		</None>
 		<None Update="Images\part.png">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

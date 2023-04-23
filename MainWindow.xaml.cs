@@ -36,6 +36,7 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Net.Mail;
 using Windows.UI.ViewManagement;
+using Windows.UI.WindowManagement;
 
 namespace SplittableDataGridSAmple
 {
@@ -73,6 +74,7 @@ namespace SplittableDataGridSAmple
             UsersNameUpdate();
             ExtendsContentIntoTitleBar = true;
             window.SetTitleBar(AppTitleBar);
+            window.Title = "MultiTools";
         }
 
         private static void LoadPaths()
