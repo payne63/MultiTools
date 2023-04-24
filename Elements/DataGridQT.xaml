@@ -40,20 +40,20 @@
         </c:DataGrid.Columns>
         <c:DataGrid.RowDetailsTemplate>
             <DataTemplate >
-                <Border BorderThickness="0"  Padding="10" >
+                <Border BorderThickness="0"  Padding="10" Background="{StaticResource AccentAcrylicBackgroundFillColorDefaultBrush}">
                     <StackPanel Orientation="Horizontal" Tapped="dataGrid_Tapped">
                         <Image Source="{Binding BitmapImage ,Mode=OneWay}" Width="128" Height="128" />
                         <StackPanel Orientation="Vertical">
                             <StackPanel Orientation="Horizontal" Margin="8">
-                                <TextBlock  Text="Chemin du fichier : " Margin="0,0,5,0" />
-                                <TextBlock  Text="{Binding NameFile}"  />
+                                <TextBlock  Text="Chemin du fichier : " Margin="0,0,5,0" Foreground="{StaticResource TextOnAccentFillColorDefault}"/>
+                                <TextBlock  Text="{Binding NameFile}"  Foreground="{StaticResource TextOnAccentFillColorDefault}"/>
                             </StackPanel>
                             <StackPanel Orientation="Horizontal" Margin="8">
-                                <TextBlock Text="nom complet : " Margin="0,0,5,0" />
-                                <TextBlock Text="{Binding FullPathName}"  />
+                                <TextBlock Text="nom complet : " Margin="0,0,5,0" Foreground="{StaticResource TextOnAccentFillColorDefault}"/>
+                                <TextBlock Text="{Binding FullPathName}"  Foreground="{StaticResource TextOnAccentFillColorDefault}"/>
                             </StackPanel>
                             <StackPanel Orientation="Horizontal" Margin="8">
-                                <TextBlock Text="Categorie : " Margin="0,0,5,0" VerticalAlignment="Center" />
+                                <TextBlock Text="Categorie : " Margin="0,0,5,0" VerticalAlignment="Center" Foreground="{StaticResource TextOnAccentFillColorDefault}"/>
                             <ComboBox x:Name="ComboBoxCategory"
                                         ItemsSource="{Binding GetCategoryTypes}"
                                         SelectedItem="{Binding Category}"
