@@ -43,8 +43,6 @@ namespace SplittableDataGridSAmple.Tabs
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
         #endregion
-        
-
 
         private bool _IsInterfaceEnabled = true;
         public bool IsInterfaceEnabled
@@ -86,20 +84,24 @@ namespace SplittableDataGridSAmple.Tabs
             }
             if (storageItemDrop.Name.EndsWith(".ipt") || storageItemDrop.Name.EndsWith(".iam"))
             {
+                RemoveAllData();
                 IsInterfaceEnabled = false;
-                //DatasIQT = new ObservableCollection<DataIQT>(await LoadData(storageItemDrop.Path)); // get all files informations
-                //DatasIQT = new ObservableCollection<DataIQT>(QtManager.GetQtDatas(storageItemDrop.Path));
 
                 var groups = QtManager.GetQtDatas(storageItemDrop.Path).GroupBy(data => data.Category);
-                foreach (var group in groups)
+                foreach (DataIBase.CategoryType enumVal in Enum.GetValues(typeof(DataIBase.CategoryType)))
                 {
-                    var dataGridInstance = new Elements.DataGridQT(group.Key) { Datas = new ObservableCollection<DataIQT>(group), Title = group.Key.ToString() };
-                    StackPanelOfBom.Children.Add(dataGridInstance);
-                    //dataGridCollection.Add(dataGridInstance);
+                    var group = groups.Where(x => x.Key == enumVal);
+                    if (group.Count() != 0)
+                    {
+                        var dataGridInstance = new Elements.DataGridQT(enumVal) { Datas = new ObservableCollection<DataIQT>(group.First()), Title = enumVal.ToString() };
+                        StackPanelOfBom.Children.Add(dataGridInstance);
+                    }
+                    else
+                    {
+                        var dataGridInstance = new Elements.DataGridQT(enumVal) { Datas = new ObservableCollection<DataIQT>() { }, Title = enumVal.ToString() ,IsVisible = false }; // empty list
+                        StackPanelOfBom.Children.Add(dataGridInstance);
+                    }
                 }
-
-
-
                 IsInterfaceEnabled = true;
             }
         }
@@ -107,7 +109,11 @@ namespace SplittableDataGridSAmple.Tabs
 
         private void Button_Click_RemoveData(object sender, RoutedEventArgs e)
         {
-            //DatasIQT.Clear();
+            RemoveAllData();
+        }
+
+        private void RemoveAllData()
+        {
             DataGridQT.ClearAllData();
             StackPanelOfBom.Children.Clear();
         }
@@ -126,9 +132,8 @@ namespace SplittableDataGridSAmple.Tabs
 
         private void Button_Click_ExportData(object sender, RoutedEventArgs e)
         {
-            List<DataIQT> fulldata = DataGridQT.dataGridCollection.Where(x=>x.IsVisible == true).SelectMany(data => data.Datas).ToList();
+            List<DataIQT> fulldata = DataGridQT.dataGridCollection.Where(x => x.IsVisible == true).SelectMany(data => data.Datas).ToList();
             if (fulldata.Count == 0) return;
-            //ExcelHelper.ExportData(fulldata);
             EPPlusHelper.ExportData(fulldata);
         }
 

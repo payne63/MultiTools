@@ -23,12 +23,8 @@ using Microsoft.UI.Xaml.Media.Imaging;
 using Windows.Storage.FileProperties;
 using System.Threading.Tasks;
 
-// To learn more about WinUI, the WinUI project structure,
-// and more about our project templates, see: http://aka.ms/winui-project-info.
-
 namespace SplittableDataGridSAmple.Elements
 {
-
     public sealed partial class DataGridQT : StackPanel, INotifyPropertyChanged
     {
 
@@ -150,10 +146,10 @@ namespace SplittableDataGridSAmple.Elements
             }
         }
 
-        private void Button_Click_ChangeCategory(object sender, RoutedEventArgs e)
-        {
+        //private void Button_Click_ChangeCategory(object sender, RoutedEventArgs e)
+        //{
 
-        }
+        //}
 
         private void dataGrid_Tapped(object sender, TappedRoutedEventArgs e)
         {
@@ -173,6 +169,8 @@ namespace SplittableDataGridSAmple.Elements
             newDateGridQT.OnPropertyChanged(nameof(QtElement));
             oldDateGridQT.OnPropertyChanged(nameof(QtElement));
             dataIQT.Category = (CategoryType)e.AddedItems[0];
+            if (oldDateGridQT.Datas.Count == 0)  oldDateGridQT.IsVisible = false;
+            newDateGridQT.IsVisible = true;
         }
     }
 }

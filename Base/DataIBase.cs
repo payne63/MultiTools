@@ -1,10 +1,10 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using I=Inventor;
+using I = Inventor;
 
 namespace SplittableDataGridSAmple
 {
-    public abstract class DataIBase :INotifyPropertyChanged
+    public abstract class DataIBase : INotifyPropertyChanged
     {
         #region InotifyPropertyChange
         public event PropertyChangedEventHandler PropertyChanged;
@@ -13,15 +13,16 @@ namespace SplittableDataGridSAmple
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
         #endregion
-        public enum CategoryType { Inconnu, Laser, Commerce, Profile, MecanoSoudure, Assemblage, ElementClient, Mecanique }
+        public enum CategoryType { Assemblage, MecanoSoudure, Mecanique, Profile, Laser, Commerce, ElementClient, Inconnu, }
 
         private static I.ApprenticeServerComponent AppServer;
 
         static internal I.ApprenticeServerComponent GetAppServer
-        {   get
+        {
+            get
             {
                 if (AppServer == null) AppServer = new I.ApprenticeServerComponent();
-                return AppServer; 
+                return AppServer;
             }
         }
 
