@@ -9,6 +9,7 @@
     ".NETCoreApp,Version=v6.0/win10-x64": {
       "MultiTools/1.0.0": {
         "dependencies": {
+          "ClosedXML": "0.101.0",
           "CommunityToolkit.WinUI.UI": "7.1.2",
           "CommunityToolkit.WinUI.UI.Controls": "7.1.2",
           "CommunityToolkit.WinUI.UI.Controls.DataGrid": "7.1.2",
@@ -873,6 +874,21 @@
           }
         }
       },
+      "ClosedXML/0.101.0": {
+        "dependencies": {
+          "DocumentFormat.OpenXml": "2.16.0",
+          "ExcelNumberFormat": "1.1.0",
+          "SixLabors.Fonts": "1.0.0-beta19",
+          "System.IO.Packaging": "6.0.0",
+          "XLParser": "1.5.2"
+        },
+        "runtime": {
+          "lib/netstandard2.1/ClosedXML.dll": {
+            "assemblyVersion": "0.101.0.0",
+            "fileVersion": "0.101.0.0"
+          }
+        }
+      },
       "ColorCode.Core/2.0.13": {
         "dependencies": {
           "NETStandard.Library": "1.6.1"
@@ -1028,6 +1044,17 @@
           }
         }
       },
+      "DocumentFormat.OpenXml/2.16.0": {
+        "dependencies": {
+          "System.IO.Packaging": "6.0.0"
+        },
+        "runtime": {
+          "lib/netstandard2.0/DocumentFormat.OpenXml.dll": {
+            "assemblyVersion": "2.16.0.0",
+            "fileVersion": "2.16.0.0"
+          }
+        }
+      },
       "EPPlus/6.2.2": {
         "dependencies": {
           "EPPlus.Interfaces": "6.1.1",
@@ -1064,6 +1091,14 @@
           }
         }
       },
+      "ExcelNumberFormat/1.1.0": {
+        "runtime": {
+          "lib/netstandard2.0/ExcelNumberFormat.dll": {
+            "assemblyVersion": "1.1.0.0",
+            "fileVersion": "1.1.0.0"
+          }
+        }
+      },
       "HarfBuzzSharp/2.8.2.3": {
         "dependencies": {
           "HarfBuzzSharp.NativeAssets.Win32": "2.8.2.3",
@@ -1081,6 +1116,22 @@
         "native": {
           "runtimes/win-x64/native/libHarfBuzzSharp.dll": {
             "fileVersion": "0.0.0.0"
+          }
+        }
+      },
+      "Irony.NetCore/1.0.11": {
+        "dependencies": {
+          "NETStandard.Library": "1.6.1",
+          "System.Reflection": "4.3.0",
+          "System.Reflection.Emit.Lightweight": "4.3.0",
+          "System.Reflection.Extensions": "4.3.0",
+          "System.Reflection.TypeExtensions": "4.3.0",
+          "System.Runtime.Numerics": "4.3.0"
+        },
+        "runtime": {
+          "lib/netstandard1.6/Irony.dll": {
+            "assemblyVersion": "1.0.11.0",
+            "fileVersion": "1.0.11.0"
           }
         }
       },
@@ -1578,6 +1629,14 @@
         }
       },
       "runtime.win7.System.Private.Uri/4.3.0": {},
+      "SixLabors.Fonts/1.0.0-beta19": {
+        "runtime": {
+          "lib/netcoreapp3.1/SixLabors.Fonts.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      },
       "SixLabors.ImageSharp/2.1.3": {
         "dependencies": {
           "System.Runtime.CompilerServices.Unsafe": "6.0.0",
@@ -1824,6 +1883,14 @@
       "System.IO.FileSystem.Primitives/4.3.0": {
         "dependencies": {
           "System.Runtime": "4.3.0"
+        }
+      },
+      "System.IO.Packaging/6.0.0": {
+        "runtime": {
+          "lib/net6.0/System.IO.Packaging.dll": {
+            "assemblyVersion": "6.0.0.0",
+            "fileVersion": "6.0.21.52210"
+          }
         }
       },
       "System.Linq/4.3.0": {
@@ -2350,6 +2417,18 @@
           "System.Xml.ReaderWriter": "4.3.0"
         }
       },
+      "XLParser/1.5.2": {
+        "dependencies": {
+          "Irony.NetCore": "1.0.11",
+          "NETStandard.Library": "1.6.1"
+        },
+        "runtime": {
+          "lib/netstandard1.6/XLParser.dll": {
+            "assemblyVersion": "1.5.2.0",
+            "fileVersion": "1.5.2.0"
+          }
+        }
+      },
       "Autodesk.Inventor.Interop/23.0.0.0": {
         "runtime": {
           "Autodesk.Inventor.Interop.dll": {
@@ -2375,6 +2454,13 @@
       "type": "runtimepack",
       "serviceable": false,
       "sha512": ""
+    },
+    "ClosedXML/0.101.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-PHirYTGFZ0a9MGXzZi6zrICrlKV7zdhtKMnto0gv+nqPpfX8mt/u/hw8st+0vPdgAxrpfXz9JCpRLueJc7blUw==",
+      "path": "closedxml/0.101.0",
+      "hashPath": "closedxml.0.101.0.nupkg.sha512"
     },
     "ColorCode.Core/2.0.13": {
       "type": "package",
@@ -2467,6 +2553,13 @@
       "path": "communitytoolkit.winui.ui.controls.primitives/7.1.2",
       "hashPath": "communitytoolkit.winui.ui.controls.primitives.7.1.2.nupkg.sha512"
     },
+    "DocumentFormat.OpenXml/2.16.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-RhpnDgyyx1KjZm98T3w3bSXFHG/7ZNUaVmz4NAUA+jmV3PcVNZeW87Y04CpBNLdDHEMSspirfo0B5kLRaoE97w==",
+      "path": "documentformat.openxml/2.16.0",
+      "hashPath": "documentformat.openxml.2.16.0.nupkg.sha512"
+    },
     "EPPlus/6.2.2": {
       "type": "package",
       "serviceable": true,
@@ -2488,6 +2581,13 @@
       "path": "epplus.system.drawing/6.1.1",
       "hashPath": "epplus.system.drawing.6.1.1.nupkg.sha512"
     },
+    "ExcelNumberFormat/1.1.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-R3BVHPs9O+RkExbZYTGT0+9HLbi8ZrNij1Yziyw6znd3J7P3uoIR07uwTLGOogtz1p6+0sna66eBoXu7tBiVQA==",
+      "path": "excelnumberformat/1.1.0",
+      "hashPath": "excelnumberformat.1.1.0.nupkg.sha512"
+    },
     "HarfBuzzSharp/2.8.2.3": {
       "type": "package",
       "serviceable": true,
@@ -2508,6 +2608,13 @@
       "sha512": "sha512-Wo6QpE4+a+PFVdfIBoLkLr4wq2uC0m9TZC8FAfy4ZnLsUc10WL0Egk9EBHHhDCeokNOXDse5YtvuTYtS/rbHfg==",
       "path": "harfbuzzsharp.nativeassets.win32/2.8.2.3",
       "hashPath": "harfbuzzsharp.nativeassets.win32.2.8.2.3.nupkg.sha512"
+    },
+    "Irony.NetCore/1.0.11": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-/2MCkqdhEjPiSTZKYXg6u9AO9o3m68biqcFHAnM28WdnrcZii2vYbmKPzT5ejByyV72FUlygOtHBMt8SLnUyNw==",
+      "path": "irony.netcore/1.0.11",
+      "hashPath": "irony.netcore.1.0.11.nupkg.sha512"
     },
     "Microsoft.Extensions.Configuration/6.0.0": {
       "type": "package",
@@ -2957,6 +3064,13 @@
       "path": "runtime.win7.system.private.uri/4.3.0",
       "hashPath": "runtime.win7.system.private.uri.4.3.0.nupkg.sha512"
     },
+    "SixLabors.Fonts/1.0.0-beta19": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-ECJoayRT54VkJNoKBwZZllGvBIvxmnUFXsUCqHU8uAjAFrcdtxNpQ5Auyzw3d4+B+Q3KivKIrd7uO0qiNx/glg==",
+      "path": "sixlabors.fonts/1.0.0-beta19",
+      "hashPath": "sixlabors.fonts.1.0.0-beta19.nupkg.sha512"
+    },
     "SixLabors.ImageSharp/2.1.3": {
       "type": "package",
       "serviceable": true,
@@ -3138,6 +3252,13 @@
       "sha512": "sha512-6QOb2XFLch7bEc4lIcJH49nJN2HV+OC3fHDgsLVsBVBk3Y4hFAnOBGzJ2lUu7CyDDFo9IBWkSsnbkT6IBwwiMw==",
       "path": "system.io.filesystem.primitives/4.3.0",
       "hashPath": "system.io.filesystem.primitives.4.3.0.nupkg.sha512"
+    },
+    "System.IO.Packaging/6.0.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-C7OkTRIjqIjAKu6ef/fuj8ynCZTPcTYZnvHaq48bniACgXXJogmEoIc56YCDNTc14xhsbLmgpS3KP+evbsUa2g==",
+      "path": "system.io.packaging/6.0.0",
+      "hashPath": "system.io.packaging.6.0.0.nupkg.sha512"
     },
     "System.Linq/4.3.0": {
       "type": "package",
@@ -3474,6 +3595,13 @@
       "sha512": "sha512-5zJ0XDxAIg8iy+t4aMnQAu0MqVbqyvfoUVl1yDV61xdo3Vth45oA2FoY4pPkxYAH5f8ixpmTqXeEIya95x0aCQ==",
       "path": "system.xml.xdocument/4.3.0",
       "hashPath": "system.xml.xdocument.4.3.0.nupkg.sha512"
+    },
+    "XLParser/1.5.2": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-8tnUCmMbn6c/HGuHFyq1sulHym8YReTKDNXFFQk0U8nldNx6RGrwRvLh0+aQjEc7YoC3Q1ztH1npLt7dClKqjw==",
+      "path": "xlparser/1.5.2",
+      "hashPath": "xlparser.1.5.2.nupkg.sha512"
     },
     "Autodesk.Inventor.Interop/23.0.0.0": {
       "type": "reference",
