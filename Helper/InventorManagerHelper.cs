@@ -302,6 +302,7 @@ namespace AvitechTools.Models
 
         public async Task<bool> PrintMultiSheet(Inventor.DrawingDocument documentToPrint)
         {
+            var indexPage = 1;
             foreach (Inventor.Sheet sheet in documentToPrint.Sheets)
             {
                 //Inventor.Sheet sheet = documentToPrint.ActiveSheet;
@@ -324,9 +325,10 @@ namespace AvitechTools.Models
                 printerManager.ScaleMode = Inventor.PrintScaleModeEnum.kPrintFullScale;//Inventor.PrintScaleModeEnum.kPrintBestFitScale;
                 printerManager.PaperSize = printerSizeConverter[size];
                 printerManager.Orientation = printerOrientationConverter[orientation];
-                printerManager.PrintRange = Inventor.PrintRangeEnum.kPrintCurrentSheet;
+                printerManager.PrintRange = Inventor.PrintRangeEnum.kPrintSheetRange;
+                printerManager.SetSheetRange(indexPage, indexPage);
                 await Task.Run(() => printerManager.SubmitPrint());
-
+                indexPage++;
             }
             return true;
 
