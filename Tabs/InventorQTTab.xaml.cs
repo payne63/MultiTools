@@ -30,6 +30,9 @@ using CommunityToolkit.WinUI.Helpers;
 using Inventor;
 using Windows.Graphics.Printing;
 using SplittableDataGridSAmple.Elements;
+using Windows.Storage.Pickers;
+using Windows.Storage;
+using CommunityToolkit.WinUI.UI;
 
 namespace SplittableDataGridSAmple.Tabs
 {
@@ -130,12 +133,24 @@ namespace SplittableDataGridSAmple.Tabs
             _ = await dialog.ShowAsync();
         }
 
-        private void Button_Click_ExportData(object sender, RoutedEventArgs e)
+        private async void Button_Click_ExportData(object sender, RoutedEventArgs e)
         {
+
             List<DataIQT> fulldata = DataGridQT.dataGridCollection.Where(x => x.IsVisible == true).SelectMany(data => data.Datas).ToList();
             if (fulldata.Count == 0) return;
-            CloseXMLHelper.ExportData(fulldata);
+
+            FileSavePicker savePicker = new Windows.Storage.Pickers.FileSavePicker();
+            var hWnd = WinRT.Interop.WindowNative.GetWindowHandle(MainWindow.Instance);
+            WinRT.Interop.InitializeWithWindow.Initialize(savePicker, hWnd);
+            savePicker.SuggestedStartLocation = PickerLocationId.ComputerFolder; //System.IO.Path.GetDirectoryName(fulldata[0].FullPathName);
+            savePicker.FileTypeChoices.Add("Fichier Excel", new List<string>() { ".xlsx" });
+            savePicker.SuggestedFileName = System.IO.Path.GetFileNameWithoutExtension(fulldata[0].NameFile) + ".xlsx"; ;
+            StorageFile file = await savePicker.PickSaveFileAsync();
+
+
+            CloseXMLHelper.ExportData(fulldata, file);
         }
 
+        
     }
 }
