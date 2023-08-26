@@ -10,82 +10,107 @@ using I = Inventor;
 using Inventor;
 using Microsoft.UI.Xaml.Media.Imaging;
 
-namespace SplittableDataGridSAmple.Models
+namespace SplittableDataGridSAmple.Models;
+
+public class IDWPrintModel : INotifyPropertyChanged
 {
-    public class IDWPrintModel : INotifyPropertyChanged
+    private static readonly I.ApprenticeServerComponent appServer = new();
+    public event PropertyChangedEventHandler PropertyChanged;
+    protected void OnPropertyChanged([CallerMemberName] string name = null)
     {
-        private static I.ApprenticeServerComponent appServer = new I.ApprenticeServerComponent();
-        public event PropertyChangedEventHandler PropertyChanged;
-        protected void OnPropertyChanged([CallerMemberName] string name = null)
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+    }
+
+    public BitmapImage bitmapImage;
+
+    public FileInfo FileInfoData { get; }
+
+    private bool _IsPrint;
+    public bool IsPrint
+    {
+        get => _IsPrint;
+        set { _IsPrint = value; OnPropertyChanged(); }
+    }
+
+    private bool _IsDrawing;
+    public bool IsDrawing
+    {
+        get => _IsDrawing;
+        set { _IsDrawing = value; OnPropertyChanged(); }
+    }
+
+    private DrawingSheetSizeEnum _SheetSize;
+    public DrawingSheetSizeEnum SheetSize
+    {
+        get => _SheetSize;
+        set { _SheetSize = value; OnPropertyChanged(); }
+    }
+
+    private PageOrientationTypeEnum _Orientation;
+    public PageOrientationTypeEnum Orientation
+    {
+        get =>_Orientation; 
+        set { _Orientation = value; OnPropertyChanged(); }
+    }
+
+    private int _PageNumber;
+    public int PageNumber
+    {
+        get => _PageNumber; 
+        set { _PageNumber = value; OnPropertyChanged(); }
+    }
+
+    private bool _isOnlyOnePage;
+
+    public bool IsOnlyOnePage
+    {
+        get => _isOnlyOnePage;
+        set { _isOnlyOnePage = value; OnPropertyChanged();}
+    }
+
+    public bool isMultiPage => !IsOnlyOnePage;
+    public string Name => FileInfoData.Name;
+
+    private IDWPrintModel(string filePath,
+        DrawingSheetSizeEnum drawingSheetSizeEnum,
+        PageOrientationTypeEnum drawingOrientationEnum,
+        int pageNumber,
+        bool isOnlyOnePage,
+        PropertyChangedEventHandler propertyChangedEventHandler)
+    {
+        SheetSize = drawingSheetSizeEnum;
+        Orientation = drawingOrientationEnum;
+        PageNumber = pageNumber;
+        IsOnlyOnePage = isOnlyOnePage;
+        FileInfoData = new FileInfo(filePath);
+        DefineSelectPrint();
+        PropertyChanged += propertyChangedEventHandler;
+    }
+
+    public void DefineSelectPrint()
+    {
+        if (Name.EndsWith(".idw"))
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
-        }
-
-        public BitmapImage bitmapImage;
-
-        public FileInfo FileInfoData { get; }
-
-        private bool _IsPrint;
-        public bool IsPrint
-        {
-            get { return _IsPrint; }
-            set { _IsPrint = value; OnPropertyChanged(); }
-        }
-
-        private bool _IsDrawing;
-        public bool IsDrawing
-        {
-            get { return _IsDrawing; }
-            set { _IsDrawing = value; OnPropertyChanged(); }
-        }
-
-        private DrawingSheetSizeEnum _SheetSize;
-        public DrawingSheetSizeEnum SheetSize
-        {
-            get { return _SheetSize; }
-            set { _SheetSize = value; OnPropertyChanged(); }
-        }
-
-        private PageOrientationTypeEnum _Orientation;
-        public PageOrientationTypeEnum Orientation
-        {
-            get { return _Orientation; }
-            set { _Orientation = value; OnPropertyChanged(); }
-        }
-
-        private int _PageCount;
-        public int PageCount
-        {
-            get { return _PageCount; }
-            set { _PageCount = value; OnPropertyChanged(); }
-        }
-
-
-        public string Name => FileInfoData.Name;
-
-        public IDWPrintModel(FileInfo fileInfo, PropertyChangedEventHandler propertyChangedEventHandler)
-        {
-            //if (appServer == null) { I.ApprenticeServerComponent appServer = new I.ApprenticeServerComponent(); }
-            var drawingDocument = appServer.Open(fileInfo.FullName) as I.ApprenticeServerDrawingDocument;
-            SheetSize = drawingDocument.Sheets[1].Size;
-            Orientation = drawingDocument.Sheets[1].Orientation;
-            PageCount = drawingDocument.Sheets.Count;
-            FileInfoData = fileInfo;
-            AutoSelectPrint();
-            PropertyChanged += propertyChangedEventHandler;
-        }
-
-        public void AutoSelectPrint()
-        {
-            if (Name.EndsWith(".idw"))
+            if (SheetSize == DrawingSheetSizeEnum.kA4DrawingSheetSize || SheetSize == DrawingSheetSizeEnum.kA3DrawingSheetSize)
             {
-                if (SheetSize == DrawingSheetSizeEnum.kA4DrawingSheetSize || SheetSize == DrawingSheetSizeEnum.kA3DrawingSheetSize)
-                {
-                    IsDrawing = true;
-                }
-                else { IsDrawing = false; }
+                IsDrawing = true;
             }
-            else if (Name.EndsWith("L.idw")) IsPrint = false; else IsPrint = true;
+            else { IsDrawing = false; }
+        }
+        else if (Name.EndsWith("L.idw")) IsPrint = false; else IsPrint = true;
+    }
+
+    public static IEnumerable<IDWPrintModel> GetIDWPrintModels(string filePath ,PropertyChangedEventHandler nbPDFDXFPropertyChanged)
+    {
+        var drawingDocument = appServer.Open(filePath) as I.ApprenticeServerDrawingDocument;
+        for (var page = 1; page < drawingDocument.Sheets.Count+1; page++)
+        {
+            yield return new IDWPrintModel(filePath,
+                drawingDocument.Sheets[page].Size,
+                drawingDocument.Sheets[page].Orientation,
+                page,
+                drawingDocument.Sheets.Count==1,
+                nbPDFDXFPropertyChanged); ;
         }
     }
 }

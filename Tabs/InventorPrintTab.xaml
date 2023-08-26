@@ -125,7 +125,7 @@
         </Border>
         <StackPanel Orientation="Horizontal" Margin="20,10,0,0" Grid.Column="1" Grid.Row="0">
             <TextBlock Text="Nom du Plan" Width="290" VerticalAlignment="Center"/>
-            <DropDownButton Content="A Imprimer" Width="120" Margin="5,0,24,0" IsEnabled="{x:Bind IsInterfaceEnabled, Mode=OneWay}">
+            <DropDownButton Content="Imprimer" Width="100" Margin="5,0,24,0" IsEnabled="{x:Bind IsInterfaceEnabled, Mode=OneWay}">
                 <DropDownButton.Flyout>
                     <MenuFlyout Placement="Bottom">
                         <MenuFlyoutItem Text="Tous" Click="MenuFlyoutItem_Click_AllPrint"/>
@@ -137,7 +137,7 @@
             </DropDownButton>
             <TextBlock Text="Format" Width="100" VerticalAlignment="Center"/>
             <TextBlock Text="Orientation" Width="100" VerticalAlignment="Center"/>
-            <TextBlock Text="Nb Page" Width="100" VerticalAlignment="Center"/>
+            <TextBlock Text="N° Page" Width="100" VerticalAlignment="Center"/>
         </StackPanel>
         <ListView ItemsSource="{x:Bind IDWPrintModels}"
                       x:Name="ListViewIDW"
@@ -157,15 +157,19 @@
                     <ListViewItem Margin="3">
                         <StackPanel Orientation="Vertical">
                             <StackPanel Orientation="Horizontal" >
-                                <TextBlock Text="{x:Bind Name}" MinWidth="300" VerticalAlignment="Center"/>
-                                <CheckBox Content="imprimer" IsChecked="{x:Bind IsPrint, Mode=TwoWay}"
-                                      Checked="CheckBox_Checked_PDFChange" 
-                                      Unchecked="CheckBox_Checked_PDFChange" Width="140"/>
+                                <TextBlock Text="{x:Bind Name}" MinWidth="320" VerticalAlignment="Center"/>
+                                <CheckBox Content="" IsChecked="{x:Bind IsPrint, Mode=TwoWay}"
+                                          HorizontalAlignment="Center" 
+                                          Checked="CheckBox_Checked_PDFChange" 
+                                          Unchecked="CheckBox_Checked_PDFChange" Width="50" MaxWidth="60"/>
                                 <TextBlock Text="{x:Bind SheetSize, Mode=OneWay, Converter={StaticResource SheetSizeEnumToStringConverter}}" Width="100"/>
                                 <TextBlock Text="{x:Bind Orientation, Mode=OneWay, Converter={StaticResource OrientationTypeToStringConverter}}" Width="100"/>
-                                <TextBlock Text="{x:Bind PageCount, Mode=OneWay}" Width="100"/>
-                                <Button x:Name="VisualButton" Click="GetThumbNailAsync" Margin="5,0,5,0">
+                                <TextBlock Text="{x:Bind PageNumber, Mode=OneWay}" Width="100"/>
+                                <Button x:Name="VisualButton" Click="GetThumbNailAsync" Margin="5,0,5,0" Visibility="{x:Bind IsOnlyOnePage,Mode=OneWay}">
                                     <FontIcon Glyph="&#xE7B3;" ToolTipService.ToolTip="Aperçu"/>
+                                </Button>
+                                <Button x:Name="VisualButtonNonPossible" Click="VisualButtonNonPossible_Click" Margin="5,0,5,0" Visibility="{x:Bind isMultiPage, Mode=OneWay}" >
+                                    <FontIcon Glyph="&#xE7BA;" ToolTipService.ToolTip="Aperçu non disponible"/>
                                 </Button>
                                 <Button  Click="Button_Click_OpenDrawing" Margin="5,0,5,0">
                                     <SymbolIcon Symbol="OpenFile" 

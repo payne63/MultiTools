@@ -194,7 +194,7 @@ namespace AvitechTools.Models
         /// <param name="folderPath">arborescence du répertoire</param>
         private static void SavePDF(Inventor.DrawingDocument drawingDoc, string folderPath)
         {
-            string fullName = folderPath + @"\" + System.IO.Path.GetFileNameWithoutExtension(drawingDoc.DisplayName) + ".pdf";
+            var fullName = folderPath + @"\" + System.IO.Path.GetFileNameWithoutExtension(drawingDoc.DisplayName) + ".pdf";
             drawingDoc.SaveAs(fullName, true);
         }
 
@@ -240,19 +240,18 @@ namespace AvitechTools.Models
             instancePrintTab.ProgressBarStatus = "Démarrage Inventor";
             await Task.Run(() => StartInventorNewInstance(instancePrintTab.IsViewApp));
             instancePrintTab.ProgressBarStatus = "Impression en cours";
-            int NbPrintDone = 0;
-            int NbPrintToDo = listIDWPrinterModel.Where(x => x.IsPrint).Count();
+            var NbPrintDone = 0;
+            var NbPrintToDo = listIDWPrinterModel.Where(x => x.IsPrint).Count();
             foreach (IDWPrintModel plan in listIDWPrinterModel)
             {
                 if (plan.IsPrint)
                 {
                     Inventor.Documents doc = app.Documents;
-
                     await Task.Run(() => doc.Open(plan.FileInfoData.FullName));
-                    //doc.Open(viewModel.FolderFileSelected + @"\" + plan.Name);
                     Inventor.DrawingDocument documentToPrint = (Inventor.DrawingDocument)app.ActiveDocument;
-                    if (await PrintMultiSheet(documentToPrint)) NbPrintDone++;
+                    if (await Print(documentToPrint, plan.PageNumber)) NbPrintDone++;
                     instancePrintTab.ProgressBarValue = (NbPrintDone * 100) / NbPrintToDo;
+                    doc.CloseAll();
                 }
             }
 
@@ -270,12 +269,10 @@ namespace AvitechTools.Models
         /// Imprime le document avec les paramètres du cartouche
         /// </summary>
         /// <param name="documentToPrint"></param>
-        public async Task<bool> Print(Inventor.DrawingDocument documentToPrint)
+        public async Task<bool> Print(Inventor.DrawingDocument documentToPrint,int indexPage)
         {
-            Inventor.Sheet sheet = documentToPrint.ActiveSheet;
-
-            Inventor.DrawingSheetSizeEnum size = sheet.Size;
-            Inventor.PageOrientationTypeEnum orientation = sheet.Orientation;
+            Inventor.DrawingSheetSizeEnum size = documentToPrint.Sheets[indexPage].Size;
+            Inventor.PageOrientationTypeEnum orientation = documentToPrint.Sheets[indexPage].Orientation;
 
             Inventor.DrawingPrintManager printerManager = (Inventor.DrawingPrintManager)documentToPrint.PrintManager;
 
@@ -293,46 +290,14 @@ namespace AvitechTools.Models
             printerManager.ScaleMode = Inventor.PrintScaleModeEnum.kPrintFullScale;//Inventor.PrintScaleModeEnum.kPrintBestFitScale;
             printerManager.PaperSize = printerSizeConverter[size];
             printerManager.Orientation = printerOrientationConverter[orientation];
-            printerManager.PrintRange = Inventor.PrintRangeEnum.kPrintAllSheets;
+            printerManager.PrintRange = Inventor.PrintRangeEnum.kPrintSheetRange;
+            printerManager.SetSheetRange(indexPage, indexPage);
             await Task.Run(() => printerManager.SubmitPrint());
 
             return true;
 
         }
-
-        public async Task<bool> PrintMultiSheet(Inventor.DrawingDocument documentToPrint)
-        {
-            var indexPage = 1;
-            foreach (Inventor.Sheet sheet in documentToPrint.Sheets)
-            {
-                //Inventor.Sheet sheet = documentToPrint.ActiveSheet;
-                Inventor.DrawingSheetSizeEnum size = sheet.Size;
-                Inventor.PageOrientationTypeEnum orientation = sheet.Orientation;
-
-                Inventor.DrawingPrintManager printerManager = (Inventor.DrawingPrintManager)documentToPrint.PrintManager;
-
-                printerManager.Printer = size switch
-                {
-                    Inventor.DrawingSheetSizeEnum.kA0DrawingSheetSize => instancePrintTab.GetSelectedPrinterA2A1A0.Name,
-                    Inventor.DrawingSheetSizeEnum.kA1DrawingSheetSize => instancePrintTab.GetSelectedPrinterA2A1A0.Name,
-                    Inventor.DrawingSheetSizeEnum.kA2DrawingSheetSize => instancePrintTab.GetSelectedPrinterA2A1A0.Name,
-                    Inventor.DrawingSheetSizeEnum.kA3DrawingSheetSize => instancePrintTab.GetSelectedPrinterA4A3.Name,
-                    Inventor.DrawingSheetSizeEnum.kA4DrawingSheetSize => instancePrintTab.GetSelectedPrinterA4A3.Name,
-                    _ => throw new NotImplementedException(),
-                };
-
-                printerManager.NumberOfCopies = 1;
-                printerManager.ScaleMode = Inventor.PrintScaleModeEnum.kPrintFullScale;//Inventor.PrintScaleModeEnum.kPrintBestFitScale;
-                printerManager.PaperSize = printerSizeConverter[size];
-                printerManager.Orientation = printerOrientationConverter[orientation];
-                printerManager.PrintRange = Inventor.PrintRangeEnum.kPrintSheetRange;
-                printerManager.SetSheetRange(indexPage, indexPage);
-                await Task.Run(() => printerManager.SubmitPrint());
-                indexPage++;
-            }
-            return true;
-
-        }
+        
         public static void TestDialogPrinter()
         {
             //PageSetupDialog pageSetupDialog = new PageSetupDialog();
