@@ -48,17 +48,6 @@
 		<Page Remove="Services\MarshalService.xaml" />
 		<Page Remove="Themes\Generic.xaml" />
 	</ItemGroup>
-	<ItemGroup>
-		<COMReference Include="Microsoft.Office.Interop.Outlook">
-			<WrapperTool>tlbimp</WrapperTool>
-			<VersionMinor>6</VersionMinor>
-			<VersionMajor>9</VersionMajor>
-			<Guid>00062fff-0000-0000-c000-000000000046</Guid>
-			<Lcid>0</Lcid>
-			<Isolated>false</Isolated>
-			<EmbedInteropTypes>true</EmbedInteropTypes>
-		</COMReference>
-	</ItemGroup>
 
 	<ItemGroup>
 		<Content Include="Assets\SplashScreen.scale-200.png" />
@@ -581,6 +570,9 @@
 	<ItemGroup>
 		<Reference Include="Autodesk.Inventor.Interop">
 			<HintPath>..\..\..\..\..\Program Files\Autodesk\Inventor 2019\Bin\Public Assemblies\Autodesk.Inventor.Interop.dll</HintPath>
+		</Reference>
+		<Reference Include="Microsoft.Office.Interop.Outlook">
+		  <HintPath>..\..\..\..\Program Files (x86)\Microsoft Office\root\Office16\ADDINS\Microsoft Power Query for Excel Integrated\bin\Microsoft.Office.Interop.Outlook.dll</HintPath>
 		</Reference>
 	</ItemGroup>
 	<ItemGroup>

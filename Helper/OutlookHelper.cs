@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using static SplittableDataGridSAmple.MainWindow;
 using Outlook = Microsoft.Office.Interop.Outlook;
 using SplittableDataGridSAmple.Helper;
+using System.Runtime.InteropServices;
 
 namespace SplittableDataGridSAmple.Helper
 {
@@ -19,14 +20,20 @@ namespace SplittableDataGridSAmple.Helper
         Outlook.Application appOutlook = null;
         private Outlook.Application GetOutlookApplication()
         {
-            try
+            if (Process.GetProcessesByName("OUTLOOK").Count() > 0)
             {
+
+                // If so, use the GetActiveObject method to obtain the process and cast it to an Application object.
                 appOutlook = Marshal2.GetActiveObject("Outlook.Application") as Outlook.Application;
             }
-            catch (System.Exception)
+            else
             {
+
+                // If not, create a new instance of Outlook and sign in to the default profile.
                 appOutlook = new Outlook.Application();
-                appOutlook.Session.Logon("", "", Missing.Value, Missing.Value);
+                Outlook.NameSpace nameSpace = appOutlook.GetNamespace("MAPI");
+                nameSpace.Logon("", "", Missing.Value, Missing.Value);
+                nameSpace = null;
             }
             return appOutlook;
         }

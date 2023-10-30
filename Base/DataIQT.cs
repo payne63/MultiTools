@@ -77,8 +77,10 @@ namespace SplittableDataGridSAmple.Base
                     bom.Add((FullDocumentName, qtPart));
                 }
                 if (bom.Count == 0) { return; } // no children?
-                if (System.IO.Path.GetFileNameWithoutExtension( bom[0].fullFileName)[0..7] == PartNumber[0..7]) { Category = CategoryType.MecanoSoudure; GetAppServer.Close(); return; }
-
+                if (bom[0].fullFileName.Length >=8 && PartNumber.Length >=8)
+                {
+                    if (System.IO.Path.GetFileNameWithoutExtension( bom[0].fullFileName)[0..7] == PartNumber[0..7]) { Category = CategoryType.MecanoSoudure; GetAppServer.Close(); return; }
+                }
                 Category = CategoryType.Assemblage;
                 GetAppServer.Close();
                 return;
