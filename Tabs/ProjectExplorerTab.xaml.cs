@@ -138,7 +138,7 @@ namespace SplittableDataGridSAmple.Tabs
             set { _IsInterfaceEnabled = value; OnPropertyChanged(); }
         }
 
-        private bool _IsAutoUpdate = true;
+        private bool _IsAutoUpdate = false;
         public bool IsAutoUpdate
         {
             get { return _IsAutoUpdate; }
@@ -298,6 +298,8 @@ namespace SplittableDataGridSAmple.Tabs
         }
         private void RecursiveRemoveSpecificChildren(DataI dataISource)
         {
+            // les pièces ou assemblages élement client n'ont pas d'enfant
+            if (dataISource.Category == DataI.CategoryType.ElementClient) dataISource.ReferencedDataI.Clear();
             // les pièces ou assemblages du commerce n'ont pas d'enfant
             if (dataISource.Category == DataI.CategoryType.Commerce) dataISource.ReferencedDataI.Clear();
             // les pièces ou assemblages du commerce n'ont pas d'enfant

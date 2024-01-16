@@ -144,11 +144,13 @@ namespace SplittableDataGridSAmple.Tabs
             WinRT.Interop.InitializeWithWindow.Initialize(savePicker, hWnd);
             savePicker.SuggestedStartLocation = PickerLocationId.ComputerFolder; //System.IO.Path.GetDirectoryName(fulldata[0].FullPathName);
             savePicker.FileTypeChoices.Add("Fichier Excel", new List<string>() { ".xlsx" });
-            savePicker.SuggestedFileName = System.IO.Path.GetFileNameWithoutExtension(fulldata[0].NameFile) + ".xlsx"; ;
+            var dateSave = DateTime.Now;
+            var fileName = System.IO.Path.GetFileNameWithoutExtension(fulldata[0].NameFile);
+            savePicker.SuggestedFileName = "Extraction de " + fileName + " le " + dateSave.ToString("yy-MM-dd à hh\\hmm") + ".xlsx";
             StorageFile file = await savePicker.PickSaveFileAsync();
+            if (file == null) return;
 
-
-            CloseXMLHelper.ExportData(fulldata, file);
+            CloseXMLHelper.ExportData(fulldata, file,dateSave);
         }
 
         
