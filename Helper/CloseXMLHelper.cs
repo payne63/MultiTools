@@ -31,7 +31,7 @@ public class CloseXMLHelper
         sheet.Cell("A2").Value = "Assemblage Maître";
         sheet.Cell("B2").Value = datas[0].NameFile;
         sheet.Cell("A3").Value = "date d'extraction";
-        sheet.Cell("B3").Value = dateSave.ToString("dd/MM/yy hh:mm");
+        sheet.Cell("B3").Value = dateSave.ToString("dd/MM/yy HH:mm");
 
         var table = sheet.Cell("A4").InsertTable(datas.Select(
             x => new DataTable(x.NameFile,null,null, x.Description, x.Category.ToString(), x.Qt,null, null,null,null)));
@@ -41,7 +41,10 @@ public class CloseXMLHelper
         var rowOfTable = table.RowCount();
         for (int i = 0; i < rowOfTable-1; i++)
         {
-            sheet.Cell("A" + (i + 5).ToString()).SetHyperlink(new XLHyperlink(datas[i].FullPathName));
+            var cell = sheet.Cell("A" + (i + 5).ToString());
+            cell.SetHyperlink(new XLHyperlink(datas[i].FullPathName));
+            cell.Style.Font.FontColor = XLColor.Black;
+            cell.Style.Font.Underline = XLFontUnderlineValues.None;
         }
 
         sheet.Columns().AdjustToContents();

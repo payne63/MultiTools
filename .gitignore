@@ -28,6 +28,8 @@ x86/
 [Aa][Rr][Mm]64/
 bld/
 [Bb]in/
+Win64
+x64
 [Oo]bj/
 [Oo]ut/
 [Ll]og/

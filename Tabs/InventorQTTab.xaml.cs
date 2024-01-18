@@ -146,7 +146,7 @@ namespace SplittableDataGridSAmple.Tabs
             savePicker.FileTypeChoices.Add("Fichier Excel", new List<string>() { ".xlsx" });
             var dateSave = DateTime.Now;
             var fileName = System.IO.Path.GetFileNameWithoutExtension(fulldata[0].NameFile);
-            savePicker.SuggestedFileName = "Extraction de " + fileName + " le " + dateSave.ToString("yy-MM-dd à hh\\hmm") + ".xlsx";
+            savePicker.SuggestedFileName = "Extraction de " + fileName + " le " + dateSave.ToString("yy-MM-dd à HH\\hmm") + ".xlsx";
             StorageFile file = await savePicker.PickSaveFileAsync();
             if (file == null) return;
 
