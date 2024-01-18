@@ -35,10 +35,14 @@ public class CloseXMLHelper
 
         var table = sheet.Cell("A4").InsertTable(datas.Select(
             x => new DataTable(x.NameFile,null,null, x.Description, x.Category.ToString(), x.Qt,null, null,null,null)));
-
-
+        
         table.Theme = XLTableTheme.TableStyleMedium1;
         sheet.Cells("A4:J4").ToList().ForEach( cell => cell.Value = cell.Value.GetText().Replace('_',' '));
+        var rowOfTable = table.RowCount();
+        for (int i = 0; i < rowOfTable-1; i++)
+        {
+            sheet.Cell("A" + (i + 5).ToString()).SetHyperlink(new XLHyperlink(datas[i].FullPathName));
+        }
 
         sheet.Columns().AdjustToContents();
         try
@@ -53,5 +57,5 @@ public class CloseXMLHelper
     }
 
     record DataTable (string Nom,string Plan_Details, string Plan_Laser, string Description,
-        string Categorie, int Qt, string Fournisseur, string Status, string Date_De_Livraison,string Commentaire);
+        string Categorie, int Qt, string Fournisseur, string Status, string Date_De_Livraison,string Commentaires);
 }
