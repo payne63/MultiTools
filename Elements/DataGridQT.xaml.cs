@@ -22,6 +22,7 @@ using static SplittableDataGridSAmple.DataIBase;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Windows.Storage.FileProperties;
 using System.Threading.Tasks;
+using System.Diagnostics;
 
 namespace SplittableDataGridSAmple.Elements
 {
@@ -171,6 +172,7 @@ namespace SplittableDataGridSAmple.Elements
             dataIQT.Category = (CategoryType)e.AddedItems[0];
             if (oldDateGridQT.Datas.Count == 0)  oldDateGridQT.IsVisible = false;
             newDateGridQT.IsVisible = true;
+            Trace.WriteLine("bug");
         }
     }
 }
