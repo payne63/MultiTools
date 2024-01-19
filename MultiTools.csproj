@@ -710,7 +710,9 @@
     <Page Update="Elements\OpenNewTab.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Content Include=".vscode\launch.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include=".vscode\" />
   </ItemGroup>
   <!-- 
     Defining the "HasPackageAndPublishMenuAddedByProject" property here allows the Solution 

@@ -12,7 +12,7 @@
         <CheckBox IsChecked="{x:Bind IsVisible, Mode=TwoWay}" Margin="10,0,0,0" ToolTipService.ToolTip="Visibiliter" MinWidth="30"/>
         <TextBlock Text="{x:Bind Title, Mode=OneWay}" FontSize="20" FontStyle="Italic" FontWeight="Bold" Margin="0,0,20,0" />
         <TextBlock Text="Nb Elements :" FontSize="13" FontStyle="Italic"  VerticalAlignment="Bottom" Margin="2,0,2,7"/>
-        <TextBlock Text="{x:Bind QtElement , Mode=OneWay}" FontSize="13" FontStyle="Italic" VerticalAlignment="Bottom" Margin="2,0,2,7"  />
+        <TextBlock Text="{x:Bind CountElement , Mode=OneWay}" FontSize="13" FontStyle="Italic" VerticalAlignment="Bottom" Margin="2,0,2,7"  />
     </StackPanel>
     <c:DataGrid x:Name="dataGrid"  Visibility="{x:Bind IsVisible , Mode=OneWay}"
                 ItemsSource="{x:Bind Datas ,Mode=TwoWay}" 

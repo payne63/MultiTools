@@ -1,4 +1,5 @@
 ﻿using ClosedXML.Excel;
+using OfficeOpenXml.FormulaParsing.ExcelUtilities;
 using SplittableDataGridSAmple.Base;
 using System;
 using System.Collections.Generic;
@@ -17,8 +18,8 @@ public class CloseXMLHelper
         using var wb = new XLWorkbook();
         var sheet = wb.AddWorksheet("Fiche Lancement");
 
-        var range = sheet.Range("A1:D1").Merge();
-        range.SetValue("Fiche de lancement").
+        var range = sheet.Range("A1:J1").Merge();
+        range.SetValue("Fiche de lancement " + datas[0].NameFile[..^4]).
             Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center).
             Font.SetFontSize(20).
             Font.SetBold(true);
@@ -28,18 +29,18 @@ public class CloseXMLHelper
             .Border.SetLeftBorder(XLBorderStyleValues.Medium);
         range.Style.Fill.SetBackgroundColor(XLColor.LightGray);
 
-        sheet.Cell("A2").Value = "Assemblage Maître";
-        sheet.Cell("B2").Value = datas[0].NameFile;
-        sheet.Cell("A3").Value = "date d'extraction";
-        sheet.Cell("B3").Value = dateSave.ToString("dd/MM/yy HH:mm");
+        SetLine(sheet.Cell("A2"), "Assemblage Maitre", datas[0].NameFile);
+        SetLine(sheet.Cell("A3"), "Emplacement", datas[0].FullPathName);
+        SetLine(sheet.Cell("A4"), "date d'extraction", dateSave.ToString("dd/MM/yy HH:mm"));
+        SetLine(sheet.Cell("A5"), "Qt plan laser", datas.Where(x => x.Category == DataIBase.CategoryType.Laser).Count().ToString());
 
-        var table = sheet.Cell("A4").InsertTable(datas.Select(
+        var table = sheet.Cell("A6").InsertTable(datas.Select(
             x => new DataTable(x.NameFile,null,null, x.Description, x.Category.ToString(), x.Qt,null, null,null,null)));
         
         table.Theme = XLTableTheme.TableStyleMedium1;
-        sheet.Cells("A4:J4").ToList().ForEach( cell => cell.Value = cell.Value.GetText().Replace('_',' '));
+        sheet.Cells("A6:J6").ToList().ForEach( cell => cell.Value = cell.Value.GetText().Replace('_',' '));
         var rowOfTable = table.RowCount();
-        for (int i = 0; i < rowOfTable-1; i++)
+        for (var i = 0; i < rowOfTable-1; i++)
         {
             var cell = sheet.Cell("A" + (i + 5).ToString());
             cell.SetHyperlink(new XLHyperlink(datas[i].FullPathName));
@@ -61,4 +62,15 @@ public class CloseXMLHelper
 
     record DataTable (string Nom,string Plan_Details, string Plan_Laser, string Description,
         string Categorie, int Qt, string Fournisseur, string Status, string Date_De_Livraison,string Commentaires);
+
+    private static void SetLine(IXLCell cellStart, string title, string value)
+    {
+        cellStart.Value = title +" :";
+        cellStart.Style.Font.SetBold(true);
+        var rangeExtend = cellStart.Worksheet.Range(cellStart.CellRight(),cellStart.CellRight(8)).Merge();
+        rangeExtend.Value = value;
+        var rangeBox = cellStart.Worksheet.Range(cellStart,cellStart.CellRight(9));
+        rangeBox.Style.Border.SetOutsideBorder(XLBorderStyleValues.Medium);
+        
+    }
 }

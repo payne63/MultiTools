@@ -94,26 +94,23 @@ namespace SplittableDataGridSAmple.Tabs
                 foreach (DataIBase.CategoryType enumVal in Enum.GetValues(typeof(DataIBase.CategoryType)))
                 {
                     var group = groups.Where(x => x.Key == enumVal);
+                    DataGridQT dataGridQT;
                     if (group.Count() != 0)
                     {
-                        var dataGridInstance = new Elements.DataGridQT(enumVal) { Datas = new ObservableCollection<DataIQT>(group.First()), Title = enumVal.ToString() };
-                        StackPanelOfBom.Children.Add(dataGridInstance);
+                        dataGridQT = new DataGridQT(enumVal, new(group.First()));
                     }
                     else
                     {
-                        var dataGridInstance = new Elements.DataGridQT(enumVal) { Datas = new ObservableCollection<DataIQT>() { }, Title = enumVal.ToString() ,IsVisible = false }; // empty list
-                        StackPanelOfBom.Children.Add(dataGridInstance);
+                        dataGridQT = new DataGridQT(enumVal, new() ,false);
                     }
+                    StackPanelOfBom.Children.Add(dataGridQT);
                 }
                 IsInterfaceEnabled = true;
             }
         }
 
 
-        private void Button_Click_RemoveData(object sender, RoutedEventArgs e)
-        {
-            RemoveAllData();
-        }
+        private void Button_Click_RemoveData(object sender, RoutedEventArgs e) => RemoveAllData();
 
         private void RemoveAllData()
         {

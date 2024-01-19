@@ -56,7 +56,7 @@ namespace SplittableDataGridSAmple.Elements
         //public CategoryType CategorySelected { get; set; }
 
         private CategoryType category;
-        public int QtElement { get => Datas.Count; }
+        public int CountElement => Datas.Count;
 
         private ObservableCollection<DataIQT> _Datas;
         public ObservableCollection<DataIQT> Datas { get { return _Datas; } set { _Datas = value; OnPropertyChanged(); } }
@@ -65,9 +65,13 @@ namespace SplittableDataGridSAmple.Elements
         {
             this.InitializeComponent();
         }
-        public DataGridQT(CategoryType categoryType) : this()
+
+        public DataGridQT(CategoryType categoryType, ObservableCollection<DataIQT> datas, bool Visibility = true) : this()
         {
             category = categoryType;
+            Datas = datas;
+            IsVisible  = Visibility;
+            Title = categoryType.ToString();
             dataGridCollection.Add(this);
         }
 
@@ -167,8 +171,8 @@ namespace SplittableDataGridSAmple.Elements
             var oldDateGridQT =  dataGridCollection.Where(x => x.category == (CategoryType)e.RemovedItems[0]).FirstOrDefault();
             newDateGridQT.Datas.Add(dataIQT);
             oldDateGridQT.Datas.Remove(dataIQT);
-            newDateGridQT.OnPropertyChanged(nameof(QtElement));
-            oldDateGridQT.OnPropertyChanged(nameof(QtElement));
+            newDateGridQT.OnPropertyChanged(nameof(CountElement));
+            oldDateGridQT.OnPropertyChanged(nameof(CountElement));
             dataIQT.Category = (CategoryType)e.AddedItems[0];
             if (oldDateGridQT.Datas.Count == 0)  oldDateGridQT.IsVisible = false;
             newDateGridQT.IsVisible = true;
