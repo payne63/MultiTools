@@ -10,7 +10,7 @@ using static SplittableDataGridSAmple.Base.DataI;
 using System.Xml.Linq;
 using I = Inventor;
 using System.Diagnostics;
-using System.IO;
+using IO = System.IO;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Windows.Storage.FileProperties;
 using System.Drawing;
@@ -77,18 +77,23 @@ namespace SplittableDataGridSAmple.Base
                     bom.Add((FullDocumentName, qtPart));
                 }
                 if (bom.Count == 0) { return; } // no children?
-                var fileNameWithoutExtension = System.IO.Path.GetFileNameWithoutExtension(bom[0].fullFileName);
-                if (fileNameWithoutExtension.Length >= 8 && PartNumber.Length >=8)
+
+                var childrens = bom
+                    .Select(x => IO.Path.GetFileNameWithoutExtension(x.fullFileName))
+                    .Where(x=>x.Count() >=8);
+                if (childrens.Any(x=>x[0..7] == PartNumber[0..7]))
                 {
-                    if (fileNameWithoutExtension[0..7] == PartNumber[0..7]) { Category = CategoryType.MecanoSoudure; GetAppServer.Close(); return; }
+                    Category = CategoryType.MecanoSoudure;
+                    return;
                 }
+
                 Category = CategoryType.Assemblage;
-                GetAppServer.Close();
+                //GetAppServer.Close();
                 return;
             }
 
             Category = CategoryType.Inconnu;
-            GetAppServer.Close();
+            //GetAppServer.Close();
         }
 
         private bool IsCommerceType => FullPathName.IndexOf("composants", StringComparison.OrdinalIgnoreCase) >= 0;
