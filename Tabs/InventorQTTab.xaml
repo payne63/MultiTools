@@ -81,7 +81,14 @@
             </StackPanel>
         </Border>
 
-        <ScrollViewer Grid.Column="1" Grid.Row="0" >
+        <ScrollViewer Grid.Column="1" Grid.Row="0" 
+                      DragOver="ScrollViewer_DragOver"
+                      Drop="ScrollViewer_Drop"
+                      AllowDrop="True"
+                      BorderThickness="2"
+                      BorderBrush="{StaticResource AccentAcrylicBackgroundFillColorBaseBrush}"
+                      CornerRadius="5"
+                      Margin="0,10,10,10">
             
                 <StackPanel x:Name="StackPanelOfBom" Margin="0,0,10,0">
                 </StackPanel>

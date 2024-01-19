@@ -150,6 +150,14 @@ namespace SplittableDataGridSAmple.Tabs
             CloseXMLHelper.ExportData(fulldata, file,dateSave);
         }
 
-        
+        private void ScrollViewer_DragOver(object sender, DragEventArgs e)
+        {
+            e.AcceptedOperation = DataPackageOperation.Move;
+        }
+
+        private void ScrollViewer_Drop(object sender, DragEventArgs e)
+        {
+            PanelDataI_Drop(sender, e);
+        }
     }
 }
