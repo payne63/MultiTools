@@ -37,7 +37,11 @@ namespace SplittableDataGridSAmple.Elements
         }
         #endregion
 
-        public static List<DataGridQT> dataGridCollection { get; private set; } = new();
+        public delegate void MoveDataHandler(DataIQT dataIQT,CategoryType fromCategoryType, CategoryType toCategoryType);
+        public event MoveDataHandler MoveData;
+
+        public delegate void SelectionHandler(CategoryType fromCategoryType);
+        public event SelectionHandler Selection;
 
         private string _Title;
         public string Title
@@ -53,9 +57,7 @@ namespace SplittableDataGridSAmple.Elements
             set { _IsVisible = value; OnPropertyChanged(); }
         }
 
-        //public CategoryType CategorySelected { get; set; }
-
-        private CategoryType category;
+        public readonly CategoryType category;
         public int CountElement => Datas.Count;
 
         private ObservableCollection<DataIQT> _Datas;
@@ -73,16 +75,10 @@ namespace SplittableDataGridSAmple.Elements
             Datas = datas;
             IsVisible  = datas.Count == 0 ? false: true;
             Title = categoryType.ToString();
-            dataGridCollection.Add(this);
+            Datas.CollectionChanged += (sender,e) => { OnPropertyChanged(nameof(CountElement)); };
+            Datas.CollectionChanged += (sender, e) => { IsVisible = Datas.Count == 0 ? false : true; };
         }
 
-        public static void ClearAllData()
-        {
-            foreach (var dataGrid in dataGridCollection)
-            {
-                dataGrid.Datas.Clear();
-            }
-        }
 
         private void dataGrid_Sorting(object sender, CommunityToolkit.WinUI.UI.Controls.DataGridColumnEventArgs e)
         {
@@ -144,18 +140,11 @@ namespace SplittableDataGridSAmple.Elements
             {
                 var dataIQT = e.AddedItems[0] as DataIQT;
                 await dataIQT.UpdateThumbnail();
-            }
-            if (e.RemovedItems.Count > 0) return;
-            foreach (var dataGridQT in dataGridCollection.Where(x => x.category != category))
-            {
-                dataGridQT.dataGrid.SelectedItem = null;
+                Selection.Invoke(category);
             }
         }
 
-        //private void Button_Click_ChangeCategory(object sender, RoutedEventArgs e)
-        //{
-
-        //}
+        public void RemoveSelection() => dataGrid.SelectedItem = null;
 
         private void dataGrid_Tapped(object sender, TappedRoutedEventArgs e)
         {
@@ -167,17 +156,9 @@ namespace SplittableDataGridSAmple.Elements
             if(e.AddedItems.Count == 0) return;
             if (e.RemovedItems.Count == 0) return;
             if (e.RemovedItems[0].ToString() == e.AddedItems[0].ToString()) return;
-            var dataIQT = ((FrameworkElement)sender).DataContext as DataIQT;
-            var newDateGridQT =  dataGridCollection.Where(x => x.category == (CategoryType)e.AddedItems[0]).FirstOrDefault();
-            var oldDateGridQT =  dataGridCollection.Where(x => x.category == (CategoryType)e.RemovedItems[0]).FirstOrDefault();
-            newDateGridQT.Datas.Add(dataIQT);
-            oldDateGridQT.Datas.Remove(dataIQT);
-            newDateGridQT.OnPropertyChanged(nameof(CountElement));
-            oldDateGridQT.OnPropertyChanged(nameof(CountElement));
-            dataIQT.Category = (CategoryType)e.AddedItems[0];
-            if (oldDateGridQT.Datas.Count == 0)  oldDateGridQT.IsVisible = false;
-            newDateGridQT.IsVisible = true;
-            Trace.WriteLine("bug");
+
+            MoveData.Invoke(((FrameworkElement)sender).DataContext as DataIQT, (CategoryType)e.RemovedItems.First(),(CategoryType)e.AddedItems.First());
+ 
         }
     }
 }

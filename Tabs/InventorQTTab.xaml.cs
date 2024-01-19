@@ -94,20 +94,38 @@ namespace SplittableDataGridSAmple.Tabs
                 foreach (DataIBase.CategoryType enumVal in Enum.GetValues(typeof(DataIBase.CategoryType)))
                 {
                     var group = groups.Where(x => x.Key == enumVal).FirstOrDefault();
-                    StackPanelOfBom.Children.Add(
-                        new DataGridQT(enumVal, group == null ? new(): new(group)));
+                    var newDataGridIQT = new DataGridQT(enumVal, group == null ? new() : new(group));
+                    newDataGridIQT.MoveData += NewDataGridIQT_MoveData;
+                    newDataGridIQT.Selection += NewDataGridIQT_Selection;
+                    StackPanelOfBom.Children.Add( newDataGridIQT);
                 }
                 
                 IsInterfaceEnabled = true;
             }
         }
 
+        private void NewDataGridIQT_Selection(DataIBase.CategoryType FromCategoryType)
+        {
+            foreach (var dataGridQT in StackPanelOfBom.Children.Cast<DataGridQT>().Where(x => x.category != FromCategoryType))
+            {
+                dataGridQT.RemoveSelection();
+            }
+        }
+
+        private void NewDataGridIQT_MoveData(DataIQT dataIQT, DataIBase.CategoryType fromCategoryType, DataIBase.CategoryType toCategoryType)
+        {
+            var dataGrids = StackPanelOfBom.Children.Cast<DataGridQT>().ToList();
+            var dataGridFrom = dataGrids.First(x => x.category == fromCategoryType);
+            var dataGridTo = dataGrids.First(x => x.category == toCategoryType);
+            dataGridFrom.Datas.Remove(dataIQT);
+            dataGridTo.Datas.Add(dataIQT);
+            dataIQT.Category = toCategoryType;
+        }
 
         private void Button_Click_RemoveData(object sender, RoutedEventArgs e) => RemoveAllData();
 
         private void RemoveAllData()
         {
-            DataGridQT.ClearAllData();
             StackPanelOfBom.Children.Clear();
         }
 
@@ -125,8 +143,7 @@ namespace SplittableDataGridSAmple.Tabs
 
         private async void Button_Click_ExportData(object sender, RoutedEventArgs e)
         {
-
-            List<DataIQT> fulldata = DataGridQT.dataGridCollection.Where(x => x.IsVisible == true).SelectMany(data => data.Datas).ToList();
+            var fulldata = StackPanelOfBom.Children.Cast<DataGridQT>().Where(x => x.IsVisible == true).SelectMany(d=>d.Datas).ToList();
             if (fulldata.Count == 0) return;
 
             FileSavePicker savePicker = new Windows.Storage.Pickers.FileSavePicker();
