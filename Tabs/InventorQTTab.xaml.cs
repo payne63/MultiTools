@@ -93,18 +93,11 @@ namespace SplittableDataGridSAmple.Tabs
                 var groups = QtManager.GetQtDatas(storageItemDrop.Path).GroupBy(data => data.Category);
                 foreach (DataIBase.CategoryType enumVal in Enum.GetValues(typeof(DataIBase.CategoryType)))
                 {
-                    var group = groups.Where(x => x.Key == enumVal);
-                    DataGridQT dataGridQT;
-                    if (group.Count() != 0)
-                    {
-                        dataGridQT = new DataGridQT(enumVal, new(group.First()));
-                    }
-                    else
-                    {
-                        dataGridQT = new DataGridQT(enumVal, new() ,false);
-                    }
-                    StackPanelOfBom.Children.Add(dataGridQT);
+                    var group = groups.Where(x => x.Key == enumVal).FirstOrDefault();
+                    StackPanelOfBom.Children.Add(
+                        new DataGridQT(enumVal, group == null ? new(): new(group)));
                 }
+                
                 IsInterfaceEnabled = true;
             }
         }

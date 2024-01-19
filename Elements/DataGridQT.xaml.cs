@@ -66,11 +66,12 @@ namespace SplittableDataGridSAmple.Elements
             this.InitializeComponent();
         }
 
-        public DataGridQT(CategoryType categoryType, ObservableCollection<DataIQT> datas, bool Visibility = true) : this()
+        public DataGridQT(CategoryType categoryType, ObservableCollection<DataIQT> datas) : this()
         {
+            if (datas == null) { throw new Exception("erreur"); }
             category = categoryType;
             Datas = datas;
-            IsVisible  = Visibility;
+            IsVisible  = datas.Count == 0 ? false: true;
             Title = categoryType.ToString();
             dataGridCollection.Add(this);
         }
