@@ -67,9 +67,8 @@ namespace SplittableDataGridSAmple.Base
             if (DocumentType == DocumentTypeEnum.kAssemblyDocumentObject) 
             {
                 AssemblyComponentDefinition ass = document.ComponentDefinition as AssemblyComponentDefinition; //convertion en assemblage
-                var Bom = ass.BOM;
-                var obomViewStandard = Bom.BOMViews[1];// 1 - bom standard - 2 structured - 3 part only (2 et 3 need activation)
-                foreach (BOMRow row in obomViewStandard.BOMRows)
+
+                foreach (BOMRow row in ass.BOM.BOMViews[1].BOMRows)// 1 - bom standard - 2 structured - 3 part only (2 et 3 need activation)
                 {
                     if (row.BOMStructure == BOMStructureEnum.kPhantomBOMStructure || row.BOMStructure == BOMStructureEnum.kReferenceBOMStructure) continue;
                     var FullDocumentName = ((ApprenticeServerDocument)(row.ComponentDefinitions[1]).Document).FullDocumentName;
@@ -102,10 +101,7 @@ namespace SplittableDataGridSAmple.Base
         private bool IsMecaniqueType => Description.IndexOf("#M", StringComparison.OrdinalIgnoreCase) >= 0;
         private bool IsProfileType => Description.IndexOf("#P", StringComparison.OrdinalIgnoreCase) >= 0;
 
-        public override string ToString()
-        {
-            return $"name:{NameFile} description:{Description} qt:{Qt} nbChild:{ReferencedDocuments.Count}";
-        }
+        public override string ToString() => $"name:{NameFile} description:{Description} qt:{Qt} nbChild:{ReferencedDocuments.Count}";
 
         public async Task UpdateThumbnail()
         {

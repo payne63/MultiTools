@@ -33,6 +33,8 @@ using SplittableDataGridSAmple.Elements;
 using Windows.Storage.Pickers;
 using Windows.Storage;
 using CommunityToolkit.WinUI.UI;
+using System.Windows.Input;
+using System.Diagnostics;
 
 namespace SplittableDataGridSAmple.Tabs
 {
@@ -129,12 +131,13 @@ namespace SplittableDataGridSAmple.Tabs
             StackPanelOfBom.Children.Clear();
         }
 
-        private async void OpenSimpleMessage(string Message)
+        private async void OpenSimpleMessage(string Message, string content = null)
         {
             ContentDialog dialog = new ContentDialog
             {
                 XamlRoot = XamlRoot,
                 Title = Message,
+                Content = content,
                 PrimaryButtonText = "Ok",
                 DefaultButton = ContentDialogButton.Primary,
             };
@@ -158,6 +161,19 @@ namespace SplittableDataGridSAmple.Tabs
             if (file == null) return;
 
             CloseXMLHelper.ExportData(fulldata, file,dateSave);
+
+            ContentDialog dialog = new ContentDialog
+            {
+                XamlRoot = XamlRoot,
+                Title = "Extraction Terminée",
+                Content = $"Emplacement : \n {file.Path}",
+                PrimaryButtonText = "Fermer",
+                SecondaryButtonText = "Ouvrir l'extraction",
+                SecondaryButtonCommand = new OpenExtractionCommmand(),
+                SecondaryButtonCommandParameter = file.Path,
+                DefaultButton = ContentDialogButton.Primary,
+            };
+            _ = await dialog.ShowAsync();
         }
 
         private void ScrollViewer_DragOver(object sender, DragEventArgs e)
@@ -168,6 +184,16 @@ namespace SplittableDataGridSAmple.Tabs
         private void ScrollViewer_Drop(object sender, DragEventArgs e)
         {
             PanelDataI_Drop(sender, e);
+        }
+        private class OpenExtractionCommmand : ICommand
+        {
+            public event EventHandler CanExecuteChanged;
+
+            public bool CanExecute(object parameter) => true;
+            public void Execute(object parameter)
+            {
+                Process.Start(new ProcessStartInfo { FileName = parameter as string, UseShellExecute = true });
+            }
         }
     }
 }
