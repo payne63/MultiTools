@@ -18,51 +18,7 @@
         <FontIconSource Glyph="&#xEDB1;"/>
     </TabViewItem.IconSource>
     <Border>
-        <Border.Resources>
-            <DataTemplate x:Key="EmailTokenTemplate">
-                <StackPanel Orientation="Horizontal">
-                    <Border CornerRadius="9999" Background="AliceBlue"  Width="20" Height="20">
-                        <TextBlock Text="{Binding Age}" Foreground="White"
-                            FontSize="10"
-                            FontWeight="Semibold"
-                            HorizontalAlignment="Center"
-                            VerticalAlignment="Center"/>
-                    </Border>
-                    <TextBlock Text="{Binding Name}" Padding="4,0,0,0"/>
-                </StackPanel>
-            </DataTemplate>
-            <DataTemplate x:Key="popo">
-                <TextBlock Text="{Binding MoreInfoName}"/>
-            </DataTemplate>
-            <DataTemplate x:Key="dataGridInside">
-                <StackPanel Orientation="Horizontal">
-                    <SymbolIcon Symbol="Link" VerticalAlignment="Center" />
-                    <controls:DataGrid ItemsSource="{Binding Childrens}" AutoGenerateColumns="True" RowDetailsTemplate="{StaticResource dataGridInside}" RowDetailsVisibilityMode="VisibleWhenSelected">
-
-                    </controls:DataGrid>
-                </StackPanel>
-            </DataTemplate>
-            <DataTemplate x:Key="template1" x:DataType="base:Character">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="200"/>
-                        <ColumnDefinition Width="100"/>
-                        <ColumnDefinition Width="50"/>
-                        <ColumnDefinition Width="Auto"/>
-                    </Grid.ColumnDefinitions>
-                    <TextBox Grid.Column="0" Text="{Binding Name, UpdateSourceTrigger=PropertyChanged,Mode=TwoWay}" VerticalAlignment="Center"/>
-                    <TextBlock Grid.Column="1" Text="{Binding Age}" VerticalAlignment="Center"/>
-                    <CheckBox Grid.Column="2" IsChecked="{Binding Work, UpdateSourceTrigger=PropertyChanged,Mode=TwoWay}" />
-                    <Button Grid.Column="3">
-                        <StackPanel Orientation="Vertical">
-                            <SymbolIcon Symbol="Mail" />
-                            <TextBlock Text="send Mail"/>
-                        </StackPanel>
-                    </Button>
-                </Grid>
-            </DataTemplate>
-        </Border.Resources>
-
+        
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
@@ -73,39 +29,15 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             <StackPanel Grid.Row="0" Orientation="Vertical">
-                <Button Content="Add element" Click="Button_Click_AddElement"/>
-                <Button Content="Print data First Element" Click="Button_Click_PrintData"/>
-                <Button Content="SAVE" Click="SAVE_Click" />
-                <Button Content="LOAD" Click="LOAD_Click" />
                 <Button Height="200" Width="200" Drop="TabViewItem_Drop" DragOver="TabViewItem_DragOver" AllowDrop="True" >
                     <StackPanel Orientation="Vertical" >
                         <SymbolIcon Symbol="OpenFile" />
                         <TextBlock Text="Drop contact" />
                     </StackPanel>
                 </Button>
+                <Button Content="dxf" Click="Button_Click_Dxf"/>
             </StackPanel>
-            <controls:DataGrid x:Name="dg" Grid.Row="1" ItemsSource="{x:Bind Characters}" SelectionMode="Extended" GridLinesVisibility="None" VerticalScrollBarVisibility="Visible" AlternatingRowBackground="Transparent" AlternatingRowForeground="Gray"
-                               CanUserSortColumns="True" CanUserReorderColumns="True" CanUserResizeColumns="True"  AutoGenerateColumns="False" Sorting="DataGridInstance_Sorting">
-                <controls:DataGrid.Resources>
-                    <Style x:Key="BodyTextBlockStyle" TargetType="TextBlock" >
-                        <Setter Property="FontSize" Value="30"/>
-                    </Style>
-                </controls:DataGrid.Resources>
-                <controls:DataGrid.Columns>
-                    <controls:DataGridTextColumn Header="Nom" Binding="{Binding Name}" Tag="name"/>
-                    <controls:DataGridTextColumn Header="l'age" Binding="{Binding Age}" Tag="age" />
-                    <controls:DataGridCheckBoxColumn Header="check" Binding="{Binding Work , UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Tag="work"/>
-                    <controls:DataGridTemplateColumn Header="DXF"  Tag="work" CanUserResize="False" Width="100">
-                        <controls:DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                                <CheckBox IsChecked="{Binding Work , UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Margin="20,0,0,0"/>
-                            </DataTemplate>
-                        </controls:DataGridTemplateColumn.CellTemplate>
-                    </controls:DataGridTemplateColumn>
-                </controls:DataGrid.Columns>
-            </controls:DataGrid>
-            <ListView Grid.Column="1" Grid.Row="1" ItemsSource="{x:Bind Characters}" ItemTemplate="{StaticResource template1}">
-            </ListView>
+           
 
         </Grid>
     </Border>

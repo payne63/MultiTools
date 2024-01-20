@@ -25,6 +25,9 @@ using MsgReader.Outlook;
 using SplittableDataGridSAmple.Helper;
 using System.Threading.Tasks;
 using SplittableDataGridSAmple.Interfaces;
+using AvitechTools.Models;
+using Inventor;
+using DocumentFormat.OpenXml.Math;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -32,35 +35,16 @@ using SplittableDataGridSAmple.Interfaces;
 namespace SplittableDataGridSAmple.Tabs
 {
 
-    public sealed partial class Test3Tab : TabViewItem ,IInitTab
+    public sealed partial class Test3Tab : TabViewItem, IInitTab
     {
-        public ObservableCollection<Character> Characters { get; set; } = new();
-
+        InventorManagerHelper inventorManager;
         public Test3Tab()
         {
             this.InitializeComponent();
-
         }
-        private void Button_Click_AddElement(object sender, RoutedEventArgs e)
+        public void InitTab()
         {
-            Characters.Add(new Character { Name = "Florent", Age = "41" });
-            Characters.Add(new Character { Name = "Laetitia", Age = "40" });
-            Characters.Add(new Character { Name = "Nathan", Age = "12" });
-            var localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
-            localSettings.Values["popo"] = "testSave";
-        }
 
-        private async void SAVE_Click(object sender, RoutedEventArgs e)
-        {
-            await JsonHelper.SaveArray<Character>(Characters.ToArray(), "test.json");
-        }
-
-        private async void LOAD_Click(object sender, RoutedEventArgs e)
-        {
-            foreach (var charactere in await JsonHelper.LoadArray<Character>("test.json"))
-            {
-                Characters.Add(charactere);
-            }
         }
 
         private async void TabViewItem_Drop(object sender, DragEventArgs e)
@@ -88,8 +72,8 @@ namespace SplittableDataGridSAmple.Tabs
 
                     using (var msg = new MsgReader.Outlook.Storage.Message(fileInfo.FullName))
                     {
-                        var contact  = msg.Contact;
-                        if (contact != null) 
+                        var contact = msg.Contact;
+                        if (contact != null)
                         {
                             Trace.WriteLine(contact.SurName);//Prenom
                             Trace.WriteLine(contact.GivenName);//Nom
@@ -114,57 +98,144 @@ namespace SplittableDataGridSAmple.Tabs
         }
         private void TabViewItem_DragOver(object sender, DragEventArgs e)
         {
-            e.AcceptedOperation = DataPackageOperation.Copy;
-        }
-        private void DataGridInstance_Sorting(object sender, CommunityToolkit.WinUI.UI.Controls.DataGridColumnEventArgs e)
-        {
-            if (e.Column.Tag.ToString() == "name")
-            {
-                if (e.Column.SortDirection == null || e.Column.SortDirection == CommunityToolkit.WinUI.UI.Controls.DataGridSortDirection.Descending)
-                {
-                    dg.ItemsSource = new ObservableCollection<Character>(from item in Characters orderby item.Name ascending select item);
-                    e.Column.SortDirection = CommunityToolkit.WinUI.UI.Controls.DataGridSortDirection.Ascending;
-                }
-                else
-                {
-                    dg.ItemsSource = new ObservableCollection<Character>(from item in Characters orderby item.Name descending select item);
-                    e.Column.SortDirection = CommunityToolkit.WinUI.UI.Controls.DataGridSortDirection.Descending;
-                }
-            }
-            if (e.Column.Tag.ToString() == "age")
-            {
-                if (e.Column.SortDirection == null || e.Column.SortDirection == CommunityToolkit.WinUI.UI.Controls.DataGridSortDirection.Descending)
-                {
-                    dg.ItemsSource = new ObservableCollection<Character>(from item in Characters orderby item.Age ascending select item);
-                    e.Column.SortDirection = CommunityToolkit.WinUI.UI.Controls.DataGridSortDirection.Ascending;
-                }
-                else
-                {
-                    dg.ItemsSource = new ObservableCollection<Character>(from item in Characters orderby item.Age descending select item);
-                    e.Column.SortDirection = CommunityToolkit.WinUI.UI.Controls.DataGridSortDirection.Descending;
-                }
-            }
-            foreach (var c in dg.Columns)
-            {
-                if (c.Tag.ToString() != e.Column.Tag.ToString())
-                {
-                    c.SortDirection = null;
-                }
-            }
-        }
-        private void Button_Click_PrintData(object sender, RoutedEventArgs e)
-        {
-            if (Characters.Count > 0)
-            {
-                Trace.WriteLine(Characters.First().Name + $"check{Characters.First().Work}");
-            }
+            e.AcceptedOperation = DataPackageOperation.Move;
         }
 
-        public void InitTab()
+        private void Button_Click_Dxf(object sender, RoutedEventArgs e)
         {
-            Characters.Add(new Character { Name = "First", Age = "100", Work = true });
-            Characters.First().AddChildren(new Character { Name = "Children", Age = "1", Work = false });
-            Characters.First().AddChildren(new Character { Name = "Children2", Age = "2", Work = false });
+            var partFile = @"E:\testPlan\P641-051-03.ipt";
+
+            var documentPart = InventorManagerHelper.GetActualInventorApp()?.Documents.Open(partFile);
+
+            var appI = InventorManagerHelper.GetActualInventorApp();
+            if (appI == null) { return; }
+            if (appI.ActiveDocument is Inventor.PartDocument part)
+            {
+                if (part.ComponentDefinition is SheetMetalComponentDefinition sheetMetalComponentDefinition)
+                {
+                    if (sheetMetalComponentDefinition.HasFlatPattern)
+                    {
+                        sheetMetalComponentDefinition.FlatPattern.Edit();
+                    }
+                    else
+                    {
+                        sheetMetalComponentDefinition.Unfold();
+                    }
+                    var thickness = (double)sheetMetalComponentDefinition.Thickness.Value * 10;
+                    var range = sheetMetalComponentDefinition.RangeBox;
+                    var width = (range.MaxPoint.X - range.MinPoint.X) * 10;
+                    var height = (range.MaxPoint.Y - range.MinPoint.Y) * 10;
+                    Trace.WriteLine(width);
+                    Trace.WriteLine(height);
+                    var dxfFormat = "FLAT PATTERN DXF?AcadVersion=2000&OuterProfileLayer=IV_INTERIOR_PROFILES";
+                    //sheetMetalComponentDefinition.DataIO.WriteDataToFile(dxfFormat, $"E:\\testPlan\\P641-050-01 {thickness}mm.dxf");
+                }
+                var templatePath = @"C:\Users\Public\Documents\Autodesk\Inventor 2019\Templates\Metric\ISO.idw";
+                var drawingDoc = appI.Documents.Add(DocumentTypeEnum.kDrawingDocumentObject, templatePath) as Inventor.DrawingDocument;
+                var sheet = drawingDoc.Sheets[1];
+                sheet.Orientation = PageOrientationTypeEnum.kPortraitPageOrientation;
+                sheet.Size = DrawingSheetSizeEnum.kA4DrawingSheetSize;
+                var transientGeometry = appI.TransientGeometry;
+                var position = transientGeometry.CreatePoint2d(10d, 20d);
+                var nameValueMap = appI.TransientObjects.CreateNameValueMap();
+                nameValueMap.Add("SheetMetalFoldedModel", false);
+                var view = sheet.DrawingViews.AddBaseView(documentPart, position, 1d, ViewOrientationTypeEnum.kDefaultViewOrientation, DrawingViewStyleEnum.kHiddenLineRemovedDrawingViewStyle, AdditionalOptions: nameValueMap);
+                var drawingCurveOrientation = transientGeometry.CreateLine2d(position, transientGeometry.CreateUnitVector2d(10d, 0d)) ;
+               
+                var position2 = transientGeometry.CreatePoint2d(15d, 20d);
+                var view2 = sheet.DrawingViews.AddProjectedView(view, position2,DrawingViewStyleEnum.kHiddenLineDrawingViewStyle);
+
+                var intents = new List<GeometryIntent>();
+
+                foreach (DrawingCurve drawingCurve in view.DrawingCurves)
+                {
+                    switch (drawingCurve.ProjectedCurveType)
+                    {
+                        case Curve2dTypeEnum.kCircleCurve2d:
+                        case Curve2dTypeEnum.kCircularArcCurve2d:
+                        case Curve2dTypeEnum.kEllipseFullCurve2d:
+                        case Curve2dTypeEnum.kEllipticalArcCurve2d:
+                            AddIntent(drawingCurve, PointIntentEnum.kCircularTopPointIntent,true);
+                            AddIntent(drawingCurve, PointIntentEnum.kCircularBottomPointIntent, true);
+                            AddIntent(drawingCurve, PointIntentEnum.kCircularLeftPointIntent, true);
+                            AddIntent(drawingCurve, PointIntentEnum.kCircularRightPointIntent, true);
+                            AddIntent(drawingCurve, PointIntentEnum.kEndPointIntent, false);
+                            AddIntent(drawingCurve, PointIntentEnum.kStartPointIntent, false);
+                            break;
+                        case Curve2dTypeEnum.kLineCurve2d:
+                        case Curve2dTypeEnum.kLineSegmentCurve2d:
+                            AddIntent(drawingCurve, PointIntentEnum.kEndPointIntent, false);
+                            AddIntent(drawingCurve, PointIntentEnum.kStartPointIntent, false);
+                            break;
+                    }
+                }
+               
+                var orderedIntentsInX = intents.Where(x=>x.PointOnSheet != null).OrderBy(x => x.PointOnSheet.X).ToList();
+                CreateHorizontalDimension(orderedIntentsInX.First(),orderedIntentsInX.Last(),1.2d- 0.6d);
+
+                var orderedIntentsInY = intents.Where(x => x.PointOnSheet != null).OrderBy(x => x.PointOnSheet.Y).ToList();
+                CreateVerticalDimension(orderedIntentsInY.Last(), orderedIntentsInY.First(), 1.2d - 0.6d);
+
+                documentPart.Close();
+                return;
+
+                void AddIntent(DrawingCurve drawingCurve, PointIntentEnum kCircularTopPointIntent, bool onLineCheck)
+                {
+                    var intent = sheet.CreateGeometryIntent(drawingCurve,kCircularTopPointIntent);
+                    if (intent == null) return;
+                    if (onLineCheck)
+                    {
+                        if (IntentIsOnCurve(intent))
+                        {
+                            intents.Add(intent);
+                        }
+                    }
+                    else
+                    {
+                        intents.Add(intent);
+                    }
+                }
+
+                bool IntentIsOnCurve(GeometryIntent intent)
+                {
+                    var geometry = intent.Geometry as DrawingCurve;
+                    var sp = intent.PointOnSheet;
+                    var pts = new double[2] { sp.X, sp.Y };
+                    double[] gp = new double[] { };
+                    double[] md = new double[] { };
+                    double[] pm = new double[] { };
+                    SolutionNatureEnum[] st = new SolutionNatureEnum[] { };
+                    try
+                    {
+                        geometry.Evaluator2D.GetParamAtPoint(ref pts, ref gp,ref md,ref pm,ref st);
+                    }
+                    catch (Exception ex)
+                    {
+                        return false;
+                    }
+                    return true;
+                }
+
+                void CreateHorizontalDimension(GeometryIntent pointLeft , GeometryIntent pointRight, double distanceFromView)
+                {
+                    var textX = pointLeft.PointOnSheet.X + (pointRight.PointOnSheet.X - pointLeft.PointOnSheet.X) / 2;
+                    var textY = view.Position.Y + view.Height / 2 + distanceFromView;
+                    var pointText = appI.TransientGeometry.CreatePoint2d(textX, textY);
+                    sheet.DrawingDimensions.GeneralDimensions.AddLinear(pointText, pointLeft, pointRight, DimensionTypeEnum.kHorizontalDimensionType);
+                }
+
+                void CreateVerticalDimension(GeometryIntent pointLeft, GeometryIntent pointRight, double distanceFromView)
+                {
+                    
+                    var textX = view.Position.X - view.Width / 2 - distanceFromView;
+                    var textY = pointLeft.PointOnSheet.Y + (pointRight.PointOnSheet.Y - pointLeft.PointOnSheet.Y) / 2;
+                    var pointText = appI.TransientGeometry.CreatePoint2d(textX, textY);
+                    sheet.DrawingDimensions.GeneralDimensions.AddLinear(pointText, pointLeft, pointRight, DimensionTypeEnum.kVerticalDimensionType);
+                }
+            }
+
         }
+
+        
     }
 }
