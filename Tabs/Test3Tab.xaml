@@ -36,6 +36,7 @@
                     </StackPanel>
                 </Button>
                 <Button Content="dxf" Click="Button_Click_Dxf"/>
+                <Button Content="better dxf" Click="Button_ClickAsync"/>
             </StackPanel>
            
 

@@ -135,15 +135,16 @@ namespace SplittableDataGridSAmple.Tabs
                 var sheet = drawingDoc.Sheets[1];
                 sheet.Orientation = PageOrientationTypeEnum.kPortraitPageOrientation;
                 sheet.Size = DrawingSheetSizeEnum.kA4DrawingSheetSize;
+
                 var transientGeometry = appI.TransientGeometry;
                 var position = transientGeometry.CreatePoint2d(10d, 20d);
                 var nameValueMap = appI.TransientObjects.CreateNameValueMap();
                 nameValueMap.Add("SheetMetalFoldedModel", false);
                 var view = sheet.DrawingViews.AddBaseView(documentPart, position, 1d, ViewOrientationTypeEnum.kDefaultViewOrientation, DrawingViewStyleEnum.kHiddenLineRemovedDrawingViewStyle, AdditionalOptions: nameValueMap);
-                var drawingCurveOrientation = transientGeometry.CreateLine2d(position, transientGeometry.CreateUnitVector2d(10d, 0d)) ;
-               
+                //var drawingCurveOrientation = transientGeometry.CreateLine2d(position, transientGeometry.CreateUnitVector2d(10d, 0d)) ;
+
                 var position2 = transientGeometry.CreatePoint2d(15d, 20d);
-                var view2 = sheet.DrawingViews.AddProjectedView(view, position2,DrawingViewStyleEnum.kHiddenLineDrawingViewStyle);
+                var view2 = sheet.DrawingViews.AddProjectedView(view, position2, DrawingViewStyleEnum.kHiddenLineDrawingViewStyle);
 
                 var intents = new List<GeometryIntent>();
 
@@ -155,7 +156,7 @@ namespace SplittableDataGridSAmple.Tabs
                         case Curve2dTypeEnum.kCircularArcCurve2d:
                         case Curve2dTypeEnum.kEllipseFullCurve2d:
                         case Curve2dTypeEnum.kEllipticalArcCurve2d:
-                            AddIntent(drawingCurve, PointIntentEnum.kCircularTopPointIntent,true);
+                            AddIntent(drawingCurve, PointIntentEnum.kCircularTopPointIntent, true);
                             AddIntent(drawingCurve, PointIntentEnum.kCircularBottomPointIntent, true);
                             AddIntent(drawingCurve, PointIntentEnum.kCircularLeftPointIntent, true);
                             AddIntent(drawingCurve, PointIntentEnum.kCircularRightPointIntent, true);
@@ -169,9 +170,9 @@ namespace SplittableDataGridSAmple.Tabs
                             break;
                     }
                 }
-               
-                var orderedIntentsInX = intents.Where(x=>x.PointOnSheet != null).OrderBy(x => x.PointOnSheet.X).ToList();
-                CreateHorizontalDimension(orderedIntentsInX.First(),orderedIntentsInX.Last(),1.2d- 0.6d);
+
+                var orderedIntentsInX = intents.Where(x => x.PointOnSheet != null).OrderBy(x => x.PointOnSheet.X).ToList();
+                CreateHorizontalDimension(orderedIntentsInX.First(), orderedIntentsInX.Last(), 1.2d - 0.6d);
 
                 var orderedIntentsInY = intents.Where(x => x.PointOnSheet != null).OrderBy(x => x.PointOnSheet.Y).ToList();
                 CreateVerticalDimension(orderedIntentsInY.Last(), orderedIntentsInY.First(), 1.2d - 0.6d);
@@ -181,7 +182,7 @@ namespace SplittableDataGridSAmple.Tabs
 
                 void AddIntent(DrawingCurve drawingCurve, PointIntentEnum kCircularTopPointIntent, bool onLineCheck)
                 {
-                    var intent = sheet.CreateGeometryIntent(drawingCurve,kCircularTopPointIntent);
+                    var intent = sheet.CreateGeometryIntent(drawingCurve, kCircularTopPointIntent);
                     if (intent == null) return;
                     if (onLineCheck)
                     {
@@ -207,7 +208,7 @@ namespace SplittableDataGridSAmple.Tabs
                     SolutionNatureEnum[] st = new SolutionNatureEnum[] { };
                     try
                     {
-                        geometry.Evaluator2D.GetParamAtPoint(ref pts, ref gp,ref md,ref pm,ref st);
+                        geometry.Evaluator2D.GetParamAtPoint(ref pts, ref gp, ref md, ref pm, ref st);
                     }
                     catch (Exception ex)
                     {
@@ -216,7 +217,7 @@ namespace SplittableDataGridSAmple.Tabs
                     return true;
                 }
 
-                void CreateHorizontalDimension(GeometryIntent pointLeft , GeometryIntent pointRight, double distanceFromView)
+                void CreateHorizontalDimension(GeometryIntent pointLeft, GeometryIntent pointRight, double distanceFromView)
                 {
                     var textX = pointLeft.PointOnSheet.X + (pointRight.PointOnSheet.X - pointLeft.PointOnSheet.X) / 2;
                     var textY = view.Position.Y + view.Height / 2 + distanceFromView;
@@ -226,7 +227,7 @@ namespace SplittableDataGridSAmple.Tabs
 
                 void CreateVerticalDimension(GeometryIntent pointLeft, GeometryIntent pointRight, double distanceFromView)
                 {
-                    
+
                     var textX = view.Position.X - view.Width / 2 - distanceFromView;
                     var textY = pointLeft.PointOnSheet.Y + (pointRight.PointOnSheet.Y - pointLeft.PointOnSheet.Y) / 2;
                     var pointText = appI.TransientGeometry.CreatePoint2d(textX, textY);
@@ -236,6 +237,24 @@ namespace SplittableDataGridSAmple.Tabs
 
         }
 
-        
+        private async void Button_ClickAsync(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var drawingDocument = DXFBuilderHelper.Build(@"E:\testPlan\P641-110.ipt");
+            }
+            catch (Exception ex)
+            {
+                ContentDialog dialog = new ContentDialog
+                {
+                    XamlRoot = XamlRoot,
+                    Title = "Erreur",
+                    Content = ex.Message,
+                    PrimaryButtonText = "Fermer",
+                    DefaultButton = ContentDialogButton.Primary,
+                };
+                _ = await dialog.ShowAsync();
+            }
+        }
     }
 }
