@@ -51,6 +51,7 @@ namespace SplittableDataGridSAmple.Tabs
             //JobElements.Add(new NewTabButton(typeof(Tabs.Test1Tab),"test1"));
             //JobElements.Add(new NewTabButton(typeof(Tabs.Test2Tab),"Test2"));
             JobElements.Add(new NewTabButton(typeof(Tabs.Test3Tab),"Test3"));
+            JobElements.Add(new NewTabButton(typeof(Tabs.DrawingBuilderTab)));
         }
 
         public void InitTab()

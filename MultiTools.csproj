@@ -34,6 +34,7 @@
     <None Remove="Services\PrintPage.xaml" />
     <None Remove="Tabs\Contacts2Tab.xaml" />
     <None Remove="Tabs\ContactsTab.xaml" />
+    <None Remove="Tabs\DrawingBuilderTab.xaml" />
     <None Remove="Tabs\FolderProjectCreationTab.xaml" />
     <None Remove="Tabs\InventorLaserTab.xaml" />
     <None Remove="Tabs\InventorPrintTab.xaml" />
@@ -578,9 +579,6 @@
     <Reference Include="Autodesk.Inventor.Interop">
       <HintPath>..\..\..\..\..\Program Files\Autodesk\Inventor 2019\Bin\Public Assemblies\Autodesk.Inventor.Interop.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Office.Interop.Outlook">
-      <HintPath>..\..\..\..\Program Files (x86)\Microsoft Office\root\Office16\ADDINS\Microsoft Power Query for Excel Integrated\bin\Microsoft.Office.Interop.Outlook.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Page Update="Elements\NewTabButton.xaml">
@@ -650,6 +648,9 @@
     <None Update="JsonData\users.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <Page Update="Tabs\DrawingBuilderTab.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Update="Tabs\InventorQTTab.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
