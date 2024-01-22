@@ -5,11 +5,15 @@ using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
+using Microsoft.UI.Xaml.Media.Imaging;
 using Microsoft.UI.Xaml.Navigation;
 using SplittableDataGridSAmple.Base;
 using SplittableDataGridSAmple.Elements;
+using SplittableDataGridSAmple.Helper;
+using SplittableDataGridSAmple.Models;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
@@ -18,6 +22,7 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Storage.FileProperties;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -35,6 +40,9 @@ namespace SplittableDataGridSAmple.Tabs
         #endregion
 
         private bool _IsInterfaceEnabled = true;
+
+        public  ObservableCollection<DataIQT> LaserCollection = new();
+
         public bool IsInterfaceEnabled
         {
             get { return _IsInterfaceEnabled; }
@@ -78,41 +86,100 @@ namespace SplittableDataGridSAmple.Tabs
             if (storageItemDrop.Name.EndsWith(".ipt") || storageItemDrop.Name.EndsWith(".iam"))
             {
                 RemoveAllData();
-                IsInterfaceEnabled = false;
+                //IsInterfaceEnabled = false;
 
-                var groups = QtManager.GetQtDatas(storageItemDrop.Path).GroupBy(data => data.Category);
-                foreach (DataIBase.CategoryType enumVal in Enum.GetValues(typeof(DataIBase.CategoryType)))
+
+                foreach (var item in GetLaserDatas(storageItemDrop.Path))
                 {
-                    var group = groups.Where(x => x.Key == enumVal).FirstOrDefault();
-                    var newDataGridIQT = new DataGridQT(enumVal, group == null ? new() : new(group));
-                    //newDataGridIQT.MoveData += NewDataGridIQT_MoveData;
-                    //newDataGridIQT.Selection += NewDataGridIQT_Selection;
-                    StackPanelOfLasers.Children.Add(newDataGridIQT);
+                    LaserCollection.Add(item);
                 }
+                
 
-                IsInterfaceEnabled = true;
+                //IsInterfaceEnabled = true;
             }
         }
 
-        private void Button_Click_RemoveData(object sender, RoutedEventArgs e) => throw new Exception();
+        public  List<DataIQT> GetLaserDatas(string firstPathFullName)
+        {
+            LaserCollection = new();
+            RecursiveLaserDatas(firstPathFullName, 1);
+            var dic = new Dictionary<string, DataIQT>();
+            foreach (DataIQT data in LaserCollection)
+            {
+                if (dic.ContainsKey(data.FullPathName))
+                {
+                    dic[data.FullPathName].Qt += data.Qt;
+                    continue;
+                }
+                dic.Add(data.FullPathName, data);
+            }
+            return   dic.Select(x => x.Value).Where(x=> x.Category == DataIBase.CategoryType.Laser).ToList();
+        }
+
+        private  void RecursiveLaserDatas(string PathFullName, int qt)
+        {
+            var data = new DataIQT(PathFullName, qt);
+            LaserCollection.Add(data);
+            if (data.bom.Count == 0) return;
+            foreach (var bomElement in data.bom)
+            {
+                RecursiveLaserDatas(bomElement.fullFileName, bomElement.Qt * qt);
+            }
+        }
+
+        private void Button_Click_RemoveData(object sender, RoutedEventArgs e) => RemoveAllData();
 
         private async void Button_Click_BuildDrawing(object sender, RoutedEventArgs e)
         {
-            
+            foreach (var laser in LaserCollection)
+            {
+                DXFBuilderHelper.Build(laser.FullPathName);
+            }
         }
         private void RemoveAllData()
         {
-            StackPanelOfLasers.Children.Clear();
+            LaserCollection.Clear();
         }
 
-        private void ScrollViewer_DragOver(object sender, DragEventArgs e)
+        private void TabViewItem_DragOver(object sender, DragEventArgs e)
         {
             e.AcceptedOperation = DataPackageOperation.Move;
         }
 
-        private void ScrollViewer_Drop(object sender, DragEventArgs e)
+        private void TabViewItem_Drop(object sender, DragEventArgs e)
         {
             PanelDataI_Drop(sender, e);
+        }
+
+        private void Button_Click_Remove(object sender, RoutedEventArgs e)
+        {
+            var contextIDWModel = ((FrameworkElement)sender).DataContext as DataIQT;
+            LaserCollection.Remove(contextIDWModel);
+        }
+
+        private async void GetThumbNailAsync(object sender, RoutedEventArgs e)
+        {
+            if (((FrameworkElement)sender).DataContext is IDWModel IDWModelContext)
+            {
+                if (TeachingTipThumbNail.IsOpen == true && ThumbNailPartNumber.Text == IDWModelContext.FileInfoData.Name)
+                {
+                    TeachingTipThumbNail.IsOpen = false;
+                    return;
+                }
+                var file = await Windows.Storage.StorageFile.GetFileFromPathAsync(IDWModelContext.FileInfoData.FullName);
+                var iconThumbnail = await file.GetThumbnailAsync(ThumbnailMode.SingleItem, 256);
+                var bitmapImage = new BitmapImage();
+                bitmapImage.SetSource(iconThumbnail);
+                if (bitmapImage != null)
+                {
+                    IDWModelContext.bitmapImage = bitmapImage;
+                    ImageThumbNail.Source = bitmapImage;
+                    ThumbNailPartNumber.Text = IDWModelContext.FileInfoData.Name;
+                    ThumbNailDescription.Text = string.Empty;
+                    ThumbNailCustomer.Text = string.Empty;
+                    TeachingTipThumbNail.IsOpen = true;
+                }
+            }
         }
 
         private async void OpenSimpleMessage(string Message, string content = null)

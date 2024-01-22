@@ -159,8 +159,7 @@ namespace SplittableDataGridSAmple.Tabs
         }
         private async void GetThumbNailAsync(object sender, RoutedEventArgs e)
         {
-            var IDWModelContext = ((FrameworkElement)sender).DataContext as IDWModel;
-            if (IDWModelContext != null)
+            if (((FrameworkElement)sender).DataContext is IDWModel IDWModelContext)
             {
                 if (TeachingTipThumbNail.IsOpen == true && ThumbNailPartNumber.Text == IDWModelContext.FileInfoData.Name)
                 {

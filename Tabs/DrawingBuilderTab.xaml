@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <TabViewItem
     x:Class="SplittableDataGridSAmple.Tabs.DrawingBuilderTab"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -6,6 +5,7 @@
     xmlns:local="using:SplittableDataGridSAmple.Tabs"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:base="using:SplittableDataGridSAmple.Base"
     mc:Ignorable="d"
     Header="Constructeur Plan Laser">
     <TabViewItem.IconSource>
@@ -17,10 +17,11 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <Border AutomationProperties.AccessibilityView="Raw"
-            CornerRadius="10,0,10,0"  Grid.Column="0" Grid.Row="1"  Grid.RowSpan="1"
+            CornerRadius="10,0,10,0"  Grid.Column="0" Grid.Row="0"  Grid.RowSpan="1"
             HorizontalAlignment="Stretch" VerticalAlignment="Top"
             Background="{ThemeResource AccentAcrylicBackgroundFillColorDefaultBrush}"
             Margin="10">
@@ -77,18 +78,50 @@
                 </Button>
             </StackPanel>
         </Border>
+        <ListView ItemsSource="{x:Bind LaserCollection}"
+              x:Name="ListViewLaser"
+              Grid.Column="1" Grid.Row="0"
+              CanBeScrollAnchor="True"
+              ShowsScrollingPlaceholders="True"
+              BorderThickness="2"
+              BorderBrush="{StaticResource AccentAcrylicBackgroundFillColorBaseBrush}"
+              CornerRadius="5"
+              Margin="0,10,10,10"
+              Drop="TabViewItem_Drop" 
+              DragOver="TabViewItem_DragOver"
+              AllowDrop="True" IsEnabled="{x:Bind IsInterfaceEnabled, Mode=OneWay}">
+            <ListView.ItemTemplate>
+                <DataTemplate x:DataType="base:DataIQT">
+                    <ListViewItem Margin="3" >
+                        <StackPanel Orientation="Vertical">
+                            <StackPanel Orientation="Horizontal" >
+                                <TextBlock Text="{x:Bind PartNumber}" MinWidth="300" VerticalAlignment="Center"/>
 
-        <ScrollViewer Grid.Column="1" Grid.Row="0" 
-                  DragOver="ScrollViewer_DragOver"
-                  Drop="ScrollViewer_Drop"
-                  AllowDrop="True"
-                  BorderThickness="2"
-                  BorderBrush="{StaticResource AccentAcrylicBackgroundFillColorBaseBrush}"
-                  CornerRadius="5"
-                  Margin="0,10,10,10">
-
-            <StackPanel x:Name="StackPanelOfLasers" Margin="0,0,10,0">
-            </StackPanel>
-        </ScrollViewer>
+                                <Button x:Name="VisualButton" Click="GetThumbNailAsync" Margin="5,0,5,0">
+                                    <FontIcon Glyph="&#xE7B3;" ToolTipService.ToolTip="Aperçu"/>
+                                </Button>
+                                <Button  Click="Button_Click_Remove" Margin="5,0,5,0">
+                                    <SymbolIcon Symbol="Delete"
+                                        ToolTipService.ToolTip="supprimer le plan de la liste"/>
+                                </Button>
+                            </StackPanel>
+                            <MenuFlyoutSeparator Height="3"/>
+                        </StackPanel>
+                    </ListViewItem>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+        <TeachingTip x:Name="TeachingTipThumbNail" PreferredPlacement="Right">
+            <TeachingTip.HeroContent>
+                <Image x:Name="ImageThumbNail" />
+            </TeachingTip.HeroContent>
+            <TeachingTip.Content>
+                <StackPanel Orientation="Vertical">
+                    <TextBlock x:Name="ThumbNailPartNumber" HorizontalAlignment="Center"/>
+                    <TextBlock x:Name="ThumbNailDescription" HorizontalAlignment="Center"/>
+                    <TextBlock x:Name="ThumbNailCustomer" HorizontalAlignment="Center"/>
+                </StackPanel>
+            </TeachingTip.Content>
+        </TeachingTip>
     </Grid>
 </TabViewItem>

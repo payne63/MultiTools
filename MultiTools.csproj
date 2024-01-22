@@ -60,13 +60,27 @@
     </COMReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Assets\SplashScreen.scale-200.png" />
-    <Content Include="Assets\LockScreenLogo.scale-200.png" />
-    <Content Include="Assets\Square150x150Logo.scale-200.png" />
-    <Content Include="Assets\Square44x44Logo.scale-200.png" />
-    <Content Include="Assets\Square44x44Logo.targetsize-24_altform-unplated.png" />
-    <Content Include="Assets\StoreLogo.png" />
-    <Content Include="Assets\Wide310x150Logo.scale-200.png" />
+    <Content Include="Assets\SplashScreen.scale-200.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\LockScreenLogo.scale-200.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Square150x150Logo.scale-200.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Square44x44Logo.scale-200.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Square44x44Logo.targetsize-24_altform-unplated.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\StoreLogo.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Wide310x150Logo.scale-200.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="bin\x64\Release\net6.0-windows10.0.19041.0\win10-x64\Assets\LockScreenLogo.scale-200.png" />
     <Content Include="bin\x64\Release\net6.0-windows10.0.19041.0\win10-x64\Assets\SplashScreen.scale-200.png" />
     <Content Include="bin\x64\Release\net6.0-windows10.0.19041.0\win10-x64\Assets\Square150x150Logo.scale-200.png" />
@@ -80,7 +94,9 @@
     <Content Include="bin\x64\Release\net6.0-windows10.0.19041.0\win10-x64\Images\draw.ico" />
     <Content Include="bin\x64\Release\net6.0-windows10.0.19041.0\win10-x64\Images\drawing.png" />
     <Content Include="bin\x64\Release\net6.0-windows10.0.19041.0\win10-x64\Images\laserIcon.png" />
-    <Content Include="Images\cropped-copietravail-evolution6.ico" />
+    <Content Include="Images\cropped-copietravail-evolution6.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="bin\x64\Release\net6.0-windows10.0.19041.0\win10-x64\Images\part.png" />
     <Content Include="bin\x64\Release\net6.0-windows10.0.19041.0\win10-x64\Images\removeUser.png" />
     <Content Include="bin\x64\Release\net6.0-windows10.0.19041.0\win10-x64\Images\Welcome.png" />
@@ -89,10 +105,11 @@
     <Content Include="bin\x64\Release\net6.0-windows10.0.19041.0\win10-x64\JsonData\contacts.json" />
     <Content Include="bin\x64\Release\net6.0-windows10.0.19041.0\win10-x64\JsonData\users.json" />
     <Content Include="bin\x64\Release\net6.0-windows10.0.19041.0\win10-x64\Microsoft.UI.Xaml\Assets\NoiseAsset_256x256_PNG.png" />
-    <Content Include="bin\x64\Release\net6.0-windows10.0.19041.0\win10-x64\MultiTools.deps.json" />
-    <Content Include="bin\x64\Release\net6.0-windows10.0.19041.0\win10-x64\MultiTools.runtimeconfig.json" />
+
     <Content Include="bin\x64\Release\net6.0-windows10.0.19041.0\win10-x64\WindowsAppRuntime.png" />
-    <Content Include="Images\part.ico" />
+    <Content Include="Images\part.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="ClosedXML" Version="0.101.0" />
@@ -602,10 +619,16 @@
     <None Update="Images\cropped-copietravail-evolution6.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="Images\Evolution-Homme-Ordinateur.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Images\smallLogo.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
+    </None>
+    <None Update="Images\Welcome.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="JsonData\companys.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -714,6 +737,19 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include=".vscode\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Update="Properties\Resources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Update="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
   <!-- 
     Defining the "HasPackageAndPublishMenuAddedByProject" property here allows the Solution 
