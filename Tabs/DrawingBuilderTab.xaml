@@ -96,7 +96,7 @@
                         <StackPanel Orientation="Vertical">
                             <StackPanel Orientation="Horizontal" >
                                 <TextBlock Text="{x:Bind PartNumber}" MinWidth="300" VerticalAlignment="Center"/>
-
+                                <TextBlock Text="{x:Bind Description}" MinWidth="600" VerticalAlignment="Center"/>
                                 <Button x:Name="VisualButton" Click="GetThumbNailAsync" Margin="5,0,5,0">
                                     <FontIcon Glyph="&#xE7B3;" ToolTipService.ToolTip="Aperçu"/>
                                 </Button>

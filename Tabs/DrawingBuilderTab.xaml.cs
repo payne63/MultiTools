@@ -41,7 +41,7 @@ namespace SplittableDataGridSAmple.Tabs
 
         private bool _IsInterfaceEnabled = true;
 
-        public  ObservableCollection<DataIQT> LaserCollection = new();
+        public ObservableCollection<DataIQT> LaserCollection = new();
 
         public bool IsInterfaceEnabled
         {
@@ -94,17 +94,16 @@ namespace SplittableDataGridSAmple.Tabs
                     LaserCollection.Add(item);
                 }
                 
-
                 //IsInterfaceEnabled = true;
             }
         }
 
         public  List<DataIQT> GetLaserDatas(string firstPathFullName)
         {
-            LaserCollection = new();
-            RecursiveLaserDatas(firstPathFullName, 1);
+            var Lasers = new List<DataIQT>();
+            RecursiveLaserDatas(Lasers, firstPathFullName, 1);
             var dic = new Dictionary<string, DataIQT>();
-            foreach (DataIQT data in LaserCollection)
+            foreach (DataIQT data in Lasers)
             {
                 if (dic.ContainsKey(data.FullPathName))
                 {
@@ -116,14 +115,14 @@ namespace SplittableDataGridSAmple.Tabs
             return   dic.Select(x => x.Value).Where(x=> x.Category == DataIBase.CategoryType.Laser).ToList();
         }
 
-        private  void RecursiveLaserDatas(string PathFullName, int qt)
+        private  void RecursiveLaserDatas(List<DataIQT> lasers ,string PathFullName, int qt)
         {
             var data = new DataIQT(PathFullName, qt);
             LaserCollection.Add(data);
             if (data.bom.Count == 0) return;
             foreach (var bomElement in data.bom)
             {
-                RecursiveLaserDatas(bomElement.fullFileName, bomElement.Qt * qt);
+                RecursiveLaserDatas(lasers, bomElement.fullFileName, bomElement.Qt * qt);
             }
         }
 
@@ -159,22 +158,22 @@ namespace SplittableDataGridSAmple.Tabs
 
         private async void GetThumbNailAsync(object sender, RoutedEventArgs e)
         {
-            if (((FrameworkElement)sender).DataContext is IDWModel IDWModelContext)
+            if (((FrameworkElement)sender).DataContext is DataIQT DataIQTContext)
             {
-                if (TeachingTipThumbNail.IsOpen == true && ThumbNailPartNumber.Text == IDWModelContext.FileInfoData.Name)
+                if (TeachingTipThumbNail.IsOpen == true && ThumbNailPartNumber.Text == DataIQTContext.FileInfoData.Name)
                 {
                     TeachingTipThumbNail.IsOpen = false;
                     return;
                 }
-                var file = await Windows.Storage.StorageFile.GetFileFromPathAsync(IDWModelContext.FileInfoData.FullName);
+                var file = await Windows.Storage.StorageFile.GetFileFromPathAsync(DataIQTContext.FileInfoData.FullName);
                 var iconThumbnail = await file.GetThumbnailAsync(ThumbnailMode.SingleItem, 256);
                 var bitmapImage = new BitmapImage();
                 bitmapImage.SetSource(iconThumbnail);
                 if (bitmapImage != null)
                 {
-                    IDWModelContext.bitmapImage = bitmapImage;
+                    DataIQTContext.bitmapImage = bitmapImage;
                     ImageThumbNail.Source = bitmapImage;
-                    ThumbNailPartNumber.Text = IDWModelContext.FileInfoData.Name;
+                    ThumbNailPartNumber.Text = DataIQTContext.FileInfoData.Name;
                     ThumbNailDescription.Text = string.Empty;
                     ThumbNailCustomer.Text = string.Empty;
                     TeachingTipThumbNail.IsOpen = true;

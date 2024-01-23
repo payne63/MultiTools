@@ -1,4 +1,6 @@
-﻿using System.ComponentModel;
+﻿using Microsoft.UI.Xaml.Media.Imaging;
+using System.ComponentModel;
+using System.IO;
 using System.Runtime.CompilerServices;
 using I = Inventor;
 
@@ -14,6 +16,8 @@ namespace SplittableDataGridSAmple
         }
         #endregion
         public enum CategoryType { Assemblage, MecanoSoudure, Mecanique, Profile, Laser, Commerce, ElementClient, Inconnu, }
+        public FileInfo FileInfoData { get; }
+        public BitmapImage bitmapImage;
 
         private static I.ApprenticeServerComponent AppServer;
 
