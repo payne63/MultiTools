@@ -1,4 +1,5 @@
 ﻿using Microsoft.UI.Xaml.Media.Imaging;
+using System;
 using System.ComponentModel;
 using System.IO;
 using System.Runtime.CompilerServices;
@@ -16,12 +17,24 @@ namespace SplittableDataGridSAmple
         }
         #endregion
         public enum CategoryType { Assemblage, MecanoSoudure, Mecanique, Profile, Laser, Commerce, ElementClient, Inconnu, }
-        public FileInfo FileInfoData { get; }
+
+        private FileInfo fileInfo;
+        public FileInfo FileInfoData {
+            get
+            {
+                if (fileInfo == null)
+                {
+                    fileInfo = new FileInfo(FullPathName);
+                    if (!fileInfo.Exists) { throw new Exception($"File {FullPathName} doesn't exist "); }
+                }
+                return fileInfo;
+            } 
+        }
         public BitmapImage bitmapImage;
 
         private static I.ApprenticeServerComponent AppServer;
 
-        static internal I.ApprenticeServerComponent GetAppServer
+        internal static I.ApprenticeServerComponent GetAppServer
         {
             get
             {

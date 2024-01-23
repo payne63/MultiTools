@@ -15,12 +15,14 @@ using Microsoft.UI.Xaml.Media.Imaging;
 using Windows.Storage.FileProperties;
 using System.Drawing;
 using System.ComponentModel;
+using Microsoft.VisualStudio.OLE.Interop;
+using Microsoft.VisualStudio.Shell.Interop;
 
 namespace SplittableDataGridSAmple.Base
 {
     public class DataIQT : DataIBase
     {
-
+        private readonly string CLSID_InventorSheetMetalPart_RegGUID = "9C464203-9BAE-11D3-8BAD-0060B0CE6BB4";
         public List<(string FullFileName, string DisplayName)> ReferencedDocuments { get; set; }
 
         public List<(string fullFileName, int Qt)> bom = new();
@@ -45,6 +47,15 @@ namespace SplittableDataGridSAmple.Base
             set { _BitmapImage = value; NotifyPropertyChanged(); }
         }
 
+        private bool _trueSheetMetal;
+
+        public bool TrueSheetMetal
+        {
+            get => _trueSheetMetal;
+            private set => _trueSheetMetal = value;
+        }
+
+
         public IList<CategoryType> GetCategoryTypes => Enum.GetValues(typeof(CategoryType)).Cast<CategoryType>().ToList();
 
         public DataIQT(string fullPathDocument, int qt)
@@ -63,6 +74,7 @@ namespace SplittableDataGridSAmple.Base
             if (IsLaserType) { Category = CategoryType.Laser; GetAppServer.Close(); return; };
             if (IsProfileType) { Category = CategoryType.Profile; GetAppServer.Close(); return; };
             if (IsMecaniqueType) { Category = CategoryType.Mecanique; GetAppServer.Close(); return; };
+          
 
             if (DocumentType == DocumentTypeEnum.kAssemblyDocumentObject) 
             {

@@ -97,9 +97,11 @@
                             <StackPanel Orientation="Horizontal" >
                                 <TextBlock Text="{x:Bind PartNumber}" MinWidth="300" VerticalAlignment="Center"/>
                                 <TextBlock Text="{x:Bind Description}" MinWidth="600" VerticalAlignment="Center"/>
+                                <CheckBox Content="Piece de tolerie" IsChecked="{x:Bind TrueSheetMetal , Mode=OneWay}"  />
                                 <Button x:Name="VisualButton" Click="GetThumbNailAsync" Margin="5,0,5,0">
                                     <FontIcon Glyph="&#xE7B3;" ToolTipService.ToolTip="Aperçu"/>
                                 </Button>
+                                
                                 <Button  Click="Button_Click_Remove" Margin="5,0,5,0">
                                     <SymbolIcon Symbol="Delete"
                                         ToolTipService.ToolTip="supprimer le plan de la liste"/>
