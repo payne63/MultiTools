@@ -16,10 +16,10 @@ internal class DXFBuilderHelper
     private static Application InventorApp;
     private static Inventor.Sheet sheet;
 
-    public static DrawingDocument Build(string PartPath, string templatePath = @"C:\Users\Public\Documents\Autodesk\Inventor 2019\Templates\Metric\ISO.idw")
+    public static DrawingDocument Build(InventorHelper inventorHelper, string PartPath, string templatePath = @"C:\Users\Public\Documents\Autodesk\Inventor 2019\Templates\Metric\ISO.idw")
     {
-        InventorApp = InventorManagerHelper.GetActualInventorApp();
-        if (InventorApp == null) { throw new Exception("application inventor fermer"); }
+        InventorApp = inventorHelper.App;
+        if (InventorApp == null) { throw new Exception("application inventor non disponible"); }
         var partDocument = InventorApp.Documents.Open(PartPath, true) as PartDocument;
         var dataSheetMetal = FlatCheck(partDocument);
         if (dataSheetMetal == null )

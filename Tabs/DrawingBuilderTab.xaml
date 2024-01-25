@@ -26,6 +26,7 @@
             Background="{ThemeResource AccentAcrylicBackgroundFillColorDefaultBrush}"
             Margin="10">
             <StackPanel Orientation="Vertical">
+                
                 <Button
                 Margin="10" 
                 HorizontalAlignment="Stretch"
@@ -46,18 +47,16 @@
                 <Button Margin="10" 
                 HorizontalAlignment="Stretch"
                 Padding="15"
-                IsEnabled="{x:Bind IsInterfaceEnabled, Mode=OneWay}"
+                IsEnabled="{x:Bind InventorHelperReady, Mode=OneWay}"
                     Click="Button_Click_BuildDrawing">
                     <StackPanel Orientation="Vertical" >
-                        <StackPanel Orientation="Horizontal">
-                            <Viewbox MaxHeight="25" MaxWidth="25" >
-                                <FontIcon Glyph="&#xE81B;" />
-                            </Viewbox>
-                            <Viewbox MaxHeight="25" MaxWidth="25" >
-                                <FontIcon Glyph="&#xEDE1;" />
-                            </Viewbox>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" >
+                            <ToggleSwitch  Header="Inventor app" OffContent="Chargement" OnContent="Pret" IsOn="{x:Bind InventorHelperReady, Mode=OneWay}" IsEnabled="False"/>
+                            <ProgressRing IsActive="{x:Bind RingInProgress, Mode=OneWay}" Width="32"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="5">
                             <Viewbox MaxHeight="30" MaxWidth="30" >
-                                <FontIcon Glyph="&#xE11D;" />
+                                <FontIcon Glyph="&#xEC88;" />
                             </Viewbox>
                         </StackPanel>
                         <TextBlock Text="Generer les plans Laser" HorizontalAlignment="Center" />

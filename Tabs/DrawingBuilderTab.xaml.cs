@@ -1,4 +1,5 @@
 using AvitechTools.Models;
+using Inventor;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
@@ -19,6 +20,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
@@ -39,18 +41,53 @@ namespace SplittableDataGridSAmple.Tabs
         }
         #endregion
 
+
+        private bool _RingInProgress;
+
+        public bool RingInProgress
+        {
+            get => _RingInProgress;
+            set
+            {
+                _RingInProgress = value; OnPropertyChanged();
+            }
+        }
+
+        private bool _InventorHelperReady;
+
+        public bool InventorHelperReady
+        {
+            get => _InventorHelperReady;
+            set
+            {
+                _InventorHelperReady = value; OnPropertyChanged();
+            }
+        }
+
+
         private bool _IsInterfaceEnabled = true;
+        private InventorHelper InventorHelper;
 
         public ObservableCollection<DataIQT> LaserCollection = new();
 
         public bool IsInterfaceEnabled
         {
-            get { return _IsInterfaceEnabled; }
-            set { _IsInterfaceEnabled = value; OnPropertyChanged(); }
+            get
+            {
+                return _IsInterfaceEnabled;
+            }
+            set
+            {
+                _IsInterfaceEnabled = value; OnPropertyChanged();
+            }
         }
 
-        public void InitTab()
+        public async void InitTab()
         {
+            InventorHelperReady = false;
+            RingInProgress = true;
+            InventorHelper.Ready += () => { RingInProgress = false; InventorHelperReady = true; };
+            InventorHelper = await InventorHelper.CreateAsync();
         }
 
         public DrawingBuilderTab()
@@ -65,7 +102,7 @@ namespace SplittableDataGridSAmple.Tabs
 
         private async void PanelDataI_Drop(object sender, DragEventArgs e)
         {
-            
+
             if (!e.DataView.Contains(StandardDataFormats.StorageItems))
             {
                 OpenSimpleMessage("Format non compatible");
@@ -93,12 +130,12 @@ namespace SplittableDataGridSAmple.Tabs
                 {
                     LaserCollection.Add(item);
                 }
-                
+
                 //IsInterfaceEnabled = true;
             }
         }
 
-        public  List<DataIQT> GetLaserDatas(string firstPathFullName)
+        public List<DataIQT> GetLaserDatas(string firstPathFullName)
         {
             var Lasers = new List<DataIQT>();
             RecursiveLaserDatas(Lasers, firstPathFullName, 1);
@@ -112,10 +149,10 @@ namespace SplittableDataGridSAmple.Tabs
                 }
                 dic.Add(data.FullPathName, data);
             }
-            return   dic.Select(x => x.Value).Where(x=> x.Category == DataIBase.CategoryType.Laser).ToList();
+            return dic.Select(x => x.Value).Where(x => x.Category == DataIBase.CategoryType.Laser).ToList();
         }
 
-        private  void RecursiveLaserDatas(List<DataIQT> lasers ,string PathFullName, int qt)
+        private void RecursiveLaserDatas(List<DataIQT> lasers, string PathFullName, int qt)
         {
             var data = new DataIQT(PathFullName, qt);
             LaserCollection.Add(data);
@@ -130,10 +167,36 @@ namespace SplittableDataGridSAmple.Tabs
 
         private async void Button_Click_BuildDrawing(object sender, RoutedEventArgs e)
         {
+            while (InventorHelper == null)
+            {
+
+            }
+            InventorHelper.ShowApp();
             foreach (var laser in LaserCollection)
             {
-                DXFBuilderHelper.Build(laser.FullPathName);
+
+
+                var drawingDocument = DXFBuilderHelper.Build(InventorHelper, laser.FullPathName);
+                var drawingSavePath = laser.FileInfoData.Directory.FullName + @"\DXF\" + laser.FileInfoData.Name + ".idw";
+                ContentDialog dialogValidation = new ContentDialog
+                {
+                    XamlRoot = XamlRoot,
+                    Title = "Validation",
+                    Content = $"le plan Generer est-il correct ?\nsi OUI, is sera sauvegarder\n{drawingSavePath}",
+                    PrimaryButtonText = "OUI",
+                    SecondaryButtonText = "NON",
+                    DefaultButton = ContentDialogButton.Primary,
+                };
+                var dialogResult = await dialogValidation.ShowAsync();
+                if (dialogResult == ContentDialogResult.Primary)
+                {
+                    drawingDocument.SaveAs(drawingSavePath, false);
+
+                }
+                drawingDocument.Close();
             }
+            InventorHelper.HideApp();
+
         }
         private void RemoveAllData()
         {
@@ -192,6 +255,13 @@ namespace SplittableDataGridSAmple.Tabs
                 DefaultButton = ContentDialogButton.Primary,
             };
             _ = await dialog.ShowAsync();
+        }
+
+
+
+        private void ToggleSwitch_Loaded(object sender, RoutedEventArgs e)
+        {
+            (sender as ToggleSwitch).IsOn = false;
         }
     }
 }

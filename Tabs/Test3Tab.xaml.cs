@@ -241,7 +241,7 @@ namespace SplittableDataGridSAmple.Tabs
         {
             try
             {
-                var drawingDocument = DXFBuilderHelper.Build(@"E:\testPlan\P641-110.ipt");
+                var drawingDocument = DXFBuilderHelper.Build(null,@"E:\testPlan\P641-110.ipt");
             }
             catch (Exception ex)
             {
