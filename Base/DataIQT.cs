@@ -49,10 +49,21 @@ namespace SplittableDataGridSAmple.Base
 
         private bool _trueSheetMetal;
 
-        public bool TrueSheetMetal
+        public bool IsTrueSheetMetal
         {
             get => _trueSheetMetal;
-            private set => _trueSheetMetal = value;
+            set => _trueSheetMetal = value;
+        }
+
+        private string _Status = string.Empty;
+
+        public string Status
+        {
+            get => _Status;
+            set
+            {
+                _Status = value; NotifyPropertyChanged();
+            }
         }
 
 
@@ -69,12 +80,19 @@ namespace SplittableDataGridSAmple.Base
             PartNumber = (string)document.PropertySets["Design Tracking Properties"].ItemByPropId[5].Value;
             Material = (string)document.PropertySets["Design Tracking Properties"].ItemByPropId[20].Value;
             Qt = qt;
+
+            if (DocumentType == DocumentTypeEnum.kPartDocumentObject)
+            {
+                if (document.ComponentDefinition is SheetMetalComponentDefinition sheetMetalComponentDefinition) IsTrueSheetMetal = true;
+            }
+
             if (IsCommerceType) { Category = CategoryType.Commerce; GetAppServer.Close(); return; };
             if (IsElementClientType) { Category = CategoryType.ElementClient; GetAppServer.Close(); return; };
             if (IsLaserType) { Category = CategoryType.Laser; GetAppServer.Close(); return; };
             if (IsProfileType) { Category = CategoryType.Profile; GetAppServer.Close(); return; };
             if (IsMecaniqueType) { Category = CategoryType.Mecanique; GetAppServer.Close(); return; };
-          
+            
+
 
             if (DocumentType == DocumentTypeEnum.kAssemblyDocumentObject) 
             {
@@ -109,7 +127,7 @@ namespace SplittableDataGridSAmple.Base
 
         private bool IsCommerceType => FullPathName.IndexOf("composants", StringComparison.OrdinalIgnoreCase) >= 0;
         private bool IsElementClientType => FullPathName.IndexOf("Elements client", StringComparison.OrdinalIgnoreCase) >= 0;
-        private bool IsLaserType => Description.IndexOf("laser", StringComparison.OrdinalIgnoreCase) >= 0;
+        public bool IsLaserType => Description.IndexOf("laser", StringComparison.OrdinalIgnoreCase) >= 0;
         private bool IsMecaniqueType => Description.IndexOf("#M", StringComparison.OrdinalIgnoreCase) >= 0;
         private bool IsProfileType => Description.IndexOf("#P", StringComparison.OrdinalIgnoreCase) >= 0;
 

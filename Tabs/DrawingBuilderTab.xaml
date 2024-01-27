@@ -7,7 +7,8 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:base="using:SplittableDataGridSAmple.Base"
     mc:Ignorable="d"
-    Header="Constructeur Plan Laser">
+    Header="Constructeur Plan Laser"
+    >
     <TabViewItem.IconSource>
         <FontIconSource Glyph="&#xE945;"/>
     </TabViewItem.IconSource>
@@ -21,12 +22,12 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <Border AutomationProperties.AccessibilityView="Raw"
-            CornerRadius="10,0,10,0"  Grid.Column="0" Grid.Row="0"  Grid.RowSpan="1"
+            CornerRadius="10,0,10,0"  Grid.Column="0" Grid.Row="1"  Grid.RowSpan="1"
             HorizontalAlignment="Stretch" VerticalAlignment="Top"
             Background="{ThemeResource AccentAcrylicBackgroundFillColorDefaultBrush}"
             Margin="10">
             <StackPanel Orientation="Vertical">
-                
+
                 <Button
                 Margin="10" 
                 HorizontalAlignment="Stretch"
@@ -50,10 +51,8 @@
                 IsEnabled="{x:Bind InventorHelperReady, Mode=OneWay}"
                     Click="Button_Click_BuildDrawing">
                     <StackPanel Orientation="Vertical" >
-                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" >
-                            <ToggleSwitch  Header="Inventor app" OffContent="Chargement" OnContent="Pret" IsOn="{x:Bind InventorHelperReady, Mode=OneWay}" IsEnabled="False"/>
-                            <ProgressRing IsActive="{x:Bind RingInProgress, Mode=OneWay}" Width="32"/>
-                        </StackPanel>
+                        <TextBlock Text="Chargement d'Inventor" x:Name="ProgressRingLabel" HorizontalAlignment="Center"/>
+                        <ProgressRing  IsActive="{x:Bind RingInProgress, Mode=OneWay}" Width="32"/>
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="5">
                             <Viewbox MaxHeight="30" MaxWidth="30" >
                                 <FontIcon Glyph="&#xEC88;" />
@@ -77,9 +76,16 @@
                 </Button>
             </StackPanel>
         </Border>
+        <StackPanel Orientation="Horizontal" Margin="20,10,0,0" Grid.Column="1" Grid.Row="0">
+            <TextBlock Text="Code" Width="300" VerticalAlignment="Center"/>
+            <TextBlock Text="Designation" Width="500" VerticalAlignment="Center"/>
+            <TextBlock Text="Gabarit Laser" Width="150" VerticalAlignment="Center"/>
+            <TextBlock Text="Status" Width="200" VerticalAlignment="Center"/>
+            
+        </StackPanel>
         <ListView ItemsSource="{x:Bind LaserCollection}"
               x:Name="ListViewLaser"
-              Grid.Column="1" Grid.Row="0"
+              Grid.Column="1" Grid.Row="1"
               CanBeScrollAnchor="True"
               ShowsScrollingPlaceholders="True"
               BorderThickness="2"
@@ -95,12 +101,16 @@
                         <StackPanel Orientation="Vertical">
                             <StackPanel Orientation="Horizontal" >
                                 <TextBlock Text="{x:Bind PartNumber}" MinWidth="300" VerticalAlignment="Center"/>
-                                <TextBlock Text="{x:Bind Description}" MinWidth="600" VerticalAlignment="Center"/>
-                                <CheckBox Content="Piece de tolerie" IsChecked="{x:Bind TrueSheetMetal , Mode=OneWay}"  />
+                                <TextBlock Text="{x:Bind Description}" MinWidth="500" VerticalAlignment="Center"/>
+                                <CheckBox Content="Piece de tolerie" IsChecked="{x:Bind IsTrueSheetMetal , Mode=OneWay}" 
+                                          IsEnabled="False" MinWidth="150" />
+                                <StackPanel Orientation="Horizontal" MinWidth="200">
+                                    <TextBlock Text="{x:Bind Status ,Mode=OneWay}"  VerticalAlignment="Center"/>
+                                    <ProgressRing x:Name="ProgressRingStatus" IsActive="False" Margin="10,0,10,0"/>
+                                </StackPanel>
                                 <Button x:Name="VisualButton" Click="GetThumbNailAsync" Margin="5,0,5,0">
                                     <FontIcon Glyph="&#xE7B3;" ToolTipService.ToolTip="Aperçu"/>
                                 </Button>
-                                
                                 <Button  Click="Button_Click_Remove" Margin="5,0,5,0">
                                     <SymbolIcon Symbol="Delete"
                                         ToolTipService.ToolTip="supprimer le plan de la liste"/>

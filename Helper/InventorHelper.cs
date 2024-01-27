@@ -30,12 +30,18 @@ internal class InventorHelper
         PageOrientationTypeEnum.kDefaultPageOrientation => PrintOrientationEnum.kDefaultOrientation
     };
 
-    private Application _app;
-
+    private Application _App;
     public Application App
     {
-        get => _app;
-        private set => _app = value;
+        get => _App;
+        private set => _App = value;
+    }
+
+    private ApprenticeServerComponent _AppServerComp;
+    public ApprenticeServerComponent AppServerComp
+    {
+        get => _AppServerComp;
+        private set => _AppServerComp = value;
     }
 
     public static event Action Ready;
@@ -48,8 +54,9 @@ internal class InventorHelper
     {
         var inventorHelper = new InventorHelper();
         inventorHelper.App = await CreateInventorInstance();
-        inventorHelper.App.SilentOperation = true; //suprime les promptes d'inventor
+        //inventorHelper.App.SilentOperation = true; //supprime les promptes d'inventor
         Ready.Invoke();
+        inventorHelper.AppServerComp = new ApprenticeServerComponent();
         return inventorHelper;
     }
 
@@ -86,6 +93,38 @@ internal class InventorHelper
     public void ShowApp() => App.Visible = true;
     public void HideApp() => App.Visible = false;
 
+    public void SavePDF(Inventor.DrawingDocument drawingDoc, string folderPath)
+    {
+        var fullName = folderPath + @"\" + System.IO.Path.GetFileNameWithoutExtension(drawingDoc.DisplayName) + ".pdf";
+        drawingDoc.SaveAs(fullName, true);
+    }
 
+    public void SaveDXF(Inventor.DrawingDocument drawingDoc, string folderPath)
+    {
+        var DXFAddin = (Inventor.TranslatorAddIn)App.ApplicationAddIns.ItemById["{C24E3AC4-122E-11D5-8E91-0010B541CD80}"];
+        //active l'addon si il est pas activé
+        if (DXFAddin.Activated == false) DXFAddin.Activate();
+
+        //context
+        var oContext = App.TransientObjects.CreateTranslationContext();
+        oContext.Type = Inventor.IOMechanismEnum.kFileBrowseIOMechanism;
+
+        //créer un NameValueMap object
+        var oOptions = App.TransientObjects.CreateNameValueMap();
+
+        //créer un dataMedium object
+        var oDataMedium = App.TransientObjects.CreateDataMedium();
+        //renseigne la destination
+        oDataMedium.FileName = folderPath + @"\" + System.IO.Path.GetFileNameWithoutExtension(drawingDoc.DisplayName) + ".dxf";
+
+        //DXF Exporter does NOT overwrite and will hang if previous files found
+        if (System.IO.File.Exists(oDataMedium.FileName))
+        {
+            System.IO.File.Delete(oDataMedium.FileName);
+        }
+
+        DXFAddin.SaveCopyAs(drawingDoc, oContext, oOptions, oDataMedium);
+
+    }
 
 }

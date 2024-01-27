@@ -1,4 +1,6 @@
 using AvitechTools.Models;
+using CommunityToolkit.WinUI.UI;
+using DocumentFormat.OpenXml.Wordprocessing;
 using Inventor;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -49,20 +51,13 @@ namespace SplittableDataGridSAmple.Tabs
             get => _RingInProgress;
             set
             {
-                _RingInProgress = value; OnPropertyChanged();
+                _RingInProgress = value; OnPropertyChanged(); OnPropertyChanged(nameof(InventorHelperReady));
             }
         }
 
-        private bool _InventorHelperReady;
+        public bool InventorHelperReady => !RingInProgress;
 
-        public bool InventorHelperReady
-        {
-            get => _InventorHelperReady;
-            set
-            {
-                _InventorHelperReady = value; OnPropertyChanged();
-            }
-        }
+
 
 
         private bool _IsInterfaceEnabled = true;
@@ -84,10 +79,10 @@ namespace SplittableDataGridSAmple.Tabs
 
         public async void InitTab()
         {
-            InventorHelperReady = false;
             RingInProgress = true;
-            InventorHelper.Ready += () => { RingInProgress = false; InventorHelperReady = true; };
+            InventorHelper.Ready += () => { RingInProgress = false; ProgressRingLabel.Text = "Inventor Pret"; };
             InventorHelper = await InventorHelper.CreateAsync();
+            CloseRequested += (sender, args) => { InventorHelper.App.Quit(); InventorHelper = null; };
         }
 
         public DrawingBuilderTab()
@@ -109,33 +104,34 @@ namespace SplittableDataGridSAmple.Tabs
                 return;
             }
             var items = await e.DataView.GetStorageItemsAsync();
-            if (items.Count != 1)
-            {
-                OpenSimpleMessage("Déposer 1 seul fichier à la fois");
-                return;
-            }
-            var storageItemDrop = items[0];
-            if (storageItemDrop.Name.EndsWith(".idw"))
-            {
-                OpenSimpleMessage("Déposer un assemblage ou une pièce, mais pas de plan");
-                return;
-            }
-            if (storageItemDrop.Name.EndsWith(".ipt") || storageItemDrop.Name.EndsWith(".iam"))
-            {
-                RemoveAllData();
-                //IsInterfaceEnabled = false;
 
-
-                foreach (var item in GetLaserDatas(storageItemDrop.Path))
+            if (items.Count > 0)
+            {
+                ClearLaserData();
+                foreach (var file in items)
                 {
-                    LaserCollection.Add(item);
+                    if (file.Name.EndsWith(".ipt") || file.Name.EndsWith(".iam"))
+                    {
+                        foreach (var dataIQT in GetLaserDatas(file.Path))
+                        {
+                            if (dataIQT.IsTrueSheetMetal || dataIQT.IsLaserType)
+                            {
+                                dataIQT.Status = "en attente";
+                                LaserCollection.Add(dataIQT);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        OpenSimpleMessage("seul des pièces ou des assemblages sont utilisable");
+                    }
                 }
-
-                //IsInterfaceEnabled = true;
             }
+
+
         }
 
-        public List<DataIQT> GetLaserDatas(string firstPathFullName)
+        public IEnumerable<DataIQT> GetLaserDatas(string firstPathFullName)
         {
             var Lasers = new List<DataIQT>();
             RecursiveLaserDatas(Lasers, firstPathFullName, 1);
@@ -149,13 +145,13 @@ namespace SplittableDataGridSAmple.Tabs
                 }
                 dic.Add(data.FullPathName, data);
             }
-            return dic.Select(x => x.Value).Where(x => x.Category == DataIBase.CategoryType.Laser).ToList();
+            return dic.Select(x=> x.Value);
         }
 
         private void RecursiveLaserDatas(List<DataIQT> lasers, string PathFullName, int qt)
         {
             var data = new DataIQT(PathFullName, qt);
-            LaserCollection.Add(data);
+            lasers.Add(data);
             if (data.bom.Count == 0) return;
             foreach (var bomElement in data.bom)
             {
@@ -163,21 +159,24 @@ namespace SplittableDataGridSAmple.Tabs
             }
         }
 
-        private void Button_Click_RemoveData(object sender, RoutedEventArgs e) => RemoveAllData();
+        private void Button_Click_RemoveData(object sender, RoutedEventArgs e) => ClearLaserData();
 
         private async void Button_Click_BuildDrawing(object sender, RoutedEventArgs e)
         {
-            while (InventorHelper == null)
-            {
-
-            }
             InventorHelper.ShowApp();
-            foreach (var laser in LaserCollection)
+            foreach (var dataIQT in LaserCollection)
             {
+                if (!dataIQT.IsTrueSheetMetal)
+                {
+                    dataIQT.Status = "A faire Manuellement";
+                    continue;
+                }
+                dataIQT.Status = "en Cours";
+                GetProgressRingStatus(dataIQT).IsActive = true;
+                DrawingDocument drawingDocument = null;
 
-
-                var drawingDocument = DXFBuilderHelper.Build(InventorHelper, laser.FullPathName);
-                var drawingSavePath = laser.FileInfoData.Directory.FullName + @"\DXF\" + laser.FileInfoData.Name + ".idw";
+                await Task.Run(() => drawingDocument = DXFBuilderHelper.Build(InventorHelper, dataIQT.FullPathName));
+                var drawingSavePath = dataIQT.FileInfoData.Directory.FullName + @"\DXF\" + dataIQT.FileInfoData.Name + ".idw";
                 ContentDialog dialogValidation = new ContentDialog
                 {
                     XamlRoot = XamlRoot,
@@ -190,15 +189,28 @@ namespace SplittableDataGridSAmple.Tabs
                 var dialogResult = await dialogValidation.ShowAsync();
                 if (dialogResult == ContentDialogResult.Primary)
                 {
+                    if (System.IO.File.Exists(drawingSavePath))
+                    {
+                        System.IO.File.Delete(drawingSavePath);
+                    }
                     drawingDocument.SaveAs(drawingSavePath, false);
-
+                    InventorHelper.SaveDXF(drawingDocument,  System.IO.Path.GetDirectoryName( drawingSavePath));
                 }
-                drawingDocument.Close();
+                dataIQT.Status = "Fait";
+                GetProgressRingStatus(dataIQT).IsActive = false;
+                drawingDocument.Close(true);
             }
             InventorHelper.HideApp();
 
         }
-        private void RemoveAllData()
+
+        private ProgressRing GetProgressRingStatus(DataIQT dataIQT)
+        {
+            var container = ListViewLaser.ContainerFromItem(dataIQT) as ListViewItem;
+            return container.FindChild<ProgressRing>();
+        }
+
+        private void ClearLaserData()
         {
             LaserCollection.Clear();
         }

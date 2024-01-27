@@ -118,8 +118,8 @@ namespace SplittableDataGridSAmple.Tabs
                 var items = await e.DataView.GetStorageItemsAsync();
                 if (items.Count > 0)
                 {
-                    var files = items.ToList();
-                    foreach (var file in files)
+                    //var files = items.ToList();
+                    foreach (var file in items)
                     {
                         Trace.WriteLine(file.Path);
                         if (!Directory.Exists(file.Path))
