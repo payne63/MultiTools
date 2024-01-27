@@ -1,3 +1,5 @@
+using DocumentFormat.OpenXml.Drawing;
+using Microsoft.UI.Composition;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
@@ -12,9 +14,11 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Numerics;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.UI.Core.AnimationMetrics;
 
 namespace SplittableDataGridSAmple.Elements
 {
@@ -28,6 +32,9 @@ namespace SplittableDataGridSAmple.Elements
         private TabViewItem _tabViewItemToLoad;
 
         public bool isBetaVersion { get; set; }
+
+        Compositor _compositor = Microsoft.UI.Xaml.Media.CompositionTarget.GetCompositorForCurrentThread();
+        private SpringVector3NaturalMotionAnimation _springAnimation;
 
         public NewTabButton(Type tabType, string description = null, bool isBetaVersion = false)
         {
@@ -44,13 +51,37 @@ namespace SplittableDataGridSAmple.Elements
                 MainWindow.tabViewRef.TabItems.Add(_tabViewItemToLoad);
                 ((Interfaces.IInitTab)_tabViewItemToLoad).InitTab();
                 MainWindow.tabViewRef.SelectedItem = _tabViewItemToLoad;
-                MainWindow.tabViewRef.TabItems.Remove(selectedTabItem);
+                //MainWindow.tabViewRef.TabItems.Remove(selectedTabItem);
             };
             this.isBetaVersion = isBetaVersion;
         }
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             ClickMethod.Invoke(this, e);
+        }
+
+        private void Button_PointerEntered(object sender, PointerRoutedEventArgs e)
+        {
+            UpdateSpringAnimation(1.1f);
+            //(sender as UIElement).StartAnimation(_springAnimation);
+        }
+
+        private void UpdateSpringAnimation(float finalValue)
+        {
+            if (_springAnimation == null)
+            {
+                _springAnimation = _compositor.CreateSpringVector3Animation();
+                _springAnimation.Target = "Scale";
+            }
+
+            _springAnimation.FinalValue = new Vector3(finalValue);
+
+        }
+
+        private void Button_PointerExited(object sender, PointerRoutedEventArgs e)
+        {
+            UpdateSpringAnimation(1f);
+            //(sender as UIElement).StartAnimation(_springAnimation);
         }
     }
 }

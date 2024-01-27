@@ -6,15 +6,20 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    Click="Button_Click" MinWidth="370"  CornerRadius="15" Margin="10" MinHeight="90"
-    Background="{ThemeResource AccentAcrylicBackgroundFillColorDefaultBrush}" >
+    Click="Button_Click" MinWidth="30"  CornerRadius="15,0,15,0" Margin="10" MinHeight="70"
+    Background="{ThemeResource AccentAcrylicBackgroundFillColorDefaultBrush}" 
+    PointerEntered="Button_PointerEntered"
+    PointerExited="Button_PointerExited">
     <Grid>
 
-        <StackPanel Orientation="Horizontal" Margin="0,6,12,6" HorizontalAlignment="Stretch" >
-            <Viewbox MaxHeight="60" MaxWidth="60" HorizontalAlignment="Stretch">
+        <StackPanel Orientation="Horizontal" Margin="0,6,12,6" HorizontalAlignment="Left" x:Name="aa">
+            <Button CornerRadius="10,0,10,0" >
+                
+            <Viewbox MaxHeight="40" MaxWidth="40" HorizontalAlignment="Left" >
                 <FontIcon Glyph="{x:Bind GlyphsIconTab}"/>
 
             </Viewbox>
+            </Button>
             <StackPanel Margin="20,0,0,0" HorizontalAlignment="Stretch">
                 <TextBlock Text="{x:Bind Title}" 
                        Style="{StaticResource SubtitleTextBlockStyle}"
@@ -29,7 +34,8 @@
             </StackPanel>
         </StackPanel>
         <TextBlock Text="BETA VERSION" Rotation="45" 
-                   Foreground="{StaticResource SystemFillColorCritical}"
-                   FontWeight="Bold" Visibility="{x:Bind isBetaVersion}"/>
+                   Foreground="{StaticResource TextOnAccentFillColorPrimaryBrush}"
+                   FontWeight="Bold" Visibility="{x:Bind isBetaVersion}"
+                   FontSize="10"/>
     </Grid>
 </Button>

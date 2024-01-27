@@ -72,10 +72,10 @@ namespace SplittableDataGridSAmple
             tabViewRef = TabViewName;
             ResizeWindows(1800, 1000);
             UsersNameUpdate();
-            ExtendsContentIntoTitleBar = true;
-            window.SetTitleBar(AppTitleBar);
+            //ExtendsContentIntoTitleBar = true;
             window.Title = "MultiTools";
         }
+
 
         private static void LoadPaths()
         {

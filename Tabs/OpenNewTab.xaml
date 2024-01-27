@@ -8,14 +8,59 @@
     mc:Ignorable="d"
     Header="Ajouter un Onglet Outil" VerticalAlignment="Stretch">
     <TabViewItem.IconSource>
-        <FontIconSource Glyph="&#xE8FC;"/>
+        <FontIconSource Glyph="&#xE80F;"/>
     </TabViewItem.IconSource>
-    <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Stretch">
-        <Border BorderBrush="{x:Null}" Height="100">
-            <TextBlock Text="Selectionner Un Nouvel Onglet" FontSize="30" FontWeight="Bold"
-                   HorizontalAlignment="Center" VerticalAlignment="Center"/>
-        </Border>
-        <GridView ItemsSource="{x:Bind JobElements}"  />
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1.5*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Column="0">
+            <TextBlock Text="MultiTools Application" FontSize="30" FontWeight="Bold"
+                       HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            <TextBlock Text="Version : Janvier 2024" FontSize="19" FontWeight="Normal" 
+                       HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            <Image Source="ms-appx:///Images/Welcome2.png" Margin="10,150,10,150" Stretch="None" HorizontalAlignment="Center"/>
+            <Button Content="Avitech Link" FontSize="20" Margin="10" FontStyle="Italic" CornerRadius="10,0,10,0"
+                Background="{ThemeResource AccentAcrylicBackgroundFillColorDefaultBrush}"
+                HorizontalAlignment="Center" Click="Button_Click_AvitechLink"/>
+            <Button Content="Github Repository Link" FontSize="20" Margin="10" FontStyle="Italic"
+                CornerRadius="10,0,10,0"
+                Background="{ThemeResource AccentAcrylicBackgroundFillColorDefaultBrush}"
+                HorizontalAlignment="Center" Click="Button_Click_RepoLink"/>
+        </StackPanel>
 
-    </StackPanel>
+        <Border AutomationProperties.AccessibilityView="Raw" Grid.Column="1"
+                Background="{ThemeResource SystemChromeBlackLowColor}"
+                Margin="10" Padding="10" CornerRadius="30" >
+            <ScrollViewer VerticalScrollBarVisibility="Auto" BorderThickness="2" 
+                          BorderBrush="{StaticResource AccentAcrylicBackgroundFillColorBaseBrush}"
+                          CornerRadius="20">
+                <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Stretch" >
+                    <Border BorderBrush="{x:Null}" Height="100">
+                        <TextBlock Text="Specifique a Inventor" FontSize="30" FontWeight="Bold"
+                   HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                    <GridView ItemsSource="{x:Bind JobElementsInventor}"  />
+                </StackPanel>
+            </ScrollViewer>
+        </Border>
+        <Border AutomationProperties.AccessibilityView="Raw" Grid.Column="2"
+                Background="{ThemeResource SystemChromeBlackLowColor}"
+                Margin="10" Padding="10" CornerRadius="30" >
+            <ScrollViewer VerticalScrollBarVisibility="Auto" BorderThickness="2" 
+              BorderBrush="{StaticResource AccentAcrylicBackgroundFillColorBaseBrush}"
+              CornerRadius="20">
+                <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Stretch" >
+                    <Border BorderBrush="{x:Null}" Height="100">
+                        <TextBlock Text="Divers" FontSize="30" FontWeight="Bold"
+                    HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                    <GridView ItemsSource="{x:Bind JobElements}"  />
+
+                </StackPanel>
+            </ScrollViewer>
+        </Border>
+    </Grid>
 </TabViewItem>

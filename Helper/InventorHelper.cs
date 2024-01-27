@@ -66,16 +66,16 @@ internal class InventorHelper
         await Task.Run(() =>
         {
             try// essaye d'ouvrir Inventor Session
-        {
-            Type invType = Type.GetTypeFromProgID("Inventor.Application");
-            application = (Inventor.Application)System.Activator.CreateInstance(invType);
-            application.Visible = false;
-            while (!application.Ready) { }
-        }
-        catch (Exception ex)
-        {
-            throw new Exception("impossible d'ouvrir une session inventor :" + ex);
-        }
+            {
+                Type invType = Type.GetTypeFromProgID("Inventor.Application");
+                application = (Inventor.Application)System.Activator.CreateInstance(invType);
+                application.Visible = false;
+                while (!application.Ready) { }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("impossible d'ouvrir une session inventor :" + ex);
+            }
         });
         inventorApplications.Add(application);
         return application;
@@ -85,7 +85,14 @@ internal class InventorHelper
     {
         if (App != null)
         {
-            App.Quit();
+            try
+            {
+                App.Quit();
+            }
+            catch (Exception)
+            {
+
+            }
             App = null;
         }
     }

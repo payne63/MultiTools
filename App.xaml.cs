@@ -2,6 +2,7 @@
 // Licensed under the MIT License.
 
 using ABI.Windows.UI;
+using CommunityToolkit.WinUI;
 using Microsoft.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -38,7 +39,7 @@ namespace SplittableDataGridSAmple
         /// </summary>
         public App()
         {
-            this.InitializeComponent(); 
+            this.InitializeComponent();
         }
 
         /// <summary>
@@ -50,8 +51,23 @@ namespace SplittableDataGridSAmple
             m_window = new MainWindow();
             m_window.Activate();
             ((SplittableDataGridSAmple.MainWindow)m_window)._currentElementTheme = RequestedTheme == ApplicationTheme.Light? ElementTheme.Light:ElementTheme.Dark;
+            LoadIcon("Images\\travail-evolution.ico");
         }
 
         private Window m_window;
+
+        /// <summary>
+        /// Load the icon for the windowj
+        /// </summary>
+        /// <param name="iconName"></param>
+        private void LoadIcon(string iconName)
+        {
+            //Get the Window's HWND
+            var hwnd = WinRT.Interop.WindowNative.GetWindowHandle(m_window);
+            var hIcon = PInvoke.User32.LoadImage(System.IntPtr.Zero, iconName,
+                      PInvoke.User32.ImageType.IMAGE_ICON, 16, 16, PInvoke.User32.LoadImageFlags.LR_LOADFROMFILE);
+
+            PInvoke.User32.SendMessage(hwnd, PInvoke.User32.WindowMessage.WM_SETICON, (System.IntPtr)0, hIcon);
+        }
     }
 }

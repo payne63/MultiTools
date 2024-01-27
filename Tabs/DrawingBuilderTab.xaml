@@ -7,10 +7,11 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:base="using:SplittableDataGridSAmple.Base"
     mc:Ignorable="d"
-    Header="Constructeur Plan Laser"
+    Header="Plan Laser Auto"
+    x:Name="Page"
     >
     <TabViewItem.IconSource>
-        <FontIconSource Glyph="&#xE945;"/>
+        <FontIconSource Glyph="&#xEC88;"/>
     </TabViewItem.IconSource>
     <Grid>
         <Grid.ColumnDefinitions>
@@ -25,7 +26,7 @@
             CornerRadius="10,0,10,0"  Grid.Column="0" Grid.Row="1"  Grid.RowSpan="1"
             HorizontalAlignment="Stretch" VerticalAlignment="Top"
             Background="{ThemeResource AccentAcrylicBackgroundFillColorDefaultBrush}"
-            Margin="10">
+            Margin="10" >
             <StackPanel Orientation="Vertical">
 
                 <Button
@@ -94,7 +95,7 @@
               Margin="0,10,10,10"
               Drop="TabViewItem_Drop" 
               DragOver="TabViewItem_DragOver"
-              AllowDrop="True" IsEnabled="{x:Bind IsInterfaceEnabled, Mode=OneWay}">
+              AllowDrop="True" >
             <ListView.ItemTemplate>
                 <DataTemplate x:DataType="base:DataIQT">
                     <ListViewItem Margin="3" >
@@ -111,7 +112,8 @@
                                 <Button x:Name="VisualButton" Click="GetThumbNailAsync" Margin="5,0,5,0">
                                     <FontIcon Glyph="&#xE7B3;" ToolTipService.ToolTip="Aperçu"/>
                                 </Button>
-                                <Button  Click="Button_Click_Remove" Margin="5,0,5,0">
+                                <Button  Click="Button_Click_Remove" Margin="5,0,5,0"  
+                                         IsEnabled="{Binding ElementName=Page, Path=IsInterfaceEnabled ,Mode=OneWay}">
                                     <SymbolIcon Symbol="Delete"
                                         ToolTipService.ToolTip="supprimer le plan de la liste"/>
                                 </Button>

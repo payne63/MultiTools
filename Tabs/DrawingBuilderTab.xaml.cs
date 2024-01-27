@@ -163,6 +163,8 @@ namespace SplittableDataGridSAmple.Tabs
 
         private async void Button_Click_BuildDrawing(object sender, RoutedEventArgs e)
         {
+            if (!IsInterfaceEnabled) return;
+            IsInterfaceEnabled = false;
             InventorHelper.ShowApp();
             foreach (var dataIQT in LaserCollection)
             {
@@ -201,6 +203,7 @@ namespace SplittableDataGridSAmple.Tabs
                 drawingDocument.Close(true);
             }
             InventorHelper.HideApp();
+            IsInterfaceEnabled = true;
 
         }
 
@@ -227,6 +230,7 @@ namespace SplittableDataGridSAmple.Tabs
 
         private void Button_Click_Remove(object sender, RoutedEventArgs e)
         {
+            if (!IsInterfaceEnabled) return;
             var contextIDWModel = ((FrameworkElement)sender).DataContext as DataIQT;
             LaserCollection.Remove(contextIDWModel);
         }
