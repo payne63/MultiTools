@@ -47,7 +47,7 @@
                           CornerRadius="20" Margin="20">
             <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Stretch" >
                 <Border BorderBrush="{x:Null}" Height="100">
-                    <TextBlock Text="Specifique a Inventor" FontSize="25" FontWeight="Bold"
+                    <TextBlock Text="Spécifique à Inventor" FontSize="25" FontWeight="Bold"
                    HorizontalAlignment="Center" VerticalAlignment="Center"/>
                 </Border>
                 <GridView ItemsSource="{x:Bind JobElementsInventor}"  SelectionMode="None" />

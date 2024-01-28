@@ -23,10 +23,11 @@
     </Button.Resources>
     
     <Grid>
+        <Grid.RenderTransform>
+            <TranslateTransform x:Name="Translation"/>
+        </Grid.RenderTransform>
         <StackPanel Orientation="Horizontal" Margin="0,6,12,6" HorizontalAlignment="Left" x:Name="aa">
-            <StackPanel.RenderTransform>
-                <TranslateTransform x:Name="Translation"/>
-            </StackPanel.RenderTransform>
+
             <Button CornerRadius="10,0,10,0">
             <Viewbox MaxHeight="40" MaxWidth="40" HorizontalAlignment="Left" >
                 <FontIcon Glyph="{x:Bind GlyphsIconTab}"/>
@@ -46,9 +47,9 @@
                        Width="200"/>
             </StackPanel>
         </StackPanel>
-        <TextBlock Text="BETA VERSION" Rotation="45" 
+        <TextBlock Text="BETA VERSION" Rotation="-30" 
                    Foreground="{StaticResource TextOnAccentFillColorPrimaryBrush}"
                    FontWeight="Bold" Visibility="{x:Bind isBetaVersion}"
-                   FontSize="10"/>
+                   FontSize="15" Margin="10,45,0,0"/>
     </Grid>
 </Button>

@@ -54,7 +54,7 @@ public partial class App : Application
         LoadIcon("Images\\travail-evolution.ico");
     }
 
-    private Window m_window;
+    public static Window m_window;
 
     /// <summary>
     /// Load the icon for the windowj

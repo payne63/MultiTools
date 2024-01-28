@@ -47,6 +47,19 @@
                     </StackPanel>
                 </Button>
                 <Button Margin="10" 
+                    Padding="15"
+                    HorizontalAlignment="Stretch"
+                    Click="PickAFileButton_Click"    
+                    IsEnabled="{x:Bind IsInterfaceEnabled, Mode=OneWay}">
+                    <StackPanel Orientation="Vertical">
+                        <TextBlock Text="Selection du gabarit" HorizontalAlignment="Center"/>
+                        <Viewbox MaxHeight="30" MaxWidth="30" Margin="10" >
+                            <SymbolIcon Symbol="Page2"/>
+                        </Viewbox>
+                        <TextBox Text="" Header="Fichier:" x:Name="OutputTextBlock" IsReadOnly="True"/>
+                    </StackPanel>
+                </Button>
+                <Button Margin="10" 
                 HorizontalAlignment="Stretch"
                 Padding="15"
                 IsEnabled="{x:Bind InventorHelperReady, Mode=OneWay}"

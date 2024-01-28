@@ -26,7 +26,9 @@ using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Storage;
 using Windows.Storage.FileProperties;
+using Windows.Storage.Pickers;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -43,6 +45,7 @@ public sealed partial class DrawingBuilderTab : TabViewItem, Interfaces.IInitTab
     }
     #endregion
 
+    private StorageFile gabaritFile = null;
 
     private bool _RingInProgress;
 
@@ -165,6 +168,12 @@ public sealed partial class DrawingBuilderTab : TabViewItem, Interfaces.IInitTab
 
     private async void Button_Click_BuildDrawing(object sender, RoutedEventArgs e)
     {
+        if (LaserCollection.Count == 0) return;
+        if (gabaritFile ==  null)
+        {
+            OpenSimpleMessage("Selectionner en premier le plan de gabarit");
+            return;
+        }
         if (!IsInterfaceEnabled) return;
         IsInterfaceEnabled = false;
         InventorHelper.ShowApp();
@@ -179,13 +188,13 @@ public sealed partial class DrawingBuilderTab : TabViewItem, Interfaces.IInitTab
             GetProgressRingStatus(dataIQT).IsActive = true;
             DrawingDocument drawingDocument = null;
 
-            await Task.Run(() => drawingDocument = DXFBuilderHelper.Build(InventorHelper, dataIQT.FullPathName));
-            var drawingSavePath = dataIQT.FileInfoData.Directory.FullName + @"\DXF\" + dataIQT.FileInfoData.Name + ".idw";
+            await Task.Run(() => drawingDocument = DXFBuilderHelper.Build(InventorHelper, dataIQT.FullPathName,gabaritFile.Path));
+            var drawingSavePath = dataIQT.FileInfoData.Directory.FullName + @"\Auto DXF\" + dataIQT.FileInfoData.Name + ".idw";
             ContentDialog dialogValidation = new ContentDialog
             {
                 XamlRoot = XamlRoot,
                 Title = "Validation",
-                Content = $"le plan Generer est-il correct ?\nsi OUI, is sera sauvegarder\n{drawingSavePath}",
+                Content = $"le plan est-il correct ?\nsi OUI, il sera sauvegardé\n{drawingSavePath}",
                 PrimaryButtonText = "OUI",
                 SecondaryButtonText = "NON",
                 DefaultButton = ContentDialogButton.Primary,
@@ -199,8 +208,12 @@ public sealed partial class DrawingBuilderTab : TabViewItem, Interfaces.IInitTab
                 }
                 drawingDocument.SaveAs(drawingSavePath, false);
                 InventorHelper.SaveDXF(drawingDocument, System.IO.Path.GetDirectoryName(drawingSavePath));
+                dataIQT.Status = "Fait";
             }
-            dataIQT.Status = "Fait";
+            else if (dialogResult == ContentDialogResult.Secondary)
+            {
+                dataIQT.Status = "non sauvegardé";
+            }
             GetProgressRingStatus(dataIQT).IsActive = false;
             drawingDocument.Close(true);
         }
@@ -280,5 +293,38 @@ public sealed partial class DrawingBuilderTab : TabViewItem, Interfaces.IInitTab
     private void ToggleSwitch_Loaded(object sender, RoutedEventArgs e)
     {
         (sender as ToggleSwitch).IsOn = false;
+    }
+
+    private async void PickAFileButton_Click(object sender, RoutedEventArgs e)
+    {
+        // Clear previous returned file name, if it exists, between iterations of this scenario
+        OutputTextBlock.Text = "";
+
+        // Create a file picker
+        var openPicker = new Windows.Storage.Pickers.FileOpenPicker();
+
+        // See the sample code below for how to make the window accessible from the App class.
+        var window = App.m_window;
+
+        // Retrieve the window handle (HWND) of the current WinUI 3 window.
+        var hWnd = WinRT.Interop.WindowNative.GetWindowHandle(window);
+
+        // Initialize the file picker with the window handle (HWND).
+        WinRT.Interop.InitializeWithWindow.Initialize(openPicker, hWnd);
+
+        // Set options for your file picker
+        openPicker.ViewMode = PickerViewMode.Thumbnail;
+        openPicker.FileTypeFilter.Add(".idw");
+
+        // Open the picker for the user to pick a file
+        gabaritFile = await openPicker.PickSingleFileAsync();
+        if (gabaritFile != null)
+        {
+            OutputTextBlock.Text = gabaritFile.Name;
+        }
+        else
+        {
+            OutputTextBlock.Text = "";
+        }
     }
 }

@@ -76,8 +76,8 @@ public sealed partial class OpenNewTab : TabViewItem, Interfaces.IInitTab
         ContentDialog dialog = new ContentDialog
         {
             XamlRoot = XamlRoot,
-            Title = "Supporter le developeur",
-            Content = "réfléchir ca donne soif, et je te prévient, j'aime pas le café",
+            Title = "Supporter le développeur",
+            Content = "réfléchir ca donne soif, et je te préviens, j'aime pas le café",
             PrimaryButtonText = "Ok",
             DefaultButton = ContentDialogButton.Primary,
         };
