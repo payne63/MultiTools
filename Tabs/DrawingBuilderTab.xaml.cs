@@ -31,253 +31,254 @@ using Windows.Storage.FileProperties;
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
 
-namespace SplittableDataGridSAmple.Tabs
+namespace SplittableDataGridSAmple.Tabs;
+
+public sealed partial class DrawingBuilderTab : TabViewItem, Interfaces.IInitTab, INotifyPropertyChanged
 {
-    public sealed partial class DrawingBuilderTab : TabViewItem, Interfaces.IInitTab, INotifyPropertyChanged
+    #region PropertyChanged
+    public event PropertyChangedEventHandler PropertyChanged;
+    private void OnPropertyChanged([CallerMemberName] string name = null)
     {
-        #region PropertyChanged
-        public event PropertyChangedEventHandler PropertyChanged;
-        private void OnPropertyChanged([CallerMemberName] string name = null)
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+    }
+    #endregion
+
+
+    private bool _RingInProgress;
+
+    public bool RingInProgress
+    {
+        get => _RingInProgress;
+        set
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+            _RingInProgress = value; OnPropertyChanged(); OnPropertyChanged(nameof(InventorHelperReady));
         }
-        #endregion
+    }
 
+    public bool InventorHelperReady => !RingInProgress;
 
-        private bool _RingInProgress;
+    private bool _IsInterfaceEnabled = true;
+    private InventorHelper InventorHelper;
 
-        public bool RingInProgress
+    public ObservableCollection<DataIQT> LaserCollection = new();
+
+    public bool IsInterfaceEnabled
+    {
+        get => _IsInterfaceEnabled;
+        set
         {
-            get => _RingInProgress;
-            set
+            _IsInterfaceEnabled = value; OnPropertyChanged();
+        }
+    }
+
+    public async void InitTab()
+    {
+        RingInProgress = true;
+        ProgressRingLabel.Text = "Chargement d'Inventor";
+        InventorHelper.Ready += () => { RingInProgress = false; ProgressRingLabel.Text = "Inventor Prêt"; };
+        InventorHelper = await InventorHelper.CreateAsync();
+        CloseRequested += (sender, args) =>
+        {
+            if (InventorHelper != null)
             {
-                _RingInProgress = value; OnPropertyChanged(); OnPropertyChanged(nameof(InventorHelperReady));
+                InventorHelper.App.Quit();
+                InventorHelper = null;
             }
-        }
+        };
+    }
 
-        public bool InventorHelperReady => !RingInProgress;
+    public DrawingBuilderTab()
+    {
+        this.InitializeComponent();
+    }
 
+    private void PanelDataI_DragOver(object sender, DragEventArgs e)
+    {
+        e.AcceptedOperation = DataPackageOperation.Move;
+    }
 
+    private async void PanelDataI_Drop(object sender, DragEventArgs e)
+    {
 
-
-        private bool _IsInterfaceEnabled = true;
-        private InventorHelper InventorHelper;
-
-        public ObservableCollection<DataIQT> LaserCollection = new();
-
-        public bool IsInterfaceEnabled
+        if (!e.DataView.Contains(StandardDataFormats.StorageItems))
         {
-            get
+            OpenSimpleMessage("Format non compatible");
+            return;
+        }
+        var items = await e.DataView.GetStorageItemsAsync();
+
+        if (items.Count > 0)
+        {
+            ClearLaserData();
+            foreach (var file in items)
             {
-                return _IsInterfaceEnabled;
-            }
-            set
-            {
-                _IsInterfaceEnabled = value; OnPropertyChanged();
-            }
-        }
-
-        public async void InitTab()
-        {
-            RingInProgress = true;
-            InventorHelper.Ready += () => { RingInProgress = false; ProgressRingLabel.Text = "Inventor Pret"; };
-            InventorHelper = await InventorHelper.CreateAsync();
-            CloseRequested += (sender, args) => { InventorHelper.App.Quit(); InventorHelper = null; };
-        }
-
-        public DrawingBuilderTab()
-        {
-            this.InitializeComponent();
-        }
-
-        private void PanelDataI_DragOver(object sender, DragEventArgs e)
-        {
-            e.AcceptedOperation = DataPackageOperation.Move;
-        }
-
-        private async void PanelDataI_Drop(object sender, DragEventArgs e)
-        {
-
-            if (!e.DataView.Contains(StandardDataFormats.StorageItems))
-            {
-                OpenSimpleMessage("Format non compatible");
-                return;
-            }
-            var items = await e.DataView.GetStorageItemsAsync();
-
-            if (items.Count > 0)
-            {
-                ClearLaserData();
-                foreach (var file in items)
+                if (file.Name.EndsWith(".ipt") || file.Name.EndsWith(".iam"))
                 {
-                    if (file.Name.EndsWith(".ipt") || file.Name.EndsWith(".iam"))
+                    foreach (var dataIQT in GetLaserDatas(file.Path))
                     {
-                        foreach (var dataIQT in GetLaserDatas(file.Path))
+                        if (dataIQT.IsTrueSheetMetal || dataIQT.IsLaserType)
                         {
-                            if (dataIQT.IsTrueSheetMetal || dataIQT.IsLaserType)
-                            {
-                                dataIQT.Status = "en attente";
-                                LaserCollection.Add(dataIQT);
-                            }
+                            dataIQT.Status = "en attente";
+                            LaserCollection.Add(dataIQT);
                         }
                     }
-                    else
-                    {
-                        OpenSimpleMessage("seul des pièces ou des assemblages sont utilisable");
-                    }
+                }
+                else
+                {
+                    OpenSimpleMessage("seul des pièces ou des assemblages sont utilisable");
                 }
             }
-
-
         }
 
-        public IEnumerable<DataIQT> GetLaserDatas(string firstPathFullName)
+
+    }
+
+    public IEnumerable<DataIQT> GetLaserDatas(string firstPathFullName)
+    {
+        var Lasers = new List<DataIQT>();
+        RecursiveLaserDatas(Lasers, firstPathFullName, 1);
+        var dic = new Dictionary<string, DataIQT>();
+        foreach (DataIQT data in Lasers)
         {
-            var Lasers = new List<DataIQT>();
-            RecursiveLaserDatas(Lasers, firstPathFullName, 1);
-            var dic = new Dictionary<string, DataIQT>();
-            foreach (DataIQT data in Lasers)
+            if (dic.ContainsKey(data.FullPathName))
             {
-                if (dic.ContainsKey(data.FullPathName))
-                {
-                    dic[data.FullPathName].Qt += data.Qt;
-                    continue;
-                }
-                dic.Add(data.FullPathName, data);
+                dic[data.FullPathName].Qt += data.Qt;
+                continue;
             }
-            return dic.Select(x=> x.Value);
+            dic.Add(data.FullPathName, data);
         }
+        return dic.Select(x => x.Value);
+    }
 
-        private void RecursiveLaserDatas(List<DataIQT> lasers, string PathFullName, int qt)
+    private void RecursiveLaserDatas(List<DataIQT> lasers, string PathFullName, int qt)
+    {
+        var data = new DataIQT(PathFullName, qt);
+        lasers.Add(data);
+        if (data.bom.Count == 0) return;
+        foreach (var bomElement in data.bom)
         {
-            var data = new DataIQT(PathFullName, qt);
-            lasers.Add(data);
-            if (data.bom.Count == 0) return;
-            foreach (var bomElement in data.bom)
+            RecursiveLaserDatas(lasers, bomElement.fullFileName, bomElement.Qt * qt);
+        }
+    }
+
+    private void Button_Click_RemoveData(object sender, RoutedEventArgs e) => ClearLaserData();
+
+    private async void Button_Click_BuildDrawing(object sender, RoutedEventArgs e)
+    {
+        if (!IsInterfaceEnabled) return;
+        IsInterfaceEnabled = false;
+        InventorHelper.ShowApp();
+        foreach (var dataIQT in LaserCollection)
+        {
+            if (!dataIQT.IsTrueSheetMetal)
             {
-                RecursiveLaserDatas(lasers, bomElement.fullFileName, bomElement.Qt * qt);
+                dataIQT.Status = "A faire Manuellement";
+                continue;
             }
-        }
+            dataIQT.Status = "en Cours";
+            GetProgressRingStatus(dataIQT).IsActive = true;
+            DrawingDocument drawingDocument = null;
 
-        private void Button_Click_RemoveData(object sender, RoutedEventArgs e) => ClearLaserData();
-
-        private async void Button_Click_BuildDrawing(object sender, RoutedEventArgs e)
-        {
-            if (!IsInterfaceEnabled) return;
-            IsInterfaceEnabled = false;
-            InventorHelper.ShowApp();
-            foreach (var dataIQT in LaserCollection)
-            {
-                if (!dataIQT.IsTrueSheetMetal)
-                {
-                    dataIQT.Status = "A faire Manuellement";
-                    continue;
-                }
-                dataIQT.Status = "en Cours";
-                GetProgressRingStatus(dataIQT).IsActive = true;
-                DrawingDocument drawingDocument = null;
-
-                await Task.Run(() => drawingDocument = DXFBuilderHelper.Build(InventorHelper, dataIQT.FullPathName));
-                var drawingSavePath = dataIQT.FileInfoData.Directory.FullName + @"\DXF\" + dataIQT.FileInfoData.Name + ".idw";
-                ContentDialog dialogValidation = new ContentDialog
-                {
-                    XamlRoot = XamlRoot,
-                    Title = "Validation",
-                    Content = $"le plan Generer est-il correct ?\nsi OUI, is sera sauvegarder\n{drawingSavePath}",
-                    PrimaryButtonText = "OUI",
-                    SecondaryButtonText = "NON",
-                    DefaultButton = ContentDialogButton.Primary,
-                };
-                var dialogResult = await dialogValidation.ShowAsync();
-                if (dialogResult == ContentDialogResult.Primary)
-                {
-                    if (System.IO.File.Exists(drawingSavePath))
-                    {
-                        System.IO.File.Delete(drawingSavePath);
-                    }
-                    drawingDocument.SaveAs(drawingSavePath, false);
-                    InventorHelper.SaveDXF(drawingDocument,  System.IO.Path.GetDirectoryName( drawingSavePath));
-                }
-                dataIQT.Status = "Fait";
-                GetProgressRingStatus(dataIQT).IsActive = false;
-                drawingDocument.Close(true);
-            }
-            InventorHelper.HideApp();
-            IsInterfaceEnabled = true;
-
-        }
-
-        private ProgressRing GetProgressRingStatus(DataIQT dataIQT)
-        {
-            var container = ListViewLaser.ContainerFromItem(dataIQT) as ListViewItem;
-            return container.FindChild<ProgressRing>();
-        }
-
-        private void ClearLaserData()
-        {
-            LaserCollection.Clear();
-        }
-
-        private void TabViewItem_DragOver(object sender, DragEventArgs e)
-        {
-            e.AcceptedOperation = DataPackageOperation.Move;
-        }
-
-        private void TabViewItem_Drop(object sender, DragEventArgs e)
-        {
-            PanelDataI_Drop(sender, e);
-        }
-
-        private void Button_Click_Remove(object sender, RoutedEventArgs e)
-        {
-            if (!IsInterfaceEnabled) return;
-            var contextIDWModel = ((FrameworkElement)sender).DataContext as DataIQT;
-            LaserCollection.Remove(contextIDWModel);
-        }
-
-        private async void GetThumbNailAsync(object sender, RoutedEventArgs e)
-        {
-            if (((FrameworkElement)sender).DataContext is DataIQT DataIQTContext)
-            {
-                if (TeachingTipThumbNail.IsOpen == true && ThumbNailPartNumber.Text == DataIQTContext.FileInfoData.Name)
-                {
-                    TeachingTipThumbNail.IsOpen = false;
-                    return;
-                }
-                var file = await Windows.Storage.StorageFile.GetFileFromPathAsync(DataIQTContext.FileInfoData.FullName);
-                var iconThumbnail = await file.GetThumbnailAsync(ThumbnailMode.SingleItem, 256);
-                var bitmapImage = new BitmapImage();
-                bitmapImage.SetSource(iconThumbnail);
-                if (bitmapImage != null)
-                {
-                    DataIQTContext.bitmapImage = bitmapImage;
-                    ImageThumbNail.Source = bitmapImage;
-                    ThumbNailPartNumber.Text = DataIQTContext.FileInfoData.Name;
-                    ThumbNailDescription.Text = string.Empty;
-                    ThumbNailCustomer.Text = string.Empty;
-                    TeachingTipThumbNail.IsOpen = true;
-                }
-            }
-        }
-
-        private async void OpenSimpleMessage(string Message, string content = null)
-        {
-            ContentDialog dialog = new ContentDialog
+            await Task.Run(() => drawingDocument = DXFBuilderHelper.Build(InventorHelper, dataIQT.FullPathName));
+            var drawingSavePath = dataIQT.FileInfoData.Directory.FullName + @"\DXF\" + dataIQT.FileInfoData.Name + ".idw";
+            ContentDialog dialogValidation = new ContentDialog
             {
                 XamlRoot = XamlRoot,
-                Title = Message,
-                Content = content,
-                PrimaryButtonText = "Ok",
+                Title = "Validation",
+                Content = $"le plan Generer est-il correct ?\nsi OUI, is sera sauvegarder\n{drawingSavePath}",
+                PrimaryButtonText = "OUI",
+                SecondaryButtonText = "NON",
                 DefaultButton = ContentDialogButton.Primary,
             };
-            _ = await dialog.ShowAsync();
+            var dialogResult = await dialogValidation.ShowAsync();
+            if (dialogResult == ContentDialogResult.Primary)
+            {
+                if (System.IO.File.Exists(drawingSavePath))
+                {
+                    System.IO.File.Delete(drawingSavePath);
+                }
+                drawingDocument.SaveAs(drawingSavePath, false);
+                InventorHelper.SaveDXF(drawingDocument, System.IO.Path.GetDirectoryName(drawingSavePath));
+            }
+            dataIQT.Status = "Fait";
+            GetProgressRingStatus(dataIQT).IsActive = false;
+            drawingDocument.Close(true);
         }
+        InventorHelper.HideApp();
+        IsInterfaceEnabled = true;
 
+    }
 
+    private ProgressRing GetProgressRingStatus(DataIQT dataIQT)
+    {
+        var container = ListViewLaser.ContainerFromItem(dataIQT) as ListViewItem;
+        return container.FindChild<ProgressRing>();
+    }
 
-        private void ToggleSwitch_Loaded(object sender, RoutedEventArgs e)
+    private void ClearLaserData()
+    {
+        LaserCollection.Clear();
+    }
+
+    private void TabViewItem_DragOver(object sender, DragEventArgs e)
+    {
+        e.AcceptedOperation = DataPackageOperation.Move;
+    }
+
+    private void TabViewItem_Drop(object sender, DragEventArgs e)
+    {
+        PanelDataI_Drop(sender, e);
+    }
+
+    private void Button_Click_Remove(object sender, RoutedEventArgs e)
+    {
+        if (!IsInterfaceEnabled) return;
+        var contextIDWModel = ((FrameworkElement)sender).DataContext as DataIQT;
+        LaserCollection.Remove(contextIDWModel);
+    }
+
+    private async void GetThumbNailAsync(object sender, RoutedEventArgs e)
+    {
+        if (((FrameworkElement)sender).DataContext is DataIQT DataIQTContext)
         {
-            (sender as ToggleSwitch).IsOn = false;
+            if (TeachingTipThumbNail.IsOpen == true && ThumbNailPartNumber.Text == DataIQTContext.FileInfoData.Name)
+            {
+                TeachingTipThumbNail.IsOpen = false;
+                return;
+            }
+            var file = await Windows.Storage.StorageFile.GetFileFromPathAsync(DataIQTContext.FileInfoData.FullName);
+            var iconThumbnail = await file.GetThumbnailAsync(ThumbnailMode.SingleItem, 256);
+            var bitmapImage = new BitmapImage();
+            bitmapImage.SetSource(iconThumbnail);
+            if (bitmapImage != null)
+            {
+                DataIQTContext.bitmapImage = bitmapImage;
+                ImageThumbNail.Source = bitmapImage;
+                ThumbNailPartNumber.Text = DataIQTContext.FileInfoData.Name;
+                ThumbNailDescription.Text = string.Empty;
+                ThumbNailCustomer.Text = string.Empty;
+                TeachingTipThumbNail.IsOpen = true;
+            }
         }
+    }
+
+    private async void OpenSimpleMessage(string Message, string content = null)
+    {
+        ContentDialog dialog = new ContentDialog
+        {
+            XamlRoot = XamlRoot,
+            Title = Message,
+            Content = content,
+            PrimaryButtonText = "Ok",
+            DefaultButton = ContentDialogButton.Primary,
+        };
+        _ = await dialog.ShowAsync();
+    }
+
+
+
+    private void ToggleSwitch_Loaded(object sender, RoutedEventArgs e)
+    {
+        (sender as ToggleSwitch).IsOn = false;
     }
 }

@@ -22,50 +22,49 @@ using System.Runtime.CompilerServices;
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
 
-namespace SplittableDataGridSAmple.Elements
+namespace SplittableDataGridSAmple.Elements;
+
+public sealed partial class TestControlWithConverter : UserControl ,INotifyPropertyChanged
 {
-    public sealed partial class TestControlWithConverter : UserControl ,INotifyPropertyChanged
+    private string _textBox;
+    private bool _VisibilityTextBloc;
+    public bool VisibilityTextBloc
     {
-        private string _textBox;
-        private bool _VisibilityTextBloc;
-        public bool VisibilityTextBloc
-        {
-            get { return _VisibilityTextBloc; }
-            set { _VisibilityTextBloc = value; NotifyPropertyChanged(); }
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-        private void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-        public string TextBox1
-        {
-            get { return _textBox; }
-            set { _textBox = value; NotifyPropertyChanged(); Trace.WriteLine(_textBox); }
-        }
-        public TestControlWithConverter()
-        {
-            this.InitializeComponent();
-            VisibilityTextBloc = true;
-        }
-
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            TextBox1 = "button as been clicked";
-            VisibilityTextBloc = !VisibilityTextBloc;
-        }
+        get { return _VisibilityTextBloc; }
+        set { _VisibilityTextBloc = value; NotifyPropertyChanged(); }
     }
-    public class Converter1 : IValueConverter
-    {
-        public object Convert(object value, Type targetType, object parameter, string language)
-        {
-            return (bool)value ? Visibility.Visible : Visibility.Collapsed;
-        }
 
-        public object ConvertBack(object value, Type targetType, object parameter, string language)
-        {
-            throw new NotImplementedException();
-        }
+    public event PropertyChangedEventHandler PropertyChanged;
+    private void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
+    {
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+    }
+    public string TextBox1
+    {
+        get { return _textBox; }
+        set { _textBox = value; NotifyPropertyChanged(); Trace.WriteLine(_textBox); }
+    }
+    public TestControlWithConverter()
+    {
+        this.InitializeComponent();
+        VisibilityTextBloc = true;
+    }
+
+    private void Button_Click(object sender, RoutedEventArgs e)
+    {
+        TextBox1 = "button as been clicked";
+        VisibilityTextBloc = !VisibilityTextBloc;
+    }
+}
+public class Converter1 : IValueConverter
+{
+    public object Convert(object value, Type targetType, object parameter, string language)
+    {
+        return (bool)value ? Visibility.Visible : Visibility.Collapsed;
+    }
+
+    public object ConvertBack(object value, Type targetType, object parameter, string language)
+    {
+        throw new NotImplementedException();
     }
 }

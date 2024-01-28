@@ -9,12 +9,25 @@
     Click="Button_Click" MinWidth="30"  CornerRadius="15,0,15,0" Margin="10" MinHeight="70"
     Background="{ThemeResource AccentAcrylicBackgroundFillColorDefaultBrush}" 
     PointerEntered="Button_PointerEntered"
-    PointerExited="Button_PointerExited">
+    PointerExited="Button_PointerExited"
+    BorderThickness="2" 
+    >
+    <Button.Resources>
+        <Storyboard x:Name="StoryboardMoveLeft">
+            <DoubleAnimation Storyboard.TargetName="Translation" Storyboard.TargetProperty="X" From="0" To="200" Duration="0:0:0.5" >
+                <DoubleAnimation.EasingFunction>
+                    <CircleEase EasingMode="EaseInOut" />
+                </DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+        </Storyboard>
+    </Button.Resources>
+    
     <Grid>
-
         <StackPanel Orientation="Horizontal" Margin="0,6,12,6" HorizontalAlignment="Left" x:Name="aa">
-            <Button CornerRadius="10,0,10,0" >
-                
+            <StackPanel.RenderTransform>
+                <TranslateTransform x:Name="Translation"/>
+            </StackPanel.RenderTransform>
+            <Button CornerRadius="10,0,10,0">
             <Viewbox MaxHeight="40" MaxWidth="40" HorizontalAlignment="Left" >
                 <FontIcon Glyph="{x:Bind GlyphsIconTab}"/>
 

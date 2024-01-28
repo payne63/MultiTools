@@ -19,28 +19,27 @@ using Microsoft.UI.Xaml.Navigation;
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
 
-namespace SplittableDataGridSAmple.Tabs
+namespace SplittableDataGridSAmple.Tabs;
+
+/// <summary>
+/// An empty page that can be used on its own or navigated to within a Frame.
+/// </summary>
+public sealed partial class WelcomeTab : TabViewItem , Interfaces.IInitTab
 {
-    /// <summary>
-    /// An empty page that can be used on its own or navigated to within a Frame.
-    /// </summary>
-    public sealed partial class WelcomeTab : TabViewItem , Interfaces.IInitTab
+    public WelcomeTab()
     {
-        public WelcomeTab()
-        {
-            this.InitializeComponent();
-        }
+        this.InitializeComponent();
+    }
 
-        public void InitTab()
-        {
-        }
+    public void InitTab()
+    {
+    }
 
-        private void Button_Click_OpenNewTab(object sender, RoutedEventArgs e)
-        {
-            var newTab = new Tabs.OpenNewTab();
-            ((Interfaces.IInitTab)newTab).InitTab();
-            MainWindow.tabViewRef.TabItems.Add(newTab);
-            MainWindow.tabViewRef.SelectedItem = newTab;
-        }
+    private void Button_Click_OpenNewTab(object sender, RoutedEventArgs e)
+    {
+        var newTab = new Tabs.OpenNewTab();
+        ((Interfaces.IInitTab)newTab).InitTab();
+        MainWindow.tabViewRef.TabItems.Add(newTab);
+        MainWindow.tabViewRef.SelectedItem = newTab;
     }
 }
