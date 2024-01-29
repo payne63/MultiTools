@@ -73,7 +73,7 @@ namespace SplittableDataGridSAmple.Base
         {
             I.ApprenticeServerDocument document = GetAppServer.Open(fullPathDocument);
             Document = document;
-            NameFile = document.DisplayName; 
+            NameFile = document.DisplayName;
             FullPathName = Document.FullFileName;
             DocumentType = Document.DocumentType;
             Description = (string)document.PropertySets["Design Tracking Properties"].ItemByPropId[29].Value;
@@ -91,26 +91,35 @@ namespace SplittableDataGridSAmple.Base
             if (IsLaserType) { Category = CategoryType.Laser; GetAppServer.Close(); return; };
             if (IsProfileType) { Category = CategoryType.Profile; GetAppServer.Close(); return; };
             if (IsMecaniqueType) { Category = CategoryType.Mecanique; GetAppServer.Close(); return; };
-            
 
 
-            if (DocumentType == DocumentTypeEnum.kAssemblyDocumentObject) 
+
+            if (DocumentType == DocumentTypeEnum.kAssemblyDocumentObject)
             {
                 AssemblyComponentDefinition ass = document.ComponentDefinition as AssemblyComponentDefinition; //convertion en assemblage
 
                 foreach (BOMRow row in ass.BOM.BOMViews[1].BOMRows)// 1 - bom standard - 2 structured - 3 part only (2 et 3 need activation)
                 {
                     if (row.BOMStructure == BOMStructureEnum.kPhantomBOMStructure || row.BOMStructure == BOMStructureEnum.kReferenceBOMStructure) continue;
-                    var FullDocumentName = ((ApprenticeServerDocument)(row.ComponentDefinitions[1]).Document).FullDocumentName;
-                    var qtPart = int.Parse(row.TotalQuantity);
-                    bom.Add((FullDocumentName, qtPart));
+                    try
+                    {
+                        var a = row.ComponentDefinitions[1];
+                        var FullDocumentName = ((ApprenticeServerDocument)(row.ComponentDefinitions[1]).Document).FullDocumentName;
+                        var qtPart = int.Parse(row.TotalQuantity);
+                        bom.Add((FullDocumentName, qtPart));
+                    }
+                    catch (Exception)
+                    {
+                        throw new Exception("Assemblage avec des liens rompus!! Corriger les liens");
+                    }
+
                 }
                 if (bom.Count == 0) { return; } // no children?
 
                 var childrens = bom
                     .Select(x => IO.Path.GetFileNameWithoutExtension(x.fullFileName))
-                    .Where(x=>x.Count() >=8);
-                if (childrens.Any(x=>x[0..7] == PartNumber[0..7]))
+                    .Where(x => x.Count() >= 8);
+                if (childrens.Any(x => x[0..7] == PartNumber[0..7]))
                 {
                     Category = CategoryType.MecanoSoudure;
                     return;

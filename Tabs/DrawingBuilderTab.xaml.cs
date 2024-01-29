@@ -155,7 +155,16 @@ public sealed partial class DrawingBuilderTab : TabViewItem, Interfaces.IInitTab
 
     private void RecursiveLaserDatas(List<DataIQT> lasers, string PathFullName, int qt)
     {
-        var data = new DataIQT(PathFullName, qt);
+        DataIQT data = null;
+        try
+        {
+            data = new DataIQT(PathFullName, qt);
+        }
+        catch (Exception ex)
+        {
+            OpenSimpleMessage($"Erreur!!{ex.Message} \n fichier { PathFullName}");
+            return ;
+        }
         lasers.Add(data);
         if (data.bom.Count == 0) return;
         foreach (var bomElement in data.bom)
@@ -187,9 +196,9 @@ public sealed partial class DrawingBuilderTab : TabViewItem, Interfaces.IInitTab
             dataIQT.Status = "en Cours";
             GetProgressRingStatus(dataIQT).IsActive = true;
             DrawingDocument drawingDocument = null;
-
             await Task.Run(() => drawingDocument = DXFBuilderHelper.Build(InventorHelper, dataIQT.FullPathName,gabaritFile.Path));
-            var drawingSavePath = dataIQT.FileInfoData.Directory.FullName + @"\Auto DXF\" + dataIQT.FileInfoData.Name + ".idw";
+            var drawingSavePath = dataIQT.FileInfoData.Directory.FullName + @"\Auto DXF\" + 
+                    System.IO.Path.GetFileNameWithoutExtension(dataIQT.FileInfoData.Name) + ".idw";
             ContentDialog dialogValidation = new ContentDialog
             {
                 XamlRoot = XamlRoot,
@@ -297,19 +306,11 @@ public sealed partial class DrawingBuilderTab : TabViewItem, Interfaces.IInitTab
 
     private async void PickAFileButton_Click(object sender, RoutedEventArgs e)
     {
-        // Clear previous returned file name, if it exists, between iterations of this scenario
         OutputTextBlock.Text = "";
 
-        // Create a file picker
         var openPicker = new Windows.Storage.Pickers.FileOpenPicker();
-
-        // See the sample code below for how to make the window accessible from the App class.
         var window = App.m_window;
-
-        // Retrieve the window handle (HWND) of the current WinUI 3 window.
         var hWnd = WinRT.Interop.WindowNative.GetWindowHandle(window);
-
-        // Initialize the file picker with the window handle (HWND).
         WinRT.Interop.InitializeWithWindow.Initialize(openPicker, hWnd);
 
         // Set options for your file picker

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -154,7 +155,9 @@ internal class DXFBuilderHelper
 
     private static void CreateHorizontalDimension(DrawingView view, List<GeometryIntent> intents)
     {
-        var orderedIntentsInX = intents.Where(x => x.PointOnSheet != null).OrderBy(x => x.PointOnSheet.X).ToList();
+        var orderedIntentsInX = intents.Where(x => x.PointOnSheet != null)
+            .OrderBy(x => x.PointOnSheet.X)
+            .ToList();
         var distanceFromView = 1.2d - 0.6d;
         var pointLeft = orderedIntentsInX.First();
         var pointRight = orderedIntentsInX.Last();
@@ -166,7 +169,9 @@ internal class DXFBuilderHelper
 
     private static void CreateVerticalDimension(DrawingView view, List<GeometryIntent> intents)
     {
-        var orderedIntentsInY = intents.Where(x => x.PointOnSheet != null).OrderBy(x => x.PointOnSheet.Y).ToList();
+        var orderedIntentsInY = intents.Where(x => x.PointOnSheet != null)
+            .OrderBy(x => x.PointOnSheet.Y)
+            .ToList();
         var distanceFromView = 1.2d - 0.6d;
         var pointLeft = orderedIntentsInY.Last();
         var pointRight = orderedIntentsInY.First();

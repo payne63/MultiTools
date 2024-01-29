@@ -92,7 +92,17 @@ namespace SplittableDataGridSAmple.Tabs
                 RemoveAllData();
                 IsInterfaceEnabled = false;
 
-                var groups = QtManager.GetQtDatas(storageItemDrop.Path).GroupBy(data => data.Category);
+                IEnumerable<IGrouping<DataIBase.CategoryType, DataIQT>> groups;
+                try
+                {
+                    groups = QtManager.GetQtDatas(storageItemDrop.Path).GroupBy(data => data.Category);
+                }
+                catch (System.Exception ex)
+                {
+                    IsInterfaceEnabled = true;
+                    OpenSimpleMessage($"Erreur!!{ex.Message} ");
+                    return;
+                }
                 foreach (DataIBase.CategoryType enumVal in Enum.GetValues(typeof(DataIBase.CategoryType)))
                 {
                     var group = groups.Where(x => x.Key == enumVal).FirstOrDefault();
