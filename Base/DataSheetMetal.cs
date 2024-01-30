@@ -18,7 +18,7 @@ internal class DataSheetMetal
     public DataSheetMetal(string name, double thickness, double height, double width)
     {
         Name = name;
-        Thickness = Math.Round(Thickness,1);
+        Thickness = Math.Round(thickness, 1);
         Height = height;
         Width = width;
     }
