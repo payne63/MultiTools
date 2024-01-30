@@ -70,7 +70,7 @@ public sealed partial class DrawingBuilderTab : TabViewItem, Interfaces.IInitTab
         get => _IsInterfaceEnabled;
         set
         {
-            _IsInterfaceEnabled = value; OnPropertyChanged();
+            _IsInterfaceEnabled = value ; OnPropertyChanged();
         }
     }
 
@@ -306,8 +306,6 @@ public sealed partial class DrawingBuilderTab : TabViewItem, Interfaces.IInitTab
 
     private async void PickAFileButton_Click(object sender, RoutedEventArgs e)
     {
-        OutputTextBlock.Text = "";
-
         var openPicker = new Windows.Storage.Pickers.FileOpenPicker();
         var window = App.m_window;
         var hWnd = WinRT.Interop.WindowNative.GetWindowHandle(window);
@@ -321,11 +319,12 @@ public sealed partial class DrawingBuilderTab : TabViewItem, Interfaces.IInitTab
         gabaritFile = await openPicker.PickSingleFileAsync();
         if (gabaritFile != null)
         {
-            OutputTextBlock.Text = gabaritFile.Name;
+            OutputTextBlock.Text = "Selection: "+gabaritFile.Name;
         }
         else
         {
             OutputTextBlock.Text = "";
+            gabaritFile = null;
         }
     }
 }

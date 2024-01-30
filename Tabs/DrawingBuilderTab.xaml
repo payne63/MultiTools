@@ -28,7 +28,6 @@
             Background="{ThemeResource AccentAcrylicBackgroundFillColorDefaultBrush}"
             Margin="10" >
             <StackPanel Orientation="Vertical">
-
                 <Button
                 Margin="10" 
                 HorizontalAlignment="Stretch"
@@ -56,7 +55,7 @@
                         <Viewbox MaxHeight="30" MaxWidth="30" Margin="10" >
                             <SymbolIcon Symbol="Page2"/>
                         </Viewbox>
-                        <TextBox Text="" Header="Fichier:" x:Name="OutputTextBlock" IsReadOnly="True"/>
+                        <TextBlock Text=""  x:Name="OutputTextBlock" />
                     </StackPanel>
                 </Button>
                 <Button Margin="10" 

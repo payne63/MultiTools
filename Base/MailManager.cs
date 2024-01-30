@@ -48,7 +48,7 @@ namespace SplittableDataGridSAmple.Base
                 $"  <br />" +
                 $"  <br />" +
                 $"  <br />",
-                @"C:\Users\Florent\source\repos\SplittableDataGridSAmple\test.json");
+                Environment.CurrentDirectory + "\\JsonData\\users.json");
         }
 
         public static async Task CreateMail(object sender, RoutedEventArgs e)

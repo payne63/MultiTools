@@ -198,7 +198,7 @@ namespace SplittableDataGridSAmple.Tabs
                 $"  <br />" +
                 $"  <br />" +
                 $"  <br />",
-                @"C:\Users\Florent\source\repos\SplittableDataGridSAmple\test.json");
+                Environment.CurrentDirectory + "\\JsonData\\users.json");
         }
 
         private async void Button_Click_Mail(object sender, RoutedEventArgs e)
