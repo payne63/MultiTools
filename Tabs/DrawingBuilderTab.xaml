@@ -96,6 +96,15 @@
             <TextBlock Text="Status" Width="200" VerticalAlignment="Center"/>
             
         </StackPanel>
+        <TextBlock Grid.Column="1" Grid.Row="1" Text="DRAG AND DROP HER" 
+                   Visibility="{x:Bind DragAndDropVisibility ,Mode=OneWay}"
+                   VerticalAlignment="Center" HorizontalAlignment="Center"
+                   Foreground="{StaticResource AccentAcrylicBackgroundFillColorDefaultBrush}"
+                   FontSize="30"
+                   FontWeight="Bold"
+                   FontStyle="Italic">
+            
+        </TextBlock>
         <ListView ItemsSource="{x:Bind LaserCollection}"
               x:Name="ListViewLaser"
               Grid.Column="1" Grid.Row="1"

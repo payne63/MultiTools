@@ -65,6 +65,7 @@ public sealed partial class DrawingBuilderTab : TabViewItem, Interfaces.IInitTab
 
     public ObservableCollection<DataIQT> LaserCollection = new();
 
+    public Visibility DragAndDropVisibility => LaserCollection.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
     public bool IsInterfaceEnabled
     {
         get => _IsInterfaceEnabled;
@@ -76,6 +77,7 @@ public sealed partial class DrawingBuilderTab : TabViewItem, Interfaces.IInitTab
 
     public async void InitTab()
     {
+        LaserCollection.CollectionChanged += (sender, e) => OnPropertyChanged(nameof(DragAndDropVisibility));
         RingInProgress = true;
         ProgressRingLabel.Text = "Chargement d'Inventor";
         InventorHelper.Ready += () => { RingInProgress = false; ProgressRingLabel.Text = "Inventor Prêt"; };
