@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Numerics;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -16,14 +15,22 @@ internal class DXFBuilderHelper
 {
     private static Application InventorApp;
     private static Inventor.Sheet sheet;
-
-    public static DrawingDocument Build(InventorHelper inventorHelper, string PartPath, string templatePath = @"C:\Users\Public\Documents\Autodesk\Inventor 2019\Templates\Metric\ISO.idw")
+    private enum CartesianAxis
+    {
+        Zneg = -3,
+        Yneg = -2,
+        Xneg = -1,
+        X = 0,
+        Y = 1,
+        Z = 2
+    }
+    public static DrawingDocument BuildTrueSheetMetal(InventorHelper inventorHelper, string PartPath, string templatePath = @"C:\Users\Public\Documents\Autodesk\Inventor 2019\Templates\Metric\ISO.idw")
     {
         InventorApp = inventorHelper.App;
         if (InventorApp == null) { throw new Exception("application inventor non disponible"); }
         var partDocument = InventorApp.Documents.Open(PartPath, true) as PartDocument;
         var dataSheetMetal = FlatCheck(partDocument);
-        if (dataSheetMetal == null )
+        if (dataSheetMetal == null)
         {
             throw new Exception("piece non laser");
         }
@@ -36,8 +43,8 @@ internal class DXFBuilderHelper
 
         var zoom = DefineZoom(dataSheetMetal);
 
-        
-        (DrawingView frontView, DrawingView sideView) = CreateView(sheet, partDocument,zoom, dataSheetMetal.TurnView);
+
+        (DrawingView frontView, DrawingView sideView) = CreateView(sheet, partDocument, zoom, dataSheetMetal.TurnView);
         if (dataSheetMetal.TurnView)
         {
             dataSheetMetal.TurnSwap();
@@ -51,7 +58,7 @@ internal class DXFBuilderHelper
         CreateHorizontalDimension(sideView, intentsSideView);
 
         var transientGeometry = InventorApp.TransientGeometry;
-        sheet.DrawingNotes.GeneralNotes.AddFitted(transientGeometry.CreatePoint2d(4,5),dataSheetMetal.ToString());
+        sheet.DrawingNotes.GeneralNotes.AddFitted(transientGeometry.CreatePoint2d(4, 5), dataSheetMetal.ToString());
         partDocument.Close();
         return drawingDoc;
     }
@@ -128,24 +135,24 @@ internal class DXFBuilderHelper
         var inverseZoom = 1d;
         while (true)
         {
-            if (dataSheetMetal.Height/inverseZoom <maxHeight && dataSheetMetal.Width/inverseZoom < maxWidth)
+            if (dataSheetMetal.Height / inverseZoom < maxHeight && dataSheetMetal.Width / inverseZoom < maxWidth)
             {
-                return 1/inverseZoom;
+                return 1 / inverseZoom;
             }
-            inverseZoom +=1;
+            inverseZoom += 1;
         }
     }
 
-    private static (DrawingView frontView, DrawingView sideView) CreateView(Inventor.Sheet sheet, PartDocument partDocument, double zoom,bool turnView)
+    private static (DrawingView frontView, DrawingView sideView) CreateView(Inventor.Sheet sheet, PartDocument partDocument, double zoom, bool turnView , ViewOrientationTypeEnum viewOrientationTypeEnum = ViewOrientationTypeEnum.kDefaultViewOrientation )
     {
         var transientGeometry = InventorApp.TransientGeometry;
-        var positionFrontView = transientGeometry.CreatePoint2d(21d/2, (29.7d-4d)/2+4);
+        var positionFrontView = transientGeometry.CreatePoint2d(21d / 2, (29.7d - 4d) / 2 + 4);
         var nameValueMap = InventorApp.TransientObjects.CreateNameValueMap();
         nameValueMap.Add("SheetMetalFoldedModel", false);
-        var FrontView = sheet.DrawingViews.AddBaseView(partDocument as _Document, positionFrontView, zoom, ViewOrientationTypeEnum.kDefaultViewOrientation, DrawingViewStyleEnum.kHiddenLineRemovedDrawingViewStyle, AdditionalOptions: nameValueMap);
+        var FrontView = sheet.DrawingViews.AddBaseView(partDocument as _Document, positionFrontView, zoom, viewOrientationTypeEnum, DrawingViewStyleEnum.kHiddenLineRemovedDrawingViewStyle, AdditionalOptions: nameValueMap);
         if (turnView)
         {
-            FrontView.RotateByAngle(Math.PI/2);
+            FrontView.RotateByAngle(Math.PI / 2);
         }
         var positionSideView = transientGeometry.CreatePoint2d(17d, (29.7d - 4d) / 2 + 4);
         var sideView = sheet.DrawingViews.AddProjectedView(FrontView, positionSideView, DrawingViewStyleEnum.kHiddenLineDrawingViewStyle);
@@ -155,9 +162,7 @@ internal class DXFBuilderHelper
 
     private static void CreateHorizontalDimension(DrawingView view, List<GeometryIntent> intents)
     {
-        var orderedIntentsInX = intents.Where(x => x.PointOnSheet != null)
-            .OrderBy(x => x.PointOnSheet.X)
-            .ToList();
+        var orderedIntentsInX = intents.Where(x => x.PointOnSheet != null).OrderBy(x => x.PointOnSheet.X).ToList();
         var distanceFromView = 1.2d - 0.6d;
         var pointLeft = orderedIntentsInX.First();
         var pointRight = orderedIntentsInX.Last();
@@ -169,9 +174,7 @@ internal class DXFBuilderHelper
 
     private static void CreateVerticalDimension(DrawingView view, List<GeometryIntent> intents)
     {
-        var orderedIntentsInY = intents.Where(x => x.PointOnSheet != null)
-            .OrderBy(x => x.PointOnSheet.Y)
-            .ToList();
+        var orderedIntentsInY = intents.Where(x => x.PointOnSheet != null).OrderBy(x => x.PointOnSheet.Y).ToList();
         var distanceFromView = 1.2d - 0.6d;
         var pointLeft = orderedIntentsInY.Last();
         var pointRight = orderedIntentsInY.First();
@@ -187,11 +190,11 @@ internal class DXFBuilderHelper
         if (partDocument == null) { throw new Exception(); }
         if (partDocument.ComponentDefinition is SheetMetalComponentDefinition sheetMetalComponentDefinition)
         {
-            var mustSave = (LaserDescriptionCheck(partDocument) ,UnfoldLaserCheck(sheetMetalComponentDefinition));
+            var mustSave = (LaserDescriptionCheck(partDocument), UnfoldLaserCheck(sheetMetalComponentDefinition));
             var thickness = (double)sheetMetalComponentDefinition.Thickness.Value * 10;
             var range = sheetMetalComponentDefinition.RangeBox;
-            var width = Math.Round ((range.MaxPoint.X - range.MinPoint.X) * 10,2);
-            var height = Math.Round((range.MaxPoint.Y - range.MinPoint.Y) * 10,2);
+            var width = Math.Round((range.MaxPoint.X - range.MinPoint.X) * 10, 2);
+            var height = Math.Round((range.MaxPoint.Y - range.MinPoint.Y) * 10, 2);
             var dataSheetMetal = new DataSheetMetal(partDocument.DisplayName,
                 thickness,
                 height,
@@ -234,5 +237,70 @@ internal class DXFBuilderHelper
     {
         var dxfFormat = "FLAT PATTERN DXF?AcadVersion=2000&OuterProfileLayer=IV_INTERIOR_PROFILES"; var thickness = (double)sheetMetalComponentDefinition.Thickness.Value * 10;
         sheetMetalComponentDefinition.DataIO.WriteDataToFile(dxfFormat, $"E:\\testPlan\\P641-050-01 {thickness}mm.dxf");
+    }
+
+    internal static DrawingDocument BuildNotSheetMetal(InventorHelper inventorHelper, string PartPath, string templatePath = @"C:\Users\Public\Documents\Autodesk\Inventor 2019\Templates\Metric\ISO.idw")
+    {
+        InventorApp = inventorHelper.App;
+        if (InventorApp == null) { throw new Exception("application inventor non disponible"); }
+        var partDocument = InventorApp.Documents.Open(PartPath, true) as PartDocument;
+        var rangeBox = partDocument.ComponentDefinition.RangeBox;
+        var ThicknessAxis = string.Empty;
+        if (rangeBox == null) { throw new Exception("pas de rangeBox"); }
+
+        var DimensionBox = (X: Math.Round((rangeBox.MaxPoint.X - rangeBox.MinPoint.X)*10, 2), Y: Math.Round((rangeBox.MaxPoint.Y - rangeBox.MinPoint.Y) * 10,2), Z: Math.Round((rangeBox.MaxPoint.Z - rangeBox.MinPoint.Z) * 10 ,2));
+        var thickness = Math.Min(Math.Min(DimensionBox.X, DimensionBox.Y), DimensionBox.Z);
+        var width = 0d;
+        var heigh = 0d;
+        if (thickness == DimensionBox.X)
+        {
+            ThicknessAxis = "X"; width = DimensionBox.Z; heigh = DimensionBox.Y ;
+        }
+        else if (thickness == DimensionBox.Y)
+        {
+            ThicknessAxis = "Y"; width = DimensionBox.X; heigh = DimensionBox.Z;
+        }
+        else
+        {
+            ThicknessAxis = "Z"; width = DimensionBox.X; heigh = DimensionBox.Y;
+        }
+
+
+        var dataSheetMetal = new DataSheetMetal(partDocument.DisplayName, thickness, heigh, width);
+
+        var drawingDoc = InventorApp.Documents.Add(DocumentTypeEnum.kDrawingDocumentObject, templatePath, true) as Inventor.DrawingDocument;
+
+        sheet = drawingDoc.Sheets[1];
+        sheet.Orientation = PageOrientationTypeEnum.kPortraitPageOrientation;
+        sheet.Size = DrawingSheetSizeEnum.kA4DrawingSheetSize;
+
+        var zoom = DefineZoom(dataSheetMetal);
+
+        var orientationView = ThicknessAxis switch
+        {
+            "X"=> ViewOrientationTypeEnum.kRightViewOrientation,
+            "Y"=> ViewOrientationTypeEnum.kTopViewOrientation,
+            "Z"=> ViewOrientationTypeEnum.kDefaultViewOrientation,
+
+        };
+
+        (DrawingView frontView, DrawingView sideView) = CreateView(sheet, partDocument, zoom, dataSheetMetal.TurnView,orientationView);
+        if (dataSheetMetal.TurnView)
+        {
+            dataSheetMetal.TurnSwap();
+        }
+
+        var intentsFrontView = GetIntents(frontView);
+        CreateHorizontalDimension(frontView, intentsFrontView);
+        CreateVerticalDimension(frontView, intentsFrontView);
+
+        var intentsSideView = GetIntents(sideView);
+        CreateHorizontalDimension(sideView, intentsSideView);
+
+        var transientGeometry = InventorApp.TransientGeometry;
+        sheet.DrawingNotes.GeneralNotes.AddFitted(transientGeometry.CreatePoint2d(4, 5), dataSheetMetal.ToString());
+        partDocument.Close();
+        return drawingDoc;
+
     }
 }

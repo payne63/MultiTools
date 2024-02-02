@@ -71,7 +71,7 @@ public sealed partial class DrawingBuilderTab : TabViewItem, Interfaces.IInitTab
         get => _IsInterfaceEnabled;
         set
         {
-            _IsInterfaceEnabled = value ; OnPropertyChanged();
+            _IsInterfaceEnabled = value; OnPropertyChanged();
         }
     }
 
@@ -164,8 +164,8 @@ public sealed partial class DrawingBuilderTab : TabViewItem, Interfaces.IInitTab
         }
         catch (Exception ex)
         {
-            OpenSimpleMessage($"Erreur!!{ex.Message} \n fichier { PathFullName}");
-            return ;
+            OpenSimpleMessage($"Erreur!!{ex.Message} \n fichier {PathFullName}");
+            return;
         }
         lasers.Add(data);
         if (data.bom.Count == 0) return;
@@ -180,7 +180,7 @@ public sealed partial class DrawingBuilderTab : TabViewItem, Interfaces.IInitTab
     private async void Button_Click_BuildDrawing(object sender, RoutedEventArgs e)
     {
         if (LaserCollection.Count == 0) return;
-        if (gabaritFile ==  null)
+        if (gabaritFile == null)
         {
             OpenSimpleMessage("Selectionner en premier le plan de gabarit");
             return;
@@ -190,16 +190,18 @@ public sealed partial class DrawingBuilderTab : TabViewItem, Interfaces.IInitTab
         InventorHelper.ShowApp();
         foreach (var dataIQT in LaserCollection)
         {
-            if (!dataIQT.IsTrueSheetMetal)
-            {
-                dataIQT.Status = "A faire Manuellement";
-                continue;
-            }
             dataIQT.Status = "en Cours";
             GetProgressRingStatus(dataIQT).IsActive = true;
             DrawingDocument drawingDocument = null;
-            await Task.Run(() => drawingDocument = DXFBuilderHelper.Build(InventorHelper, dataIQT.FullPathName,gabaritFile.Path));
-            var drawingSavePath = dataIQT.FileInfoData.Directory.FullName + @"\Auto DXF\" + 
+            if (dataIQT.IsTrueSheetMetal)
+            {
+                await Task.Run(() => drawingDocument = DXFBuilderHelper.BuildTrueSheetMetal(InventorHelper, dataIQT.FullPathName, gabaritFile.Path));
+            }
+            else
+            {
+                await Task.Run(() => drawingDocument = DXFBuilderHelper.BuildNotSheetMetal(InventorHelper, dataIQT.FullPathName, gabaritFile.Path));
+            }
+            var drawingSavePath = dataIQT.FileInfoData.Directory.FullName + @"\Auto DXF\" +
                     System.IO.Path.GetFileNameWithoutExtension(dataIQT.FileInfoData.Name) + ".idw";
             ContentDialog dialogValidation = new ContentDialog
             {
@@ -321,7 +323,7 @@ public sealed partial class DrawingBuilderTab : TabViewItem, Interfaces.IInitTab
         gabaritFile = await openPicker.PickSingleFileAsync();
         if (gabaritFile != null)
         {
-            OutputTextBlock.Text = "Selection: "+gabaritFile.Name;
+            OutputTextBlock.Text = "Selection: " + gabaritFile.Name;
         }
         else
         {
