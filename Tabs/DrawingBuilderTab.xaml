@@ -29,20 +29,16 @@
             Margin="10" >
             <StackPanel Orientation="Vertical">
                 <Button
+                    Click="Button_Click_SelectFiles"
                 Margin="10" 
                 HorizontalAlignment="Stretch"
                 Padding="15"
-                Drop="PanelDataI_Drop" 
-                DragOver="PanelDataI_DragOver"
                 AllowDrop="True" 
                 IsEnabled="{x:Bind IsInterfaceEnabled, Mode=OneWay}">
                     <StackPanel Orientation="Vertical" >
-                        <Viewbox MaxHeight="40" MaxWidth="40" >
-                            <SymbolIcon Symbol="NewWindow"  />
-                        </Viewbox>
-                        <TextBlock Text="Glisser Deposer" HorizontalAlignment="Center" />
-                        <TextBlock Text="votre Fichiers" HorizontalAlignment="Center" />
-                        <TextBlock Text="(Assemblage ou Pièce)" HorizontalAlignment="Center"/>
+                        <FontIcon Glyph="&#xED25;"/>
+                        <TextBlock Text="Selection" HorizontalAlignment="Center" />
+                        <TextBlock Text="des fichiers" HorizontalAlignment="Center" />
                     </StackPanel>
                 </Button>
                 <Button Margin="10" 
@@ -94,17 +90,20 @@
             <TextBlock Text="Designation" Width="500" VerticalAlignment="Center"/>
             <TextBlock Text="Gabarit Laser" Width="150" VerticalAlignment="Center"/>
             <TextBlock Text="Status" Width="200" VerticalAlignment="Center"/>
-            
+
         </StackPanel>
-        <TextBlock Grid.Column="1" Grid.Row="1" Text="DRAG AND DROP HER" 
-                   Visibility="{x:Bind DragAndDropVisibility ,Mode=OneWay}"
-                   VerticalAlignment="Center" HorizontalAlignment="Center"
+        <StackPanel Orientation="Vertical" Grid.Column="1" Grid.Row="1" 
+                    VerticalAlignment="Center" HorizontalAlignment="Center"
+                    Visibility="{x:Bind DragAndDropVisibility ,Mode=OneWay}">
+            <FontIcon Glyph="&#xEBFC;" FontSize="50" Foreground="{StaticResource AccentAcrylicBackgroundFillColorDefaultBrush}"/>
+            <TextBlock Text="Glisser Deposer ici" 
                    Foreground="{StaticResource AccentAcrylicBackgroundFillColorDefaultBrush}"
                    FontSize="30"
                    FontWeight="Bold"
                    FontStyle="Italic">
-            
-        </TextBlock>
+
+            </TextBlock>
+        </StackPanel>
         <ListView ItemsSource="{x:Bind LaserCollection}"
               x:Name="ListViewLaser"
               Grid.Column="1" Grid.Row="1"

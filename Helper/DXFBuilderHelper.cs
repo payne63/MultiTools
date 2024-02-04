@@ -17,9 +17,6 @@ internal class DXFBuilderHelper
     private static Inventor.Sheet sheet;
     private enum CartesianAxis
     {
-        Zneg = -3,
-        Yneg = -2,
-        Xneg = -1,
         X = 0,
         Y = 1,
         Z = 2

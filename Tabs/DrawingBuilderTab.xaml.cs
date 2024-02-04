@@ -96,46 +96,33 @@ public sealed partial class DrawingBuilderTab : TabViewItem, Interfaces.IInitTab
     {
         this.InitializeComponent();
     }
-
-    private void PanelDataI_DragOver(object sender, DragEventArgs e)
+    private async void Button_Click_SelectFiles(object sender, RoutedEventArgs e)
     {
-        e.AcceptedOperation = DataPackageOperation.Move;
+        var file = await GetFileOpenPicker(".ipt", ".iam");
+        AddItems(new() { file });
     }
 
-    private async void PanelDataI_Drop(object sender, DragEventArgs e)
+
+    private void AddItems(List<IStorageItem> items)
     {
-
-        if (!e.DataView.Contains(StandardDataFormats.StorageItems))
+        foreach (var file in items)
         {
-            OpenSimpleMessage("Format non compatible");
-            return;
-        }
-        var items = await e.DataView.GetStorageItemsAsync();
-
-        if (items.Count > 0)
-        {
-            ClearLaserData();
-            foreach (var file in items)
+            if (file.Name.EndsWith(".ipt") || file.Name.EndsWith(".iam"))
             {
-                if (file.Name.EndsWith(".ipt") || file.Name.EndsWith(".iam"))
+                foreach (var dataIQT in GetLaserDatas(file.Path))
                 {
-                    foreach (var dataIQT in GetLaserDatas(file.Path))
+                    if (dataIQT.IsTrueSheetMetal || dataIQT.IsLaserType)
                     {
-                        if (dataIQT.IsTrueSheetMetal || dataIQT.IsLaserType)
-                        {
-                            dataIQT.Status = "en attente";
-                            LaserCollection.Add(dataIQT);
-                        }
+                        dataIQT.Status = "en attente";
+                        LaserCollection.Add(dataIQT);
                     }
                 }
-                else
-                {
-                    OpenSimpleMessage("seul des pièces ou des assemblages sont utilisable");
-                }
+            }
+            else
+            {
+                OpenSimpleMessage("seul des pièces ou des assemblages sont utilisable");
             }
         }
-
-
     }
 
     public IEnumerable<DataIQT> GetLaserDatas(string firstPathFullName)
@@ -251,9 +238,15 @@ public sealed partial class DrawingBuilderTab : TabViewItem, Interfaces.IInitTab
         e.AcceptedOperation = DataPackageOperation.Move;
     }
 
-    private void TabViewItem_Drop(object sender, DragEventArgs e)
+    private async void TabViewItem_Drop(object sender, DragEventArgs e)
     {
-        PanelDataI_Drop(sender, e);
+        if (!e.DataView.Contains(StandardDataFormats.StorageItems))
+        {
+            OpenSimpleMessage("Format non compatible");
+            return;
+        }
+        var items = await e.DataView.GetStorageItemsAsync();
+        AddItems(items.ToList());
     }
 
     private void Button_Click_Remove(object sender, RoutedEventArgs e)
@@ -310,17 +303,7 @@ public sealed partial class DrawingBuilderTab : TabViewItem, Interfaces.IInitTab
 
     private async void PickAFileButton_Click(object sender, RoutedEventArgs e)
     {
-        var openPicker = new Windows.Storage.Pickers.FileOpenPicker();
-        var window = App.m_window;
-        var hWnd = WinRT.Interop.WindowNative.GetWindowHandle(window);
-        WinRT.Interop.InitializeWithWindow.Initialize(openPicker, hWnd);
-
-        // Set options for your file picker
-        openPicker.ViewMode = PickerViewMode.Thumbnail;
-        openPicker.FileTypeFilter.Add(".idw");
-
-        // Open the picker for the user to pick a file
-        gabaritFile = await openPicker.PickSingleFileAsync();
+        gabaritFile = await GetFileOpenPicker(".idw");
         if (gabaritFile != null)
         {
             OutputTextBlock.Text = "Selection: " + gabaritFile.Name;
@@ -331,4 +314,24 @@ public sealed partial class DrawingBuilderTab : TabViewItem, Interfaces.IInitTab
             gabaritFile = null;
         }
     }
+
+    private async Task<StorageFile> GetFileOpenPicker(params String[] filters)
+    {
+        var openPicker = new Windows.Storage.Pickers.FileOpenPicker();
+        var window = App.m_window;
+        var hWnd = WinRT.Interop.WindowNative.GetWindowHandle(window);
+        WinRT.Interop.InitializeWithWindow.Initialize(openPicker, hWnd);
+
+        // Set options for your file picker
+        openPicker.ViewMode = PickerViewMode.Thumbnail;
+        foreach (var filter in filters)
+        {
+            openPicker.FileTypeFilter.Add(filter);
+        }
+
+        // Open the picker for the user to pick a file
+        return await openPicker.PickSingleFileAsync();
+    }
+
+    
 }
