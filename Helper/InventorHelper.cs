@@ -9,6 +9,7 @@ using Inventor;
 namespace SplittableDataGridSAmple.Helper;
 internal class InventorHelper
 {
+
     private static readonly List<Application> inventorApplications = new();
 
     public static void CloseAllInstance() => inventorApplications.ForEach(x => x.Quit());
@@ -37,12 +38,12 @@ internal class InventorHelper
         private set => _App = value;
     }
 
-    private ApprenticeServerComponent _AppServerComp;
-    public ApprenticeServerComponent AppServerComp
-    {
-        get => _AppServerComp;
-        private set => _AppServerComp = value;
-    }
+    //private ApprenticeServerComponent _AppServerComp;
+    //public ApprenticeServerComponent AppServerComp
+    //{
+    //    get => _AppServerComp;
+    //    private set => _AppServerComp = value;
+    //}
 
     public static event Action Ready;
 
@@ -56,7 +57,7 @@ internal class InventorHelper
         inventorHelper.App = await CreateInventorInstance();
         //inventorHelper.App.SilentOperation = true; //supprime les promptes d'inventor
         Ready.Invoke();
-        inventorHelper.AppServerComp = new ApprenticeServerComponent();
+        //inventorHelper.AppServerComp = new ApprenticeServerComponent();
         return inventorHelper;
     }
 
