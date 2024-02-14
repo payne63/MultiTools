@@ -11,14 +11,14 @@
     xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+
     Header="Page Principale">
 
     <TabViewItem.IconSource>
         <FontIconSource Glyph="&#xEDB1;"/>
     </TabViewItem.IconSource>
     <Border>
-        
+
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
@@ -36,9 +36,31 @@
                     </StackPanel>
                 </Button>
                 <Button Content="dxf" Click="Button_Click_Dxf"/>
-                <Button Content="better dxf" Click="Button_ClickAsync"/>
+                <Button Content="better dxf" Click="Button_ClickAsync" />
+                <StackPanel Orientation="Horizontal">
+
+                    <ScrollViewer HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Visible" Height="300" Width="300"
+                            ZoomMode="Enabled"  ViewChanged="ScrollViewer_ViewChanged" >
+                        <Canvas x:Name="CanvasGant" Height="1000" Width="1000" Background="Firebrick">
+                            <Line   X1="100" Y1="0" X2="100" Y2="900" StrokeThickness="1" Stroke="LightCoral"/>
+                            <Button Content="canvas button" Canvas.Left="50" Canvas.Top="0" Height="30" Background="Coral" 
+                                    Click="Button_Click"/>
+                            <Button Content="canvas button2" Canvas.Left="60" Canvas.Top="30" Height="30" Background="Coral"
+                                    Click="GetHolidays"/>
+                        </Canvas>
+                    </ScrollViewer>
+                    <ScrollViewer x:Name="ScrollViewer2" HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Visible"
+                              Height="300" Width="300"
+                              ZoomMode="Enabled"   >
+                        <Canvas x:Name="CanvasGant2" Height="1000" Width="1000" Background="Firebrick">
+                            <Line   X1="100" Y1="0" X2="100" Y2="900" StrokeThickness="1" Stroke="LightCoral"/>
+                            <Button Content="canvas button" Canvas.Left="50" Canvas.Top="0" Height="30" />
+                            <Button Content="canvas button2" Canvas.Left="60" Canvas.Top="30" Height="30" />
+                        </Canvas>
+                    </ScrollViewer>
+                </StackPanel>
             </StackPanel>
-           
+
 
         </Grid>
     </Border>

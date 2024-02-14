@@ -28,6 +28,8 @@ using SplittableDataGridSAmple.Interfaces;
 using AvitechTools.Models;
 using Inventor;
 using DocumentFormat.OpenXml.Math;
+using System.Text.Json;
+using System.Net.Http;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -41,6 +43,7 @@ namespace SplittableDataGridSAmple.Tabs
         public Test3Tab()
         {
             this.InitializeComponent();
+            InitCanvas();
         }
         public void InitTab()
         {
@@ -256,5 +259,53 @@ namespace SplittableDataGridSAmple.Tabs
                 _ = await dialog.ShowAsync();
             }
         }
+
+        private void ScrollViewer_ViewChanged(object sender, ScrollViewerViewChangedEventArgs e)
+        {
+            if (sender is ScrollViewer scrollViewer)
+            {
+                ScrollViewer2.ScrollToVerticalOffset(scrollViewer.VerticalOffset);
+                //ScrollViewer2.ScrollToHorizontalOffset(scrollViewer.HorizontalOffset);
+            }
+        }
+
+        private void InitCanvas()
+        {
+            var step = 50;
+            foreach (var day  in Enumerable.Range(1,31))
+            {
+                var dayText = new TextBlock { Text = day.ToString()  };
+                Canvas.SetLeft(dayText, step*day);
+                Canvas.SetTop(dayText, 0);
+                Canvas.SetZIndex(dayText, -1);
+                CanvasGant.Children.Add(dayText);
+            }
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is Button button)
+            {
+                Canvas.SetLeft(button, Canvas.GetLeft(button)+ 20);
+            }
+        }
+
+        public void GetHolidays(object sender, RoutedEventArgs e)
+        {
+            HttpClient client = new HttpClient();
+            var responce = client.GetStringAsync("https://calendrier.api.gouv.fr/jours-feries/metropole.json").Result;
+            //var Sunrise = JsonSerializer.Deserialize<SunriseSunsetDto>(responce.ToString()).Results.Sunrise;
+            var datas = responce.Replace("{", "").Replace("}", "").Split(", ");
+            var holidays = datas.Select(x => { 
+                var split = x.Split(": ");
+                var date = DateTime.Parse(split[0].Replace('"',(char)0));
+                var description = split[1].Replace('"', (char)0);
+                return new Holiday(description, date);
+                }
+            ).ToList();
+            Trace.WriteLine(responce);
+        }
+
+        public record Holiday(string description,DateTime date);
     }
 }

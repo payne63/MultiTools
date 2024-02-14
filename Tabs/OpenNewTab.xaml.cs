@@ -54,7 +54,7 @@ public sealed partial class OpenNewTab : TabViewItem, Interfaces.IInitTab
         JobElementsInventor.Add(new NewTabButton(typeof(Tabs.InventorQTTab),"Extrait la Nommenclature"));
         //JobElements.Add(new NewTabButton(typeof(Tabs.Test1Tab),"test1"));
         //JobElements.Add(new NewTabButton(typeof(Tabs.Test2Tab),"Test2"));
-        //JobElements.Add(new NewTabButton(typeof(Tabs.Test3Tab),"Test3"));
+        JobElements.Add(new NewTabButton(typeof(Tabs.Test3Tab),"Test3"));
         JobElementsInventor.Add(new NewTabButton(typeof(Tabs.DrawingBuilderTab),"Generation automatique DXF" ));
     }
 
