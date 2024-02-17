@@ -70,7 +70,7 @@ public sealed partial class MainWindow : Window, INotifyPropertyChanged
         LoadPaths();
         Instance = this;
         tabViewRef = TabViewName;
-        ResizeWindows(1800, 1000);
+        ResizeWindows(1300, 1000);
         UsersNameUpdate();
         //ExtendsContentIntoTitleBar = true;
         window.Title = "MultiTools";

@@ -1,0 +1,61 @@
+<TabViewItem
+    x:Class="SplittableDataGridSAmple.Tabs.ScheduleTab"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:SplittableDataGridSAmple.Tabs"
+    xmlns:base="using:SplittableDataGridSAmple.Base"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+
+    Header="Planning">
+
+    <TabViewItem.IconSource>
+        <FontIconSource Glyph="&#xE916;"/>
+    </TabViewItem.IconSource>
+    <Border>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <StackPanel Grid.Column="0" Grid.Row="0" Orientation="Vertical">
+                <Button Content="Update Header" Click="Button_Click_UpdateHeader" />
+            </StackPanel>
+
+            <ScrollViewer x:Name="ScrollViewerHeader" Grid.Row="0" Grid.Column="1"
+                          HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Disabled">
+                <Canvas x:Name="CanvasHeader" Height="75" Width="3000" Background="Firebrick"
+                        PointerWheelChanged="ScrollViewerSchedule_PointerWheelChanged">
+
+                </Canvas>
+            </ScrollViewer>
+            <ScrollViewer x:Name="ScrollViewerSchedule" Grid.Row="1" Grid.Column="1" 
+                          HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Visible"
+                          ViewChanged="ScrollViewer_ViewChanged" >
+                <Canvas x:Name="CanvasSchedule" Height="1000" Width="3000" Background="BlueViolet" >
+                    <Button>
+                        <Button>
+                            blalba
+                        </Button>
+                    </Button>
+                </Canvas>
+            </ScrollViewer>
+            <ScrollViewer x:Name="ScrollViewerTask" Grid.Row="1" Grid.Column="0" 
+                          HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Hidden"
+                          ViewChanged="ScrollViewer_ViewChanged" >
+                <Canvas x:Name="CanvasTask" Height="1000" Width="300" Background="Bisque">
+                    <TextBlock Text="=>fsdfsd"/>
+                </Canvas>
+            </ScrollViewer>
+
+
+        </Grid>
+
+    </Border>
+</TabViewItem>
