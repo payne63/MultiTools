@@ -39,19 +39,82 @@
                           HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Visible"
                           ViewChanged="ScrollViewer_ViewChanged" >
                 <Canvas x:Name="CanvasSchedule" Height="1000" Width="3000" Background="BlueViolet" >
-                    <Button>
+                    <Button x:Name="but">
                         <Button>
                             blalba
                         </Button>
                     </Button>
+                    <StackPanel Orientation="Horizontal" Canvas.Left="100">
+                        <Border Background="Cyan" CornerRadius="3" Width="50" BorderBrush="Black"/>
+                        <Button Content="sfsfsfsf" />
+                    </StackPanel>
                 </Canvas>
             </ScrollViewer>
             <ScrollViewer x:Name="ScrollViewerTask" Grid.Row="1" Grid.Column="0" 
                           HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Hidden"
                           ViewChanged="ScrollViewer_ViewChanged" >
-                <Canvas x:Name="CanvasTask" Height="1000" Width="300" Background="Bisque">
-                    <TextBlock Text="=>fsdfsd"/>
-                </Canvas>
+                <StackPanel Orientation="Vertical">
+                    <Border AutomationProperties.AccessibilityView="Raw"
+                            CornerRadius="10,0,10,0"  Grid.Column="0" Grid.Row="0" 
+                            HorizontalAlignment="Left" VerticalAlignment="Top"
+                            Background="{ThemeResource AccentAcrylicBackgroundFillColorDefaultBrush}"
+                            Margin="10" Width="200">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBox Text="P730" FontStyle="Italic"/>
+                            <Button>
+                                <SymbolIcon Symbol="View"/>
+                            </Button>
+                        </StackPanel>
+                    </Border>
+                    <TreeView x:Name="TreeViewTask" ItemsSource="{x:Bind TaskBases ,Mode=OneWay}" CanDragItems="True" CanReorderItems="True" 
+                          AllowDrop="True" SelectionMode="None" Width="1400" Collapsed="TreeViewTask_Collapsed" >
+                        <TreeView.ItemTemplate >
+                            <DataTemplate x:DataType="base:TaskBase">
+                                <TreeViewItem Height="28" MinHeight="10" 
+                                          PointerPressed="ListViewItem_PointerPressed"
+                                          PointerMoved="ListViewItem_PointerMoved"
+                                          ItemsSource="{x:Bind Children}" IsExpanded="{x:Bind IsExpanded,Mode=TwoWay}"
+                                          >
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="150"/>
+                                            <ColumnDefinition Width="20"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBox Grid.Column="0" Text="{x:Bind Description}" VerticalAlignment="Center"/>
+                                        <TextBlock Grid.Column="1" Text="{x:Bind CountDay, Mode=OneWay}" VerticalAlignment="Center"/>
+                                        <Canvas Grid.Column="2"  >
+                                            <Canvas.Clip>
+                                                <RectangleGeometry Rect="0,0,1000,28"/>
+                                            </Canvas.Clip>
+                                            <base:PressAndHoldButton Width="{x:Bind Width ,Mode=OneWay}" Background="Chartreuse" Height="18" 
+                                                Canvas.Left="{x:Bind LeftPos,Mode=OneWay}" 
+                                                 PointerMoved="Button_PointerMoved" CornerRadius="0"
+                                                PointerReleased="Button_PointerReleased" PointerPressPreview="Button_PointerPressed">
+                                                <Button.Resources>
+                                                    <ResourceDictionary>
+                                                        <ResourceDictionary.ThemeDictionaries>
+                                                            <ResourceDictionary x:Key="Dark">
+                                                                <SolidColorBrush x:Key="ButtonForegroundPointerOver" Color="Red"/>
+                                                                <SolidColorBrush x:Key="ButtonBackgroundPointerOver" Color="Chartreuse"/>
+                                                                <SolidColorBrush x:Key="ButtonBackgroundPressed" Color="Chartreuse"/>
+                                                            </ResourceDictionary>
+                                                            <ResourceDictionary x:Key="Light">
+                                                                <SolidColorBrush x:Key="ButtonForegroundPointerOver" Color="Red"/>
+                                                                <SolidColorBrush x:Key="ButtonBackgroundPointerOver" Color="Chartreuse"/>
+                                                                <SolidColorBrush x:Key="ButtonBackgroundPressed" Color="Chartreuse"/>
+                                                            </ResourceDictionary>
+                                                        </ResourceDictionary.ThemeDictionaries>
+                                                    </ResourceDictionary>
+                                                </Button.Resources>
+                                            </base:PressAndHoldButton>
+                                        </Canvas>
+                                    </Grid>
+                                </TreeViewItem>
+                            </DataTemplate>
+                        </TreeView.ItemTemplate>
+                    </TreeView>
+                </StackPanel>
             </ScrollViewer>
 
 

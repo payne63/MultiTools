@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
@@ -8,23 +9,46 @@ using System.Text;
 using System.Threading.Tasks;
 using DocumentFormat.OpenXml.Spreadsheet;
 using Microsoft.UI;
+using Microsoft.UI.Input;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Shapes;
+using Microsoft.VisualStudio.Shell.Interop;
+using SplittableDataGridSAmple.Base;
 using SplittableDataGridSAmple.Interfaces;
+using Windows.System;
+using Windows.UI.Core;
 
 namespace SplittableDataGridSAmple.Tabs;
 public sealed partial class ScheduleTab : TabViewItem, IInitTab
 {
+
+    public ObservableCollection<TaskBase> TaskBases
+    {
+        get; set;
+    }
+
+    public double MouseDownLocationX;
+
     public ScheduleTab()
     {
         this.InitializeComponent();
         InitCanvasHeader();
     }
 
+
     public void InitTab()
     {
+
+        TaskBases = new()
+        {
+            new TaskBase("rest", new DateTime(2024,3,20)) ,
+            new TaskBase("ppo", new DateTime(2024,3,20)) ,
+            new TaskBase("cvwef", new DateTime(2024,3,20)) ,
+        };
+        TaskBases.First().Children.Add(new TaskBase("children", new DateTime(2024, 3, 22)));
+        TaskBases.First().IsExpanded = true;
     }
 
     private void InitCanvasHeader()
@@ -42,12 +66,12 @@ public sealed partial class ScheduleTab : TabViewItem, IInitTab
             if (day.Day == 1)
             {
                 var monthText = new TextBlock { Text = day.ToString("MMMM yyyy", cultureFrench).ToUpper() };
-                Canvas.SetLeft(monthText, step * count + step*15);
+                Canvas.SetLeft(monthText, step * count + step * 15);
                 Canvas.SetTop(monthText, 0);
                 Canvas.SetZIndex(monthText, -1);
                 CanvasHeader.Children.Add(monthText);
-                var line = new Line { X1 = count* step, Y1 = 0, X2 = count* step, Y2 = 20, StrokeThickness= 3,Stroke = lineColor };
-                var lineTwo = new Line { X1 = count* step, Y1 = 40, X2 = count* step, Y2 = maxHeight, StrokeThickness= 3,Stroke = lineColor };
+                var line = new Line { X1 = count * step, Y1 = 0, X2 = count * step, Y2 = 20, StrokeThickness = 3, Stroke = lineColor };
+                var lineTwo = new Line { X1 = count * step, Y1 = 40, X2 = count * step, Y2 = maxHeight, StrokeThickness = 3, Stroke = lineColor };
                 CanvasHeader.Children.Add(line);
                 CanvasHeader.Children.Add(lineTwo);
             }
@@ -55,7 +79,7 @@ public sealed partial class ScheduleTab : TabViewItem, IInitTab
             if (day.ToString("dddd", cultureFrench)[..1].StartsWith("l"))
             {
                 var week = cultureFrench.Calendar.GetWeekOfYear(day, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday);
-                var weekText = new TextBlock { Text = "S"+week.ToString() };
+                var weekText = new TextBlock { Text = "S" + week.ToString() };
                 Canvas.SetLeft(weekText, step * count + step + 40);
                 Canvas.SetTop(weekText, 20);
                 Canvas.SetZIndex(weekText, -1);
@@ -65,7 +89,7 @@ public sealed partial class ScheduleTab : TabViewItem, IInitTab
             }
 
             var dayText = new TextBlock { Text = day.ToString("dd") };
-            Canvas.SetLeft(dayText, step * count +2);
+            Canvas.SetLeft(dayText, step * count + 2);
             Canvas.SetTop(dayText, 40);
             Canvas.SetZIndex(dayText, -1);
             CanvasHeader.Children.Add(dayText);
@@ -92,7 +116,7 @@ public sealed partial class ScheduleTab : TabViewItem, IInitTab
             var split = x.Split(": ");
             var date = DateTime.Parse(split[0].Replace('"', (char)0));
             var description = split[1].Replace('"', (char)0);
-            return new Holiday(description, date);
+            return new TaskBase(description, date);
         }
         ).ToList();
         Trace.WriteLine(responce);
@@ -120,7 +144,9 @@ public sealed partial class ScheduleTab : TabViewItem, IInitTab
         InitCanvasHeader();
         stopwatch.Stop();
         Trace.WriteLine($"stopwatch {stopwatch.Elapsed}");
-    
+        var offset = but.ActualOffset;
+        Trace.WriteLine(offset);
+        InitTab();
     }
 
 
@@ -144,5 +170,67 @@ public sealed partial class ScheduleTab : TabViewItem, IInitTab
         ScrollViewerSchedule.ChangeView(wheelData + ScrollViewerSchedule.HorizontalOffset, null, null);
     }
 
-    public record Holiday(string description, DateTime date);
+
+    private void Button_PointerPressed(object sender, PointerPressEventArgs e)
+    {
+        MouseDownLocationX = (int)e.PointerPositionRelative;
+        if (IsKeyDown(VirtualKey.Control))
+        {
+            if (sender is PressAndHoldButton bt)
+            {
+                (bt.DataContext as TaskBase).StartUpdateTimeSpan();
+            }
+        }
+    }
+
+    private void Button_PointerMoved(object sender, Microsoft.UI.Xaml.Input.PointerRoutedEventArgs e)
+    {
+        if (sender is Button bt)
+        {
+            var taskBase = bt.DataContext as TaskBase;
+            if (e.GetCurrentPoint(bt).Properties.IsLeftButtonPressed && IsKeyDown(VirtualKey.Control))
+            {
+                var delta = e.GetCurrentPoint(bt).Position.X - MouseDownLocationX;
+                taskBase.UpdateTimeSpan(delta);
+                return;
+            }
+            if (e.GetCurrentPoint(bt).Properties.IsLeftButtonPressed)
+            {
+                var delta = e.GetCurrentPoint(bt).Position.X - MouseDownLocationX;
+                taskBase.UpdateStartTime(delta);
+                return;
+            }
+        }
+    }
+
+    private void Button_PointerReleased(object sender, Microsoft.UI.Xaml.Input.PointerRoutedEventArgs e)
+    {
+        MouseDownLocationX = 0;
+    }
+    static bool IsKeyDown(VirtualKey key)
+    {
+        return InputKeyboardSource.GetKeyStateForCurrentThread(key).HasFlag(CoreVirtualKeyStates.Down);
+    }
+
+    private void ListViewItem_PointerPressed(object sender, Microsoft.UI.Xaml.Input.PointerRoutedEventArgs e)
+    {
+        MouseDownLocationX = (int)e.GetCurrentPoint(this).Position.X;
+    }
+
+    private void ListViewItem_PointerMoved(object sender, Microsoft.UI.Xaml.Input.PointerRoutedEventArgs e)
+    {
+        if (e.GetCurrentPoint(this).Properties.IsRightButtonPressed)
+        {
+            var delta = e.GetCurrentPoint(this).Position.X - MouseDownLocationX;
+            foreach (var taskBase in TaskBases)
+            {
+                taskBase.UpdateStartTime(delta);
+            }
+        }
+    }
+
+    private void TreeViewTask_Collapsed(TreeView sender, TreeViewCollapsedEventArgs args)
+    {
+        args.Node.IsExpanded = true;
+    }
 }
