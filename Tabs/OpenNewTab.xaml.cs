@@ -52,6 +52,7 @@ public sealed partial class OpenNewTab : TabViewItem, Interfaces.IInitTab
         JobElementsInventor.Add(new NewTabButton(typeof(Tabs.InventorPrintTab), "Impression des plans Inventor"));
         JobElements.Add(new NewTabButton(typeof(Tabs.FolderProjectCreationTab),"creation d'un répertoire Projet"));
         JobElementsInventor.Add(new NewTabButton(typeof(Tabs.InventorQTTab),"Extrait la Nommenclature"));
+        JobElementsInventor.Add(new NewTabButton(typeof(Tabs.CleanProjectTab), "supprime les pièces orphelines"));
         //JobElements.Add(new NewTabButton(typeof(Tabs.Test1Tab),"test1"));
         //JobElements.Add(new NewTabButton(typeof(Tabs.Test2Tab),"Test2"));
         //JobElements.Add(new NewTabButton(typeof(Tabs.Test3Tab),"Test3"));

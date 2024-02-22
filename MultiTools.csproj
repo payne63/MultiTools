@@ -32,6 +32,7 @@
     <None Remove="Pages\WelcomePage.xaml" />
     <None Remove="Services\MarshalService.xaml" />
     <None Remove="Services\PrintPage.xaml" />
+    <None Remove="Tabs\CleanProjectTab.xaml" />
     <None Remove="Tabs\Contacts2Tab.xaml" />
     <None Remove="Tabs\ContactsTab.xaml" />
     <None Remove="Tabs\DrawingBuilderTab.xaml" />
@@ -678,6 +679,9 @@
     <None Update="JsonData\users.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <Page Update="Tabs\CleanProjectTab.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Update="Tabs\DrawingBuilderTab.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
