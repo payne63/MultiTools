@@ -21,8 +21,8 @@
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="1000"/>
+                <ColumnDefinition Width="500"/>
             </Grid.ColumnDefinitions>
             <StackPanel Grid.Column="0" Grid.Row="0" Orientation="Vertical">
                 <Button Content="Update Header" Click="Button_Click_UpdateHeader" />
@@ -67,7 +67,7 @@
                         </StackPanel>
                     </Border>
                     <TreeView x:Name="TreeViewTask" ItemsSource="{x:Bind TaskBases ,Mode=OneWay}" CanDragItems="True" CanReorderItems="True" 
-                          AllowDrop="True" SelectionMode="None" Width="1400" Collapsed="TreeViewTask_Collapsed" >
+                          AllowDrop="True" SelectionMode="None" Width="800" Collapsed="TreeViewTask_Collapsed" HorizontalAlignment="Left">
                         <TreeView.ItemTemplate >
                             <DataTemplate x:DataType="base:TaskBase">
                                 <TreeViewItem Height="28" MinHeight="10" 
@@ -75,15 +75,11 @@
                                           PointerMoved="ListViewItem_PointerMoved"
                                           ItemsSource="{x:Bind Children}" IsExpanded="{x:Bind IsExpanded,Mode=TwoWay}"
                                           >
-                                    <Grid>
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="150"/>
-                                            <ColumnDefinition Width="20"/>
-                                            <ColumnDefinition Width="*"/>
-                                        </Grid.ColumnDefinitions>
+                                    <controls:DockPanel>
+                                        
                                         <TextBox Grid.Column="0" Text="{x:Bind Description}" VerticalAlignment="Center"/>
                                         <TextBlock Grid.Column="1" Text="{x:Bind CountDay, Mode=OneWay}" VerticalAlignment="Center"/>
-                                        <Canvas Grid.Column="2"  >
+                                        <Canvas Grid.Column="2" controls:DockPanel.Dock="Right" Width="300" HorizontalAlignment="Right">
                                             <Canvas.Clip>
                                                 <RectangleGeometry Rect="0,0,1000,28"/>
                                             </Canvas.Clip>
@@ -109,7 +105,8 @@
                                                 </Button.Resources>
                                             </base:PressAndHoldButton>
                                         </Canvas>
-                                    </Grid>
+                                    
+                                    </controls:DockPanel>
                                 </TreeViewItem>
                             </DataTemplate>
                         </TreeView.ItemTemplate>
