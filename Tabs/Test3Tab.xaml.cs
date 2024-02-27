@@ -42,7 +42,7 @@ namespace SplittableDataGridSAmple.Tabs
         {
             this.InitializeComponent();
         }
-        public void InitTab()
+        public void InitTabAsync()
         {
 
         }

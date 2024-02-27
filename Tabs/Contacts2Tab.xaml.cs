@@ -66,7 +66,7 @@ namespace SplittableDataGridSAmple.Tabs
             };
         }
 
-        public async void InitTab()
+        public async void InitTabAsync()
         {
             foreach (var contact in await StaticDataHelper.GetAllcontacts())
             {

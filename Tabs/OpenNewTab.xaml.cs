@@ -36,7 +36,7 @@ public sealed partial class OpenNewTab : TabViewItem, Interfaces.IInitTab
     public OpenNewTab()
     {
         this.InitializeComponent();
-        InitTab();
+        InitTabAsync();
     }
 
     private void PopulateElements()
@@ -59,7 +59,7 @@ public sealed partial class OpenNewTab : TabViewItem, Interfaces.IInitTab
         JobElementsInventor.Add(new NewTabButton(typeof(Tabs.DrawingBuilderTab),"Generation automatique DXF" ));
     }
 
-    public void InitTab()
+    public void InitTabAsync()
     {
         PopulateElements();
     }

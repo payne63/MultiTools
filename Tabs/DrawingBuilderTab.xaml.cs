@@ -75,7 +75,7 @@ public sealed partial class DrawingBuilderTab : TabViewItem, Interfaces.IInitTab
         }
     }
 
-    public async void InitTab()
+    public async void InitTabAsync()
     {
         LaserCollection.CollectionChanged += (sender, e) => OnPropertyChanged(nameof(DragAndDropVisibility));
         RingInProgress = true;

@@ -18,11 +18,11 @@ using SplittableDataGridSAmple.Base;
 using System.Collections.ObjectModel;
 using CommunityToolkit.WinUI.UI.Controls;
 using System.Data;
-using static SplittableDataGridSAmple.DataIBase;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Windows.Storage.FileProperties;
 using System.Threading.Tasks;
 using System.Diagnostics;
+using static SplittableDataGridSAmple.Base.DataIBase;
 
 namespace SplittableDataGridSAmple.Elements
 {

@@ -102,7 +102,7 @@
               DragOver="TabViewItem_DragOver"
               AllowDrop="True" >
             <ListView.ItemTemplate>
-                <DataTemplate x:DataType="base:DataIQT">
+                <DataTemplate x:DataType="base:DataIBase">
                     <ListViewItem Margin="3" >
                         <StackPanel Orientation="Vertical">
                             <StackPanel Orientation="Horizontal" >

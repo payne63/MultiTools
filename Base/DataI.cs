@@ -155,7 +155,7 @@ public class DataI : DataIBase, INotifyPropertyChanged
     public string GetNbErrorMessage()
     {
         var sum = 0;
-        Trace.WriteLine($"errormessageCheck => {Category}");
+        //Trace.WriteLine($"errormessageCheck => {Category}");
         foreach (var item in Validation.ValidationItems)
         {
             var resultValidation = item.CheckValidation(this);

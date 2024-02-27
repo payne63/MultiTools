@@ -56,7 +56,7 @@ internal class InventorHelper
         var inventorHelper = new InventorHelper();
         inventorHelper.App = await CreateInventorInstance();
         //inventorHelper.App.SilentOperation = true; //supprime les promptes d'inventor
-        Ready.Invoke();
+        Ready?.Invoke();
         //inventorHelper.AppServerComp = new ApprenticeServerComponent();
         return inventorHelper;
     }

@@ -87,7 +87,7 @@ namespace SplittableDataGridSAmple.Tabs
             this.InitializeComponent();
         }
 
-        public void InitTab()
+        public void InitTabAsync()
         {
             IsInterfaceEnabled = true;
             FolderSelectedVisibity = Visibility.Collapsed;

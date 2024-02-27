@@ -68,7 +68,7 @@ namespace SplittableDataGridSAmple.Tabs
         }
 
 
-        public async void InitTab()
+        public async void InitTabAsync()
         {
             await LoadCompanys();
             await LoadContacts();

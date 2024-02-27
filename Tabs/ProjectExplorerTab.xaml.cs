@@ -150,7 +150,7 @@ namespace SplittableDataGridSAmple.Tabs
         }
 
 
-        public void InitTab()
+        public void InitTabAsync()
         {
             DataI.instanceProjectExplorer = this;
             KeyDown += ProjectExplorerElements_KeyDown;

@@ -48,7 +48,7 @@ public sealed partial class NewTabButton : Button
         {
             var selectedTabItem = MainWindow.tabViewRef.SelectedItem as TabViewItem;
             MainWindow.tabViewRef.TabItems.Add(_tabViewItemToLoad);
-            ((Interfaces.IInitTab)_tabViewItemToLoad).InitTab();
+            ((Interfaces.IInitTab)_tabViewItemToLoad).InitTabAsync();
             MainWindow.tabViewRef.SelectedItem = _tabViewItemToLoad;
             //MainWindow.tabViewRef.TabItems.Remove(selectedTabItem);
         };

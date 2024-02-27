@@ -106,7 +106,7 @@ namespace SplittableDataGridSAmple.Tabs
             }; 
         }
 
-        public void InitTab()
+        public void InitTabAsync()
         {
             inventorManager = new InventorManagerHelper(this);
         }

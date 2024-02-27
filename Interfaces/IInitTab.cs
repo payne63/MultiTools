@@ -8,6 +8,6 @@ namespace SplittableDataGridSAmple.Interfaces
 {
     interface IInitTab
     {
-        public void InitTab();
+        public void InitTabAsync();
     }
 }

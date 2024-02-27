@@ -24,6 +24,10 @@ using Windows.ApplicationModel.DataTransfer;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Windows.Storage.FileProperties;
 using DocumentFormat.OpenXml.Spreadsheet;
+using SplittableDataGridSAmple.Helper;
+using SplittableDataGridSAmple.Interfaces;
+using System.Reflection;
+using I=Inventor;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -44,17 +48,19 @@ public sealed partial class CleanProjectTab : TabViewItem, Interfaces.IInitTab, 
 
     private StorageFile MainAssemblyFile = null;
 
-    public ObservableCollection<DataIQT> OrphansPart = new();
+    private HashSet<DataIClean> AllParts = new();
+    public ObservableCollection<DataIClean> OrphansPart = new();
 
     public CleanProjectTab()
     {
         this.InitializeComponent();
-        OrphansPart.CollectionChanged += (object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e) => { OnPropertyChanged( nameof( DragAndDropVisibility)); };
+        OrphansPart.CollectionChanged += (object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e) => { OnPropertyChanged(nameof(DragAndDropVisibility)); };
     }
 
 
-    public void InitTab()
+    public async void InitTabAsync()
     {
+        InventorHelper = await InventorHelper.CreateAsync();
     }
 
 
@@ -73,10 +79,9 @@ public sealed partial class CleanProjectTab : TabViewItem, Interfaces.IInitTab, 
     {
         IsInterfaceEnabled = false;
         var listOfPartAndAssembly = PartsAndAssemblyFindInRoot();
-        List<DataIQT> groups;
         try
         {
-            groups = QtManager.GetQtDatas(MainAssemblyFile.Path);
+            getDataIClean();
         }
         catch (System.Exception ex)
         {
@@ -85,23 +90,63 @@ public sealed partial class CleanProjectTab : TabViewItem, Interfaces.IInitTab, 
             return;
         }
 
-        foreach (var file in listOfPartAndAssembly)
+        foreach (var dataIClean in AllParts)
         {
-            if (groups.All(x => x.FullPathName != file))
+            if (listOfPartAndAssembly.All(x => x != dataIClean.FullPathName))
             {
-                OrphansPart.Add(new DataIQT(file,0));
+                OrphansPart.Add(dataIClean);
             }
+            //if (groups.All(x => x.FullPathName != file))
+            //{
+            //    OrphansPart.Add(new DataIQT(file, 0));
+            //}
         }
         IsInterfaceEnabled = true;
 
     }
 
-    public IEnumerable<string> PartsAndAssemblyFindInRoot()
+    private async Task getDataIClean()
+    {
+        await RecursiveGetDataIClean(MainAssemblyFile.Path);
+    }
+
+    private async Task RecursiveGetDataIClean(string path)
+    {
+        var eventCompleted = new TaskCompletionSource<bool>();
+        InventorHelper.Ready += () =>
+        {
+            eventCompleted.SetResult(true);
+
+        };
+        //await eventCompleted.Task;
+        var doc = InventorHelper.App.Documents.Open(path);
+
+        if (doc is I.AssemblyDocument assemblyDoc)
+        {
+            AllParts.Add(new DataIClean(path, MainAssemblyFile.Path));
+            foreach (I.ComponentOccurrence occurrence in assemblyDoc.ComponentDefinition.Occurrences)
+            {
+                I.ComponentDefinition compDef = occurrence.Definition;
+                if (compDef is I.PartComponentDefinition partCompDef)
+                {
+                    AllParts.Add (new DataIClean(((I.PartDocument)(partCompDef.Document)).FullFileName, MainAssemblyFile.Path));
+                }
+                else if (compDef is I.AssemblyComponentDefinition assemblyComponent)
+                {
+                    RecursiveGetDataIClean(((I.AssemblyDocument)(assemblyComponent.Document)).FullFileName);
+                }
+            }
+        }
+        doc.Close();
+    }
+
+    public List<string> PartsAndAssemblyFindInRoot()
     {
         if (MainAssemblyFile == null) return null;
         return Directory.GetFiles(Path.GetDirectoryName(MainAssemblyFile.Path), "*.*", System.IO.SearchOption.AllDirectories)
             .Where(path => path.EndsWith(".ipt") || path.EndsWith(".iam"))
-            .Where(path => !path.Contains("OldVersions")); // remove files from oldVersions folder
+            .Where(path => !path.Contains("OldVersions"))
+            .ToList();
     }
 
 
@@ -124,6 +169,8 @@ public sealed partial class CleanProjectTab : TabViewItem, Interfaces.IInitTab, 
     }
 
     public Visibility DragAndDropVisibility => OrphansPart.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
+
+    private InventorHelper InventorHelper;
 
     private void TabViewItem_DragOver(object sender, DragEventArgs e)
     {
@@ -193,7 +240,7 @@ public sealed partial class CleanProjectTab : TabViewItem, Interfaces.IInitTab, 
     private void Button_Click_Remove(object sender, RoutedEventArgs e)
     {
         if (!IsInterfaceEnabled) return;
-        var contextIDWModel = ((FrameworkElement)sender).DataContext as DataIQT;
+        var contextIDWModel = ((FrameworkElement)sender).DataContext as DataIClean;
         OrphansPart.Remove(contextIDWModel);
     }
 
@@ -212,4 +259,7 @@ public sealed partial class CleanProjectTab : TabViewItem, Interfaces.IInitTab, 
         }
         OrphansPart.Clear();
     }
+
 }
+
+

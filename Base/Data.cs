@@ -23,19 +23,13 @@ namespace SplittableDataGridSAmple.Base
         public delegate void IsSelectedEventHandler(Data data);
         public event IsSelectedEventHandler IsSelectedClick;
 
-        public string IconBase
+        public string IconBase => DocumentType switch
         {
-            get
-            {
-                return DocumentType switch
-                {
-                    Inventor.DocumentTypeEnum.kPartDocumentObject => "ms-appx:///Images/part.png",
-                    Inventor.DocumentTypeEnum.kAssemblyDocumentObject => "ms-appx:///Images/assembly.png",
-                    Inventor.DocumentTypeEnum.kDrawingDocumentObject => "ms-appx:///Images/drawing.png",
-                    _ => throw new Exception("type de document inventor non défini")
-                };
-            }
-        }
+            Inventor.DocumentTypeEnum.kPartDocumentObject => "ms-appx:///Images/part.png",
+            Inventor.DocumentTypeEnum.kAssemblyDocumentObject => "ms-appx:///Images/assembly.png",
+            Inventor.DocumentTypeEnum.kDrawingDocumentObject => "ms-appx:///Images/drawing.png",
+            _ => throw new Exception("type de document inventor non défini")
+        };
 
         private bool m_isSelected;
         public bool IsSelected

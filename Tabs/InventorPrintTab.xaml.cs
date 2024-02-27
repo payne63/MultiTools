@@ -148,7 +148,7 @@ public sealed partial class InventorPrintTab : TabViewItem, Interfaces.IInitTab,
         this.InitializeComponent();
     }
 
-    public void InitTab()
+    public void InitTabAsync()
     {
         IDWPrintModels.CollectionChanged += (object sender, NotifyCollectionChangedEventArgs e) =>
         {

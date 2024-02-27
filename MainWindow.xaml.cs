@@ -114,7 +114,7 @@ public sealed partial class MainWindow : Window, INotifyPropertyChanged
     private void TabView_AddTabButtonClick(TabView tabViewSender, object args)
     {
         var tabViewInstance = new Tabs.OpenNewTab();
-        ((Interfaces.IInitTab)tabViewInstance).InitTab();
+        ((Interfaces.IInitTab)tabViewInstance).InitTabAsync();
         tabViewRef.TabItems.Add(tabViewInstance);
         tabViewRef.SelectedItem = tabViewInstance;
     }

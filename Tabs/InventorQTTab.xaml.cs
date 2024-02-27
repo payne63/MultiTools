@@ -60,7 +60,7 @@ namespace SplittableDataGridSAmple.Tabs
         {
             this.InitializeComponent();
         }
-        public void InitTab()
+        public void InitTabAsync()
         {
         }
         private void PanelDataI_DragOver(object sender, DragEventArgs e)

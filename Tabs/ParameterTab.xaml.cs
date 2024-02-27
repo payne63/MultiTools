@@ -57,7 +57,7 @@ namespace SplittableDataGridSAmple.Tabs
         }
         private void TeachingTip_CloseButtonClick(TeachingTip sender, object args)  => TeachingTip.IsOpen=false;
 
-        public void InitTab()
+        public void InitTabAsync()
         {
             if (Users.Count == 0) LoadUsers();
         }

@@ -31,14 +31,14 @@ public sealed partial class WelcomeTab : TabViewItem , Interfaces.IInitTab
         this.InitializeComponent();
     }
 
-    public void InitTab()
+    public void InitTabAsync()
     {
     }
 
     private void Button_Click_OpenNewTab(object sender, RoutedEventArgs e)
     {
         var newTab = new Tabs.OpenNewTab();
-        ((Interfaces.IInitTab)newTab).InitTab();
+        ((Interfaces.IInitTab)newTab).InitTabAsync();
         MainWindow.tabViewRef.TabItems.Add(newTab);
         MainWindow.tabViewRef.SelectedItem = newTab;
     }
