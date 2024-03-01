@@ -47,7 +47,12 @@ internal class DXFBuilderHelper
             dataSheetMetal.TurnSwap();
         }
 
+
         var intentsFrontView = GetIntents(frontView);
+        if (intentsFrontView.Count == 0)
+        {
+            throw new Exception("Erreur, Aucunes géometries existantes !");
+        }
         CreateHorizontalDimension(frontView, intentsFrontView);
         CreateVerticalDimension(frontView, intentsFrontView);
 

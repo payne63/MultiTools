@@ -180,9 +180,29 @@ public sealed partial class DrawingBuilderTab : TabViewItem, Interfaces.IInitTab
             dataIQT.Status = "en Cours";
             GetProgressRingStatus(dataIQT).IsActive = true;
             DrawingDocument drawingDocument = null;
+            (bool status, string message) abordOperation = (false,string.Empty);
             if (dataIQT.IsTrueSheetMetal)
             {
-                await Task.Run(() => drawingDocument = DXFBuilderHelper.BuildTrueSheetMetal(InventorHelper, dataIQT.FullPathName, gabaritFile.Path));
+                await Task.Run(() =>
+                {
+                    try
+                    {
+                        drawingDocument = DXFBuilderHelper.BuildTrueSheetMetal(InventorHelper, dataIQT.FullPathName, gabaritFile.Path); 
+                    }
+                    catch (Exception ex)
+                    {
+                        abordOperation = (true,ex.Message);   
+                    }
+                });
+                if (abordOperation.status)
+                { 
+                    await OpenSimpleMessage(abordOperation.message);
+                    dataIQT.Status = abordOperation.message;
+                    GetProgressRingStatus(dataIQT).IsActive = false;
+                    InventorHelper.App.ActiveDocument.Close(true);
+                    InventorHelper.App.ActiveDocument.Close(true);
+                    continue; 
+                }
             }
             else
             {
@@ -281,7 +301,7 @@ public sealed partial class DrawingBuilderTab : TabViewItem, Interfaces.IInitTab
         }
     }
 
-    private async void OpenSimpleMessage(string Message, string content = null)
+    private async Task OpenSimpleMessage(string Message, string content = null)
     {
         ContentDialog dialog = new ContentDialog
         {
