@@ -13,13 +13,13 @@ namespace SplittableDataGridSAmple.Helper;
 
 public class CloseXMLHelper
 {
-    public static void ExportData(List<DataIQT> datas,StorageFile storageFile, DateTime dateSave)
+    public static void ExportData(List<DataIQT> datas,StorageFile storageFile, DateTime dateSave, DataIQT masterData)
     {
         using var wb = new XLWorkbook();
         var sheet = wb.AddWorksheet("Fiche Lancement");
 
         var range = sheet.Range("A1:J1").Merge();
-        range.SetValue("Fiche de lancement " + datas[0].NameFile[..^4]).
+        range.SetValue("Fiche de lancement " + masterData.NameFile[..^4]).
             Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center).
             Font.SetFontSize(20).
             Font.SetBold(true);
@@ -29,8 +29,8 @@ public class CloseXMLHelper
             .Border.SetLeftBorder(XLBorderStyleValues.Medium);
         range.Style.Fill.SetBackgroundColor(XLColor.LightGray);
 
-        SetLine(sheet.Cell("A2"), "Assemblage Maitre", datas[0].NameFile);
-        SetLine(sheet.Cell("A3"), "Emplacement", datas[0].FullPathName);
+        SetLine(sheet.Cell("A2"), "Assemblage Maitre", masterData.NameFile);
+        SetLine(sheet.Cell("A3"), "Emplacement", masterData.FullPathName);
         SetLine(sheet.Cell("A4"), "date d'extraction", dateSave.ToString("dd/MM/yy HH:mm"));
         SetLine(sheet.Cell("A5"), "Qt plan laser", datas.Where(x => x.Category == DataIBase.CategoryType.Laser).Count().ToString());
 
@@ -42,7 +42,8 @@ public class CloseXMLHelper
         var rowOfTable = table.RowCount();
         for (var i = 0; i < rowOfTable-1; i++)
         {
-            var cell = sheet.Cell("A" + (i + 5).ToString());
+            var startCellule = 7; // attention à mettre à jour lord d'un rajout de ligne au dessus.
+            var cell = sheet.Cell("A" + (i + startCellule).ToString());
             cell.SetHyperlink(new XLHyperlink(datas[i].FullPathName));
             cell.Style.Font.FontColor = XLColor.Black;
             cell.Style.Font.Underline = XLFontUnderlineValues.None;

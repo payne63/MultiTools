@@ -49,6 +49,8 @@ namespace SplittableDataGridSAmple.Tabs
         }
         #endregion
 
+        DataIQT masterDataIQT = null;
+
         private bool _IsInterfaceEnabled = true;
         public bool IsInterfaceEnabled
         {
@@ -91,6 +93,7 @@ namespace SplittableDataGridSAmple.Tabs
             {
                 RemoveAllData();
                 IsInterfaceEnabled = false;
+                masterDataIQT = new DataIQT(storageItemDrop.Path,1);
 
                 IEnumerable<IGrouping<DataIBase.CategoryType, DataIQT>> groups;
                 try
@@ -138,6 +141,7 @@ namespace SplittableDataGridSAmple.Tabs
 
         private void RemoveAllData()
         {
+            masterDataIQT = null;
             StackPanelOfBom.Children.Clear();
         }
 
@@ -165,12 +169,12 @@ namespace SplittableDataGridSAmple.Tabs
             savePicker.SuggestedStartLocation = PickerLocationId.ComputerFolder; //System.IO.Path.GetDirectoryName(fulldata[0].FullPathName);
             savePicker.FileTypeChoices.Add("Fichier Excel", new List<string>() { ".xlsx" });
             var dateSave = DateTime.Now;
-            var fileName = System.IO.Path.GetFileNameWithoutExtension(fulldata[0].NameFile);
-            savePicker.SuggestedFileName = "Extraction de " + fileName + " le " + dateSave.ToString("yy-MM-dd à HH\\hmm") + ".xlsx";
+            var masterFileName = System.IO.Path.GetFileNameWithoutExtension(masterDataIQT.NameFile);
+            savePicker.SuggestedFileName = "Extraction de " + masterFileName + " le " + dateSave.ToString("yy-MM-dd à HH\\hmm") + ".xlsx";
             StorageFile file = await savePicker.PickSaveFileAsync();
             if (file == null) return;
 
-            CloseXMLHelper.ExportData(fulldata, file,dateSave);
+            CloseXMLHelper.ExportData(fulldata, file,dateSave, masterDataIQT);
 
             ContentDialog dialog = new ContentDialog
             {
