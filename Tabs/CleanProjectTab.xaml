@@ -49,7 +49,7 @@
                     Click="Button_Click_Clean">
                     <StackPanel Orientation="Vertical" >
                         <TextBlock Text="Nettoyer les pièces"  HorizontalAlignment="Center"/>
-                        <TextBlock Text="(deplacement dans OLD)"  HorizontalAlignment="Center"/>
+                        <TextBlock Text="deplacement dans AutoOLD"  HorizontalAlignment="Center"/>
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="5">
                             <Viewbox MaxHeight="30" MaxWidth="30" >
                                 <FontIcon Glyph="&#xED62;" />
@@ -89,7 +89,7 @@
 
             </TextBlock>
         </StackPanel>
-        <ListView ItemsSource="{x:Bind OrphansPart}"
+        <ListView ItemsSource="{x:Bind OrphansPart , Mode=OneWay}"
               x:Name="ListViewLaser"
               Grid.Column="1" Grid.Row="1"
               CanBeScrollAnchor="True"

@@ -28,6 +28,7 @@ using SplittableDataGridSAmple.Helper;
 using SplittableDataGridSAmple.Interfaces;
 using System.Reflection;
 using I=Inventor;
+using System.Diagnostics;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -49,12 +50,15 @@ public sealed partial class CleanProjectTab : TabViewItem, Interfaces.IInitTab, 
     private StorageFile MainAssemblyFile = null;
 
     private HashSet<DataIClean> AllParts = new();
-    public ObservableCollection<DataIClean> OrphansPart = new();
+
+    private ObservableCollection<DataIClean> _orpheansPart =new();
+    public ObservableCollection<DataIClean> OrphansPart { get => _orpheansPart; set { _orpheansPart = value; } }
 
     public CleanProjectTab()
     {
         this.InitializeComponent();
-        OrphansPart.CollectionChanged += (object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e) => { OnPropertyChanged(nameof(DragAndDropVisibility)); };
+        //OrphansPart.CollectionChanged += (object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e) => { OnPropertyChanged(nameof(DragAndDropVisibility)); };
+        //OrphansPart.CollectionChanged += (object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e) => { OnPropertyChanged(nameof(OrphansPart)); };
     }
 
 
@@ -75,13 +79,22 @@ public sealed partial class CleanProjectTab : TabViewItem, Interfaces.IInitTab, 
     }
 
 
-    private void DoTheJob()
+    private async Task DoTheJob()
     {
         IsInterfaceEnabled = false;
         var listOfPartAndAssembly = PartsAndAssemblyFindInRoot();
+        foreach (var item in listOfPartAndAssembly)
+        {
+            //await Task.Run(() =>
+            //{
+            OrphansPart.Add(new DataIClean(item, MainAssemblyFile.Path));
+            //});
+
+        }
+        Trace.WriteLine("fin");
         try
         {
-            getDataIClean();
+            await getDataIClean();
         }
         catch (System.Exception ex)
         {
@@ -112,13 +125,18 @@ public sealed partial class CleanProjectTab : TabViewItem, Interfaces.IInitTab, 
 
     private async Task RecursiveGetDataIClean(string path)
     {
-        var eventCompleted = new TaskCompletionSource<bool>();
-        InventorHelper.Ready += () =>
-        {
-            eventCompleted.SetResult(true);
+        //var eventCompleted = new TaskCompletionSource<bool>();
+        //InventorHelper.Ready += () =>
+        //{
+        //    eventCompleted.SetResult(true);
 
-        };
-        //await eventCompleted.Task;
+        //};
+        //await eventCompleted.Task; // ne fonctionne pas !!!!
+        while (InventorHelper == null)
+        {
+            await Task.Delay(500);
+            Trace.WriteLine("wait");
+        }
         var doc = InventorHelper.App.Documents.Open(path);
 
         if (doc is I.AssemblyDocument assemblyDoc)
@@ -133,7 +151,7 @@ public sealed partial class CleanProjectTab : TabViewItem, Interfaces.IInitTab, 
                 }
                 else if (compDef is I.AssemblyComponentDefinition assemblyComponent)
                 {
-                    RecursiveGetDataIClean(((I.AssemblyDocument)(assemblyComponent.Document)).FullFileName);
+                    await RecursiveGetDataIClean(((I.AssemblyDocument)(assemblyComponent.Document)).FullFileName);
                 }
             }
         }
@@ -187,7 +205,7 @@ public sealed partial class CleanProjectTab : TabViewItem, Interfaces.IInitTab, 
         var items = await e.DataView.GetStorageItemsAsync();
         MainAssemblyFile = items.FirstOrDefault() as StorageFile;
 
-        DoTheJob();
+        await DoTheJob();
     }
 
     private async void OpenSimpleMessage(string Message, string content = null)
@@ -233,8 +251,9 @@ public sealed partial class CleanProjectTab : TabViewItem, Interfaces.IInitTab, 
     private async void Button_Click_SelectFiles(object sender, RoutedEventArgs e)
     {
         var file = await GetFileOpenPicker(".ipt", ".iam");
+        if (file == null) return;
         MainAssemblyFile = file;
-        DoTheJob();
+        await DoTheJob();
     }
 
     private void Button_Click_Remove(object sender, RoutedEventArgs e)
@@ -247,7 +266,7 @@ public sealed partial class CleanProjectTab : TabViewItem, Interfaces.IInitTab, 
     private void Button_Click_Clean(object sender, RoutedEventArgs e)
     {
         if (OrphansPart.Count == 0) return;
-        var oldPartDirectory = Path.GetDirectoryName(MainAssemblyFile.Path) + @"\OLD\";
+        var oldPartDirectory = Path.GetDirectoryName(MainAssemblyFile.Path) + @"\AutoOLD\";
         if (!Directory.Exists(oldPartDirectory))
         {
             Directory.CreateDirectory(oldPartDirectory);
