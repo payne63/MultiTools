@@ -144,8 +144,8 @@ namespace SplittableDataGridSAmple.Tabs
             if (FolderSelected.FullName != newFolder)
                 Directory.Move(FolderSelected.FullName, newFolder);
             Directory.CreateDirectory(newFolder + $"\\{CodeProject} - Consultations & Commandes");
-            Directory.CreateDirectory(newFolder + $"\\{CodeProject} - Documents contractuelss\\{CodeProject} - Documents Client");
-            Directory.CreateDirectory(newFolder + $"\\{CodeProject} - Documents contractuelss\\{CodeProject} - Documents Internes");
+            Directory.CreateDirectory(newFolder + $"\\{CodeProject} - Documents contractuels\\{CodeProject} - Documents Client");
+            Directory.CreateDirectory(newFolder + $"\\{CodeProject} - Documents contractuels\\{CodeProject} - Documents Internes");
             Directory.CreateDirectory(newFolder + $"\\{CodeProject} - Etudes électriques\\{CodeProject} - Implantation armoire");
             Directory.CreateDirectory(newFolder + $"\\{CodeProject} - Etudes électriques\\{CodeProject} - Notice");
             Directory.CreateDirectory(newFolder + $"\\{CodeProject} - Etudes électriques\\{CodeProject} - Programme automate");
