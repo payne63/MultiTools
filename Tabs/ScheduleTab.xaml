@@ -21,7 +21,7 @@
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="1000"/>
+                <ColumnDefinition Width="800"/>
                 <ColumnDefinition Width="500"/>
             </Grid.ColumnDefinitions>
             <StackPanel Grid.Column="0" Grid.Row="0" Orientation="Vertical">
@@ -76,7 +76,7 @@
                                           ItemsSource="{x:Bind Children}" IsExpanded="{x:Bind IsExpanded,Mode=TwoWay}"
                                           >
                                     <controls:DockPanel>
-                                        
+
                                         <TextBox Grid.Column="0" Text="{x:Bind Description}" VerticalAlignment="Center"/>
                                         <TextBlock Grid.Column="1" Text="{x:Bind CountDay, Mode=OneWay}" VerticalAlignment="Center"/>
                                         <Canvas Grid.Column="2" controls:DockPanel.Dock="Right" Width="300" HorizontalAlignment="Right">
@@ -105,12 +105,18 @@
                                                 </Button.Resources>
                                             </base:PressAndHoldButton>
                                         </Canvas>
-                                    
+
                                     </controls:DockPanel>
                                 </TreeViewItem>
                             </DataTemplate>
                         </TreeView.ItemTemplate>
                     </TreeView>
+                    <StackPanel Orientation="Horizontal">
+                        <CalendarView Width="300" >
+
+                            
+                        </CalendarView>
+                    </StackPanel>
                 </StackPanel>
             </ScrollViewer>
 
