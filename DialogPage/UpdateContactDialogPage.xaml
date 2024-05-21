@@ -42,17 +42,17 @@
         <StackPanel Orientation="Horizontal" Grid.Column="1">
             <TextBox Grid.Column="1" x:Name="updateName" Header="Nom"
                                    Text="{x:Bind Path=contactContext.Name,Mode=TwoWay}"
-                                   Style="{ThemeResource BaseTextBlockStyle}"
+                                   Style="{ThemeResource AutoSuggestBoxTextBoxStyle}"
                                    Margin="12,6,0,0" Width="150"/>
             <TextBox Grid.Column="1" x:Name="updatePreName" Header="Prénom" 
                                    Text="{x:Bind Path=_contactContext.PreName , Mode=TwoWay}"
-                                   Style="{ThemeResource BaseTextBlockStyle}"
+                                   Style="{ThemeResource AutoSuggestBoxTextBoxStyle}"
                                    Margin="6,6,0,0" Width="150" HorizontalAlignment="Stretch"/>
         </StackPanel>
         <TextBox Grid.Column="1" x:Name="updateJoDescription" Header="Poste"
                                    Grid.Row="1"
                                    Text="{x:Bind Path=contactContext.JobDescription,Mode=TwoWay}"
-                                   Style="{ThemeResource BodyTextBlockStyle}"
+                                   Style="{ThemeResource AutoSuggestBoxTextBoxStyle}"
                                    Margin="12,0,0,6"/>
         <TextBox Grid.Column="2" x:Name="updateMail" Header="Mail" 
                                    Grid.Row="0"
