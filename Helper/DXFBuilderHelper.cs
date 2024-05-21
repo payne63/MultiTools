@@ -152,13 +152,14 @@ internal class DXFBuilderHelper
         var nameValueMap = InventorApp.TransientObjects.CreateNameValueMap();
         nameValueMap.Add("SheetMetalFoldedModel", false);
         var FrontView = sheet.DrawingViews.AddBaseView(partDocument as _Document, positionFrontView, zoom, viewOrientationTypeEnum, DrawingViewStyleEnum.kHiddenLineRemovedDrawingViewStyle, AdditionalOptions: nameValueMap);
+        FrontView.DisplayThreadFeatures = false;
         if (turnView)
         {
             FrontView.RotateByAngle(Math.PI / 2);
         }
         var positionSideView = transientGeometry.CreatePoint2d(17d, (29.7d - 4d) / 2 + 4);
-        var sideView = sheet.DrawingViews.AddProjectedView(FrontView, positionSideView, DrawingViewStyleEnum.kHiddenLineDrawingViewStyle);
-
+        var sideView = sheet.DrawingViews.AddProjectedView(FrontView, positionSideView, DrawingViewStyleEnum.kHiddenLineRemovedDrawingViewStyle);
+        sideView.DisplayThreadFeatures = false;
         return (FrontView, sideView);
     }
 
