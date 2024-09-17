@@ -18,7 +18,7 @@ public class CloseXMLHelper
         using var wb = new XLWorkbook();
         var sheet = wb.AddWorksheet("Fiche Lancement");
 
-        var range = sheet.Range("A1:J1").Merge();
+        var range = sheet.Range("A1:K1").Merge();
         range.SetValue("Fiche de lancement " + masterData.NameFile[..^4]).
             Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center).
             Font.SetFontSize(20).
@@ -38,7 +38,7 @@ public class CloseXMLHelper
             x => new DataTable(x.NameFile,null,null, x.Description, x.Category.ToString(), x.Qt,null, null,null,null)));
         
         table.Theme = XLTableTheme.TableStyleMedium1;
-        sheet.Cells("A6:J6").ToList().ForEach( cell => cell.Value = cell.Value.GetText().Replace('_',' '));
+        sheet.Cells("A6:K6").ToList().ForEach( cell => cell.Value = cell.Value.GetText().Replace('_',' '));
         var rowOfTable = table.RowCount();
         for (var i = 0; i < rowOfTable-1; i++)
         {
@@ -62,15 +62,15 @@ public class CloseXMLHelper
     }
 
     record DataTable (string Nom,string Plan_Details, string Plan_Laser, string Description,
-        string Categorie, int Qt, string Fournisseur, string Status, string Date_De_Livraison,string Commentaires);
+        string Categorie, int Qt, string Fournisseur, string Status, string Date_De_Livraison,string Commentaires, float Prix_Unitaire =0f);
 
     private static void SetLine(IXLCell cellStart, string title, string value)
     {
         cellStart.Value = title +" :";
         cellStart.Style.Font.SetBold(true);
-        var rangeExtend = cellStart.Worksheet.Range(cellStart.CellRight(),cellStart.CellRight(8)).Merge();
+        var rangeExtend = cellStart.Worksheet.Range(cellStart.CellRight(),cellStart.CellRight(9)).Merge();
         rangeExtend.Value = value;
-        var rangeBox = cellStart.Worksheet.Range(cellStart,cellStart.CellRight(9));
+        var rangeBox = cellStart.Worksheet.Range(cellStart,cellStart.CellRight(10));
         rangeBox.Style.Border.SetOutsideBorder(XLBorderStyleValues.Medium);
         
     }
