@@ -104,7 +104,7 @@
 
             </TextBlock>
         </StackPanel>
-        <ListView ItemsSource="{x:Bind LaserCollection}"
+        <ListView ItemsSource="{x:Bind SourceLaserCollection}"
               x:Name="ListViewLaser"
               Grid.Column="1" Grid.Row="1"
               CanBeScrollAnchor="True"

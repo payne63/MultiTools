@@ -63,9 +63,9 @@ public sealed partial class DrawingBuilderTab : TabViewItem, Interfaces.IInitTab
     private bool _IsInterfaceEnabled = true;
     private InventorHelper InventorHelper;
 
-    public ObservableCollection<DataIQT> LaserCollection = new();
+    public ObservableCollection<DataIQT> SourceLaserCollection = new();
 
-    public Visibility DragAndDropVisibility => LaserCollection.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
+    public Visibility DragAndDropVisibility => SourceLaserCollection.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
     public bool IsInterfaceEnabled
     {
         get => _IsInterfaceEnabled;
@@ -77,7 +77,7 @@ public sealed partial class DrawingBuilderTab : TabViewItem, Interfaces.IInitTab
 
     public async void InitTabAsync()
     {
-        LaserCollection.CollectionChanged += (sender, e) => OnPropertyChanged(nameof(DragAndDropVisibility));
+        SourceLaserCollection.CollectionChanged += (sender, e) => OnPropertyChanged(nameof(DragAndDropVisibility));
         RingInProgress = true;
         ProgressRingLabel.Text = "Chargement d'Inventor";
         InventorHelper.Ready += () => { RingInProgress = false; ProgressRingLabel.Text = "Inventor Prêt"; };
@@ -111,10 +111,11 @@ public sealed partial class DrawingBuilderTab : TabViewItem, Interfaces.IInitTab
             {
                 foreach (var dataIQT in GetLaserDatas(file.Path))
                 {
+                    if (dataIQT.Category != DataIBase.CategoryType.Laser) continue;
                     if (dataIQT.IsTrueSheetMetal || dataIQT.IsLaserType)
                     {
                         dataIQT.Status = "en attente";
-                        LaserCollection.Add(dataIQT);
+                        SourceLaserCollection.Add(dataIQT);
                     }
                 }
             }
@@ -166,7 +167,7 @@ public sealed partial class DrawingBuilderTab : TabViewItem, Interfaces.IInitTab
 
     private async void Button_Click_BuildDrawing(object sender, RoutedEventArgs e)
     {
-        if (LaserCollection.Count == 0) return;
+        if (SourceLaserCollection.Count == 0) return;
         if (gabaritFile == null)
         {
             OpenSimpleMessage("Selectionner en premier le plan de gabarit");
@@ -175,7 +176,7 @@ public sealed partial class DrawingBuilderTab : TabViewItem, Interfaces.IInitTab
         if (!IsInterfaceEnabled) return;
         IsInterfaceEnabled = false;
         InventorHelper.ShowApp();
-        foreach (var dataIQT in LaserCollection)
+        foreach (var dataIQT in SourceLaserCollection)
         {
             dataIQT.Status = "en Cours";
             GetProgressRingStatus(dataIQT).IsActive = true;
@@ -250,7 +251,7 @@ public sealed partial class DrawingBuilderTab : TabViewItem, Interfaces.IInitTab
 
     private void ClearLaserData()
     {
-        LaserCollection.Clear();
+        SourceLaserCollection.Clear();
     }
 
     private void TabViewItem_DragOver(object sender, DragEventArgs e)
@@ -273,7 +274,7 @@ public sealed partial class DrawingBuilderTab : TabViewItem, Interfaces.IInitTab
     {
         if (!IsInterfaceEnabled) return;
         var contextIDWModel = ((FrameworkElement)sender).DataContext as DataIQT;
-        LaserCollection.Remove(contextIDWModel);
+        SourceLaserCollection.Remove(contextIDWModel);
     }
 
     private async void GetThumbNailAsync(object sender, RoutedEventArgs e)
