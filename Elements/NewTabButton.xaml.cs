@@ -46,6 +46,12 @@ public sealed partial class NewTabButton : Button
         Description = description;
         ClickMethod += delegate
         {
+            var tabExisting = MainWindow.tabViewRef.TabItems.FirstOrDefault( x => x.GetType() == tabType);
+            if (tabExisting != null  )
+            {
+                MainWindow.tabViewRef.SelectedItem = tabExisting;
+                return;
+            }
             var selectedTabItem = MainWindow.tabViewRef.SelectedItem as TabViewItem;
             MainWindow.tabViewRef.TabItems.Add(_tabViewItemToLoad);
             ((Interfaces.IInitTab)_tabViewItemToLoad).InitTabAsync();
