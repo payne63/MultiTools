@@ -23,29 +23,28 @@ using System.Text.Json;
 using SplittableDataGridSAmple.Base;
 using System.Collections.ObjectModel;
 
-namespace SplittableDataGridSAmple.Tabs
+namespace SplittableDataGridSAmple.Tabs;
+
+public sealed partial class Test2Tab : TabViewItem
 {
-    public sealed partial class Test2Tab : TabViewItem
+        
+    public Test2Tab()
     {
-        
-        public Test2Tab()
-        {
-            this.InitializeComponent();
+        this.InitializeComponent();
             
-            Brush b = new SolidColorBrush(Colors.Chocolate);
-            canvas.Children.Add(new Rectangle { Fill = b, Height = 100, Width = 100, Translation = new System.Numerics.Vector3(10, 10, 0) });
-        }
-        private void Button_Click_New_Mail(object sender, RoutedEventArgs e)
-        {
-            var outlookHelper = new OutlookHelper();
-            outlookHelper.ShowNewMailITem("Test Body", @"C:\Users\Florent\source\repos\SplittableDataGridSAmple\test.json");
-        }
-        
-
-        
-
-        
-
-        
+        Brush b = new SolidColorBrush(Colors.Chocolate);
+        canvas.Children.Add(new Rectangle { Fill = b, Height = 100, Width = 100, Translation = new System.Numerics.Vector3(10, 10, 0) });
     }
+    private void Button_Click_New_Mail(object sender, RoutedEventArgs e)
+    {
+        var outlookHelper = new OutlookHelper();
+        outlookHelper.ShowNewMailITem("Test Body", @"C:\Users\Florent\source\repos\SplittableDataGridSAmple\test.json");
+    }
+        
+
+        
+
+        
+
+        
 }
