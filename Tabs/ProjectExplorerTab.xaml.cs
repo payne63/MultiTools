@@ -23,10 +23,6 @@ using System.Diagnostics;
 using CommunityToolkit.WinUI.Helpers;
 using Windows.Graphics.Printing;
 using SplittableDataGridSAmple.Services;
-using QuestPDF.Fluent;
-using QuestPDF.Helpers;
-using QuestPDF.Infrastructure;
-using QuestPDF.Previewer;
 using I = Inventor;
 using Windows.ApplicationModel.DataTransfer;
 using System;
@@ -64,66 +60,7 @@ public sealed partial class ProjectExplorerTab : TabViewItem, Interfaces.IInitTa
         this.InitializeComponent();
     }
 
-    private void ProjectExplorerElements_KeyDown(object sender, KeyRoutedEventArgs e)
-    {
-        if (e.Key == Windows.System.VirtualKey.P)
-        {
-            Trace.WriteLine("print");
-
-            // Define Header, Footer, and Page Numbering.
-            //service.Header = new TextBlock() { Text = "Header", Margin = new Thickness(0, 0, 0, 20) };
-            //service.Footer = new TextBlock() { Text = "Footer", Margin = new Thickness(0, 20, 0, 0) };
-            //service.PageNumbering = PageNumbering.TopRight;
-
-            RenderTargetBitmap renderTargetBitmap = new RenderTargetBitmap();
-            //renderTargetBitmap.RenderAsync(treeViewPanel);
-            //renderTargetBitmap.RenderAsync(treeViewPanel, (int)treeViewPanel.Width, (int) Height);
-            DetailStackPanel.Children.Add(new Image { Source = renderTargetBitmap });
-
-
-            var document = QuestPDF.Fluent.Document.Create(container =>
-            {
-                container.Page(page =>
-                {
-                    page.Size(PageSizes.A4);
-                    page.Margin(2, Unit.Centimetre);
-                    page.PageColor(Colors.White);
-                    page.DefaultTextStyle(x => x.FontSize(20));
-
-                    page.Header()
-                        .Text("Hello PDF!")
-                        .SemiBold().FontSize(36).FontColor(Colors.Blue.Medium);
-
-                    page.Content()
-                        .PaddingVertical(1, Unit.Centimetre)
-                        .Column(x =>
-                        {
-                            x.Spacing(20);
-                            x.Item().Text(Placeholders.LoremIpsum());
-                            x.Item().Image(Placeholders.Image(200, 100));
-                        });
-
-                    page.Footer()
-                        .AlignCenter()
-                        .Text(x =>
-                        {
-                            x.Span("Page ");
-                            x.CurrentPageNumber();
-                        });
-                });
-            });
-            document.GeneratePdf(@"E:/popo.pdf");
-            var process = new Process
-            {
-                StartInfo = new ProcessStartInfo(@"E:/popo.pdf")
-                {
-                    UseShellExecute = true
-                }
-            };
-
-            process.Start();
-        }
-    }
+    
 
     public void UpdateSelectionElement(Data data)
     {
@@ -153,7 +90,6 @@ public sealed partial class ProjectExplorerTab : TabViewItem, Interfaces.IInitTa
     public void InitTabAsync()
     {
         DataI.instanceProjectExplorer = this;
-        KeyDown += ProjectExplorerElements_KeyDown;
     }
 
     private int _DeepMax;
