@@ -71,25 +71,29 @@ public sealed partial class PropertiesRenamerTab : TabViewItem, Interfaces.IInit
     }
 
     private string _NewCustomerName = string.Empty;
+
     public string NewCustomerName
     {
         get => _NewCustomerName;
         set
         {
-            _NewCustomerName = value; OnPropertyChanged();
+            _NewCustomerName = value;
+            OnPropertyChanged();
         }
     }
-    
+
     private string _NewProjectName = string.Empty;
+
     public string NewProjectName
     {
         get => _NewProjectName;
         set
         {
-            _NewProjectName = value; OnPropertyChanged();
+            _NewProjectName = value;
+            OnPropertyChanged();
         }
     }
-    
+
     private string _NewAuthorName = string.Empty;
 
     public string NewAuthorName
@@ -97,7 +101,8 @@ public sealed partial class PropertiesRenamerTab : TabViewItem, Interfaces.IInit
         get => _NewAuthorName;
         set
         {
-            _NewAuthorName = value; OnPropertyChanged();
+            _NewAuthorName = value;
+            OnPropertyChanged();
         }
     }
 
@@ -106,7 +111,11 @@ public sealed partial class PropertiesRenamerTab : TabViewItem, Interfaces.IInit
         SourceFilesCollection.CollectionChanged += (sender, e) => OnPropertyChanged(nameof(DragAndDropVisibility));
         RingInProgress = true;
         ProgressRingLabel.Text = "Chargement d'Inventor";
-        InventorHelper.Ready += () => { RingInProgress = false; ProgressRingLabel.Text = "Inventor Prêt"; };
+        InventorHelper.Ready += () =>
+        {
+            RingInProgress = false;
+            ProgressRingLabel.Text = "Inventor Prêt";
+        };
         InventorHelper = await InventorHelper.CreateAsync();
         CloseRequested += (sender, args) =>
         {
@@ -184,9 +193,10 @@ public sealed partial class PropertiesRenamerTab : TabViewItem, Interfaces.IInit
         {
             dataIProp.Document.Close();
         }
+
         SourceFilesCollection.Clear();
-    } 
-    
+    }
+
     private async void Button_Click_RenameIProperty(object sender, RoutedEventArgs e)
     {
         if (NewAuthorName == string.Empty || NewProjectName == string.Empty || NewCustomerName == string.Empty)
@@ -194,31 +204,38 @@ public sealed partial class PropertiesRenamerTab : TabViewItem, Interfaces.IInit
             OpenSimpleMessage("Veuillez remplir touts les champs avant de renommer");
             return;
         }
+        _IsInterfaceEnabled = false;
         foreach (var dataIProp in SourceFilesCollection)
         {
             GetProgressRingStatus(dataIProp).IsActive = true;
-            dataIProp.CustomerName = NewCustomerName;
+            dataIProp.CustomerName = NewCustomerName; 
             dataIProp.ProjectName = NewProjectName;
             dataIProp.AuthorName = NewAuthorName;
-            var inventorFile = InventorHelper.App.Documents.Open(dataIProp.FullPathName);
-            inventorFile.PropertySets["Design Tracking Properties"].ItemByPropId[9].Value = dataIProp.CustomerName;
-            inventorFile.PropertySets["Design Tracking Properties"].ItemByPropId[7].Value = dataIProp.ProjectName;
-            inventorFile.PropertySets["Inventor Summary Information"].ItemByPropId[4].Value = dataIProp.AuthorName;
-            
-            inventorFile.Save();
-            // await Task.Delay(200);
+            await Task.Run(() =>
+            {
+                var inventorFile = InventorHelper.App.Documents.Open(dataIProp.FullPathName);
+                inventorFile.PropertySets["Design Tracking Properties"].ItemByPropId[9].Value = dataIProp.CustomerName;
+                inventorFile.PropertySets["Design Tracking Properties"].ItemByPropId[7].Value = dataIProp.ProjectName;
+                inventorFile.PropertySets["Inventor Summary Information"].ItemByPropId[4].Value = dataIProp.AuthorName;
+
+                inventorFile.Save();
+                // await Task.Delay(200);
+            });
             dataIProp.Status = "Renommer";
             GetProgressRingStatus(dataIProp).IsActive = false;
         }
         SourceFilesCollection.First().Document.Close();
+        _IsInterfaceEnabled = true;
     }
+
     private ProgressRing GetProgressRingStatus(DataIProp dataIProp)
     {
-        var container = ListViewLaser.ContainerFromItem(dataIProp) as ListViewItem;
+        var container = ListViewParts.ContainerFromItem(dataIProp) as ListViewItem;
         return container.FindChild<ProgressRing>();
     }
 
-    private void TabViewItem_DragOver(object sender, DragEventArgs e) => e.AcceptedOperation = DataPackageOperation.Move;
+    private void TabViewItem_DragOver(object sender, DragEventArgs e) =>
+        e.AcceptedOperation = DataPackageOperation.Move;
 
     private async void TabViewItem_Drop(object sender, DragEventArgs e)
     {
@@ -294,5 +311,10 @@ public sealed partial class PropertiesRenamerTab : TabViewItem, Interfaces.IInit
 
         // Open the picker for the user to pick a file
         return await openPicker.PickSingleFileAsync();
+    }
+
+    private void TestBox_TextChange(object sender, RoutedEventArgs e)
+    {
+        Console.WriteLine(TestBox.Text);
     }
 }
