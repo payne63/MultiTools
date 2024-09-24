@@ -42,7 +42,7 @@ namespace SplittableDataGridSAmple;
 
 public sealed partial class MainWindow : Window, INotifyPropertyChanged
 {
-    public static TabView tabViewRef;
+    public static TabView tabViewStaticRef;
     public static MainWindow Instance;
     public static string ContactsDataPath;
     public static string CompanyDataPath;
@@ -69,13 +69,12 @@ public sealed partial class MainWindow : Window, INotifyPropertyChanged
         this.InitializeComponent();
         LoadPaths();
         Instance = this;
-        tabViewRef = TabViewName;
+        tabViewStaticRef = TabViewMain;
         ResizeWindows(1800, 1000);
         UsersNameUpdate();
         //ExtendsContentIntoTitleBar = true;
         window.Title = "MultiTools";
     }
-
 
     private static void LoadPaths()
     {
@@ -115,8 +114,8 @@ public sealed partial class MainWindow : Window, INotifyPropertyChanged
     {
         var tabViewInstance = new Tabs.OpenNewTab();
         ((Interfaces.IInitTab)tabViewInstance).InitTabAsync();
-        tabViewRef.TabItems.Add(tabViewInstance);
-        tabViewRef.SelectedItem = tabViewInstance;
+        tabViewStaticRef.TabItems.Add(tabViewInstance);
+        tabViewStaticRef.SelectedItem = tabViewInstance;
     }
 
     private void TabView_TabCloseRequested(TabView sender, TabViewTabCloseRequestedEventArgs args)
@@ -136,8 +135,16 @@ public sealed partial class MainWindow : Window, INotifyPropertyChanged
     private void OnThemeButtonClick(object sender, RoutedEventArgs e)
     {
         _currentElementTheme = _currentElementTheme == ElementTheme.Dark ? ElementTheme.Light : ElementTheme.Dark;
-        tabViewRef.RequestedTheme = _currentElementTheme;
+        tabViewStaticRef.RequestedTheme = _currentElementTheme;
     }
 
 
+    private void MainWindow_OnClosed(object sender, WindowEventArgs args)
+    {
+        InventorHelper.CloseAllInstance();
+        GC.Collect();
+        GC.WaitForPendingFinalizers();
+        Console.WriteLine("fermeture du program");
+        ;
+    }
 }

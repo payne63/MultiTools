@@ -46,16 +46,16 @@ public sealed partial class NewTabButton : Button
         Description = description;
         ClickMethod += delegate
         {
-            var tabExisting = MainWindow.tabViewRef.TabItems.FirstOrDefault( x => x.GetType() == tabType);
+            var tabExisting = MainWindow.tabViewStaticRef.TabItems.FirstOrDefault( x => x.GetType() == tabType);
             if (tabExisting != null  )
             {
-                MainWindow.tabViewRef.SelectedItem = tabExisting;
+                MainWindow.tabViewStaticRef.SelectedItem = tabExisting;
                 return;
             }
-            var selectedTabItem = MainWindow.tabViewRef.SelectedItem as TabViewItem;
-            MainWindow.tabViewRef.TabItems.Add(_tabViewItemToLoad);
+            var selectedTabItem = MainWindow.tabViewStaticRef.SelectedItem as TabViewItem;
+            MainWindow.tabViewStaticRef.TabItems.Add(_tabViewItemToLoad);
             ((Interfaces.IInitTab)_tabViewItemToLoad).InitTabAsync();
-            MainWindow.tabViewRef.SelectedItem = _tabViewItemToLoad;
+            MainWindow.tabViewStaticRef.SelectedItem = _tabViewItemToLoad;
             //MainWindow.tabViewRef.TabItems.Remove(selectedTabItem);
         };
         this.isBetaVersion = isBetaVersion;

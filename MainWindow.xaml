@@ -9,12 +9,13 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:tabs="using:SplittableDataGridSAmple.Tabs"
     mc:Ignorable="d"
+    Closed="MainWindow_OnClosed"
     >
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <TabView x:Name="TabViewName"  Grid.Row="0"
+        <TabView x:Name="TabViewMain"  Grid.Row="0"
              VerticalAlignment="Stretch"
              IsAddTabButtonVisible="False"
              AddTabButtonClick="TabView_AddTabButtonClick" 
@@ -47,7 +48,7 @@
                 </StackPanel>
             </TabView.TabStripFooter>
 
-            <TabView.TabItems>
+            <TabView.TabItems >
                 <tabs:OpenNewTab/>
             </TabView.TabItems>
         </TabView>

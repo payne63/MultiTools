@@ -12,7 +12,11 @@ internal class InventorHelper
 
     private static readonly List<Application> inventorApplications = new();
 
-    public static void CloseAllInstance() => inventorApplications.ForEach(x => x.Quit());
+    public static void CloseAllInstance() => inventorApplications.ForEach(x =>
+    {
+        x.Quit();
+        x = null;
+    });
 
     public static PaperSizeEnum printerSizeConverter(DrawingSheetSizeEnum sheetSizeEnum) => sheetSizeEnum switch
     {

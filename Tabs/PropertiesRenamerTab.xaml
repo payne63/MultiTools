@@ -43,9 +43,9 @@
 
                 <StackPanel Orientation="Vertical" Padding="15">
                     <TextBlock Text="Nouvelles Ipropriétés" HorizontalAlignment="Center" />
-                    <TextBox Header="Client" Text="{x:Bind NewCustomerName, Mode=TwoWay }"/>
-                    <TextBox Header="Projet" Text="{x:Bind NewProjectName, Mode=TwoWay }"/>
-                    <TextBox Header="Auteur" Text="{x:Bind NewAuthorName, Mode=TwoWay }"/>
+                    <TextBox Header="Client" x:Name="NewCustomerName"/>
+                    <TextBox Header="Projet" x:Name="NewProjectName"/>
+                    <TextBox Header="Auteur" x:Name="NewAuthorName"/>
                     <TextBox Header="test" x:Name="TestBox" TextChanged="TestBox_TextChange"/>
                 </StackPanel>
 

@@ -70,41 +70,7 @@ public sealed partial class PropertiesRenamerTab : TabViewItem, Interfaces.IInit
         this.InitializeComponent();
     }
 
-    private string _NewCustomerName = string.Empty;
-
-    public string NewCustomerName
-    {
-        get => _NewCustomerName;
-        set
-        {
-            _NewCustomerName = value;
-            OnPropertyChanged();
-        }
-    }
-
-    private string _NewProjectName = string.Empty;
-
-    public string NewProjectName
-    {
-        get => _NewProjectName;
-        set
-        {
-            _NewProjectName = value;
-            OnPropertyChanged();
-        }
-    }
-
-    private string _NewAuthorName = string.Empty;
-
-    public string NewAuthorName
-    {
-        get => _NewAuthorName;
-        set
-        {
-            _NewAuthorName = value;
-            OnPropertyChanged();
-        }
-    }
+   
 
     public async void InitTabAsync()
     {
@@ -199,7 +165,7 @@ public sealed partial class PropertiesRenamerTab : TabViewItem, Interfaces.IInit
 
     private async void Button_Click_RenameIProperty(object sender, RoutedEventArgs e)
     {
-        if (NewAuthorName == string.Empty || NewProjectName == string.Empty || NewCustomerName == string.Empty)
+        if (NewAuthorName.Text == string.Empty || NewProjectName.Text == string.Empty || NewCustomerName.Text == string.Empty)
         {
             OpenSimpleMessage("Veuillez remplir touts les champs avant de renommer");
             return;
@@ -208,9 +174,15 @@ public sealed partial class PropertiesRenamerTab : TabViewItem, Interfaces.IInit
         foreach (var dataIProp in SourceFilesCollection)
         {
             GetProgressRingStatus(dataIProp).IsActive = true;
-            dataIProp.CustomerName = NewCustomerName; 
-            dataIProp.ProjectName = NewProjectName;
-            dataIProp.AuthorName = NewAuthorName;
+            var isAlreadyGoodIProperties = dataIProp.CustomerName == NewCustomerName.Text && dataIProp.ProjectName == NewProjectName.Text && dataIProp.AuthorName== NewAuthorName.Text;
+            if (isAlreadyGoodIProperties)
+            {
+                dataIProp.Status = "non modifié";
+                continue;
+            }
+            dataIProp.CustomerName = NewCustomerName.Text; 
+            dataIProp.ProjectName = NewProjectName.Text;
+            dataIProp.AuthorName = NewAuthorName.Text;
             await Task.Run(() =>
             {
                 var inventorFile = InventorHelper.App.Documents.Open(dataIProp.FullPathName);
@@ -219,14 +191,17 @@ public sealed partial class PropertiesRenamerTab : TabViewItem, Interfaces.IInit
                 inventorFile.PropertySets["Inventor Summary Information"].ItemByPropId[4].Value = dataIProp.AuthorName;
 
                 inventorFile.Save();
+                inventorFile.Close();
                 // await Task.Delay(200);
             });
             dataIProp.Status = "Renommer";
             GetProgressRingStatus(dataIProp).IsActive = false;
         }
-        SourceFilesCollection.First().Document.Close();
+        CloseIApprenticeServerDocument(); 
         _IsInterfaceEnabled = true;
     }
+
+    private void CloseIApprenticeServerDocument() => SourceFilesCollection.First().Document.Close();
 
     private ProgressRing GetProgressRingStatus(DataIProp dataIProp)
     {
@@ -258,23 +233,23 @@ public sealed partial class PropertiesRenamerTab : TabViewItem, Interfaces.IInit
 
     private async void GetThumbNailAsync(object sender, RoutedEventArgs e)
     {
-        if (((FrameworkElement)sender).DataContext is DataIQT DataIQTContext)
+        if (((FrameworkElement)sender).DataContext is DataIBase DataIBaseContext)
         {
-            if (TeachingTipThumbNail.IsOpen == true && ThumbNailPartNumber.Text == DataIQTContext.FileInfoData.Name)
+            if (TeachingTipThumbNail.IsOpen == true && ThumbNailPartNumber.Text == DataIBaseContext.FileInfoData.Name)
             {
                 TeachingTipThumbNail.IsOpen = false;
                 return;
             }
 
-            var file = await Windows.Storage.StorageFile.GetFileFromPathAsync(DataIQTContext.FileInfoData.FullName);
+            var file = await Windows.Storage.StorageFile.GetFileFromPathAsync(DataIBaseContext.FileInfoData.FullName);
             var iconThumbnail = await file.GetThumbnailAsync(ThumbnailMode.SingleItem, 256);
             var bitmapImage = new BitmapImage();
             bitmapImage.SetSource(iconThumbnail);
             if (bitmapImage != null)
             {
-                DataIQTContext.bitmapImage = bitmapImage;
+                DataIBaseContext.bitmapImage = bitmapImage;
                 ImageThumbNail.Source = bitmapImage;
-                ThumbNailPartNumber.Text = DataIQTContext.FileInfoData.Name;
+                ThumbNailPartNumber.Text = DataIBaseContext.FileInfoData.Name;
                 ThumbNailDescription.Text = string.Empty;
                 ThumbNailCustomer.Text = string.Empty;
                 TeachingTipThumbNail.IsOpen = true;
@@ -317,4 +292,5 @@ public sealed partial class PropertiesRenamerTab : TabViewItem, Interfaces.IInit
     {
         Console.WriteLine(TestBox.Text);
     }
+    
 }
