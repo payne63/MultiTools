@@ -22,7 +22,7 @@
         </Storyboard>
     </Button.Resources>
     
-    <Grid>
+    <Grid >
         <Grid.RenderTransform>
             <TranslateTransform x:Name="Translation"/>
         </Grid.RenderTransform>

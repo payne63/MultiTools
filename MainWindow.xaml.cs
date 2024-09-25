@@ -1,4 +1,3 @@
-
 using Microsoft.Office.Interop.Outlook;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -37,6 +36,7 @@ using System.Runtime.CompilerServices;
 using System.Net.Mail;
 using Windows.UI.ViewManagement;
 using Windows.UI.WindowManagement;
+using Application = Microsoft.UI.Xaml.Application;
 
 namespace SplittableDataGridSAmple;
 
@@ -53,17 +53,21 @@ public sealed partial class MainWindow : Window, INotifyPropertyChanged
 
     public ObservableCollection<Base.User> UsersName
     {
-        get => _Users; set
+        get => _Users;
+        set
         {
             var actualUserName = GetSelectedUser;
             if (_Users != null)
             {
                 ComboBoxUsers.SelectedItem = actualUserName;
             }
-            _Users = value; OnPropertyChanged();
+            _Users = value;
+            OnPropertyChanged();
         }
     }
+
     public User GetSelectedUser => ComboBoxUsers.SelectedItem as User;
+
     public MainWindow()
     {
         this.InitializeComponent();
@@ -78,9 +82,15 @@ public sealed partial class MainWindow : Window, INotifyPropertyChanged
 
     private static void LoadPaths()
     {
-        ContactsDataPath = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "JsonData\\contacts.json");
-        CompanyDataPath = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "JsonData\\companys.json");
-        UsersDataPath = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),  "JsonData\\users.json");
+        ContactsDataPath =
+            System.IO.Path.Combine(System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
+                "JsonData\\contacts.json");
+        CompanyDataPath =
+            System.IO.Path.Combine(System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
+                "JsonData\\companys.json");
+        UsersDataPath =
+            System.IO.Path.Combine(System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
+                "JsonData\\users.json");
     }
 
     private void ResizeWindows(int width, int height)
@@ -92,10 +102,10 @@ public sealed partial class MainWindow : Window, INotifyPropertyChanged
     }
 
     public event PropertyChangedEventHandler PropertyChanged;
-    private void OnPropertyChanged([CallerMemberName] string name = null)
-    {
+
+    private void OnPropertyChanged([CallerMemberName] string name = null) =>
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
-    }
+
     public async void UsersNameUpdate()
     {
         UsersName.Clear();
@@ -104,12 +114,15 @@ public sealed partial class MainWindow : Window, INotifyPropertyChanged
         {
             UsersName.Add(user);
         }
+
         foreach (var user in ComboBoxUsers.Items)
         {
             Trace.WriteLine(user);
         }
+
         ComboBoxUsers.UpdateLayout();
     }
+
     private void TabView_AddTabButtonClick(TabView tabViewSender, object args)
     {
         var tabViewInstance = new Tabs.OpenNewTab();
@@ -118,10 +131,9 @@ public sealed partial class MainWindow : Window, INotifyPropertyChanged
         tabViewStaticRef.SelectedItem = tabViewInstance;
     }
 
-    private void TabView_TabCloseRequested(TabView sender, TabViewTabCloseRequestedEventArgs args)
-    {
+    private void TabView_TabCloseRequested(TabView sender, TabViewTabCloseRequestedEventArgs args) =>
         sender.TabItems.Remove(args.Tab);
-    }
+
 
     private void ListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
@@ -135,7 +147,7 @@ public sealed partial class MainWindow : Window, INotifyPropertyChanged
     private void OnThemeButtonClick(object sender, RoutedEventArgs e)
     {
         _currentElementTheme = _currentElementTheme == ElementTheme.Dark ? ElementTheme.Light : ElementTheme.Dark;
-        tabViewStaticRef.RequestedTheme = _currentElementTheme;
+        MainPage.RequestedTheme = _currentElementTheme;
     }
 
 

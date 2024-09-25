@@ -9,49 +9,50 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:tabs="using:SplittableDataGridSAmple.Tabs"
     mc:Ignorable="d"
-    Closed="MainWindow_OnClosed"
-    >
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
-        <TabView x:Name="TabViewMain"  Grid.Row="0"
-             VerticalAlignment="Stretch"
-             IsAddTabButtonVisible="False"
-             AddTabButtonClick="TabView_AddTabButtonClick" 
-             TabCloseRequested="TabView_TabCloseRequested"
-             TabWidthMode="SizeToContent" 
-             Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
-             >
-            <TabView.TabStripFooter>
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+    Closed="MainWindow_OnClosed">
+    <Page x:Name="MainPage" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-                    <ComboBox x:Name="ComboBoxUsers"
-                              ItemsSource="{x:Bind UsersName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                              DisplayMemberPath="Name"
-                              SelectionChanged="ListBox_SelectionChanged"
-                              PlaceholderText="Selectionner un utilisateur"
-                              VerticalAlignment="Center" 
-                              HorizontalAlignment="Right" 
-                              Width="250">
-                    </ComboBox>
-                    <Button
-                    x:Name="ThemeButton"
-                    Height="32"
-                    Margin="0,0,4,0"
-                    Click="OnThemeButtonClick"
-                    ToolTipService.ToolTip="Toggle theme">
-                        <Button.Content>
-                            <FontIcon FontSize="14" Glyph="&#xE793;" />
-                        </Button.Content>
-                    </Button>
-                </StackPanel>
-            </TabView.TabStripFooter>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <TabView x:Name="TabViewMain" Grid.Row="0"
+                     VerticalAlignment="Stretch"
+                     IsAddTabButtonVisible="False"
+                     AddTabButtonClick="TabView_AddTabButtonClick"
+                     TabCloseRequested="TabView_TabCloseRequested"
+                     TabWidthMode="SizeToContent"
+                     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+                <TabView.TabStripFooter>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
 
-            <TabView.TabItems >
-                <tabs:OpenNewTab/>
-            </TabView.TabItems>
-        </TabView>
+                        <ComboBox x:Name="ComboBoxUsers"
+                                  ItemsSource="{x:Bind UsersName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                  DisplayMemberPath="Name"
+                                  SelectionChanged="ListBox_SelectionChanged"
+                                  PlaceholderText="Selectionner un utilisateur"
+                                  VerticalAlignment="Center"
+                                  HorizontalAlignment="Right"
+                                  Width="250">
+                        </ComboBox>
+                        <Button
+                            x:Name="ThemeButton"
+                            Height="32"
+                            Margin="0,0,4,0"
+                            Click="OnThemeButtonClick"
+                            ToolTipService.ToolTip="Toggle theme">
+                            <Button.Content>
+                                <FontIcon FontSize="14" Glyph="&#xE793;" />
+                            </Button.Content>
+                        </Button>
+                    </StackPanel>
+                </TabView.TabStripFooter>
 
-    </Grid>
+                <TabView.TabItems>
+                    <tabs:OpenNewTab />
+                </TabView.TabItems>
+            </TabView>
+
+        </Grid>
+    </Page>
 </Window>
