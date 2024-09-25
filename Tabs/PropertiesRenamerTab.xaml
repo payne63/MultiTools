@@ -46,7 +46,6 @@
                     <TextBox Header="Client" x:Name="NewCustomerName"/>
                     <TextBox Header="Projet" x:Name="NewProjectName"/>
                     <TextBox Header="Auteur" x:Name="NewAuthorName"/>
-                    <TextBox Header="test" x:Name="TestBox" TextChanged="TestBox_TextChange"/>
                 </StackPanel>
 
                 <Button Margin="10"

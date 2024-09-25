@@ -287,10 +287,5 @@ public sealed partial class PropertiesRenamerTab : TabViewItem, Interfaces.IInit
         // Open the picker for the user to pick a file
         return await openPicker.PickSingleFileAsync();
     }
-
-    private void TestBox_TextChange(object sender, RoutedEventArgs e)
-    {
-        Console.WriteLine(TestBox.Text);
-    }
     
 }
