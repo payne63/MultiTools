@@ -22,11 +22,12 @@ using static MsgReader.Outlook.Storage;
 using SplittableDataGridSAmple.Elements;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-
-// To learn more about WinUI, the WinUI project structure,
-// and more about our project templates, see: http://aka.ms/winui-project-info.
+using SplittableDataGridSAmple.Tabs.InventorTab;
+using SplittableDataGridSAmple.Tabs.TestTab;
+using SplittableDataGridSAmple.Tabs.VariousTab;
 
 namespace SplittableDataGridSAmple.Tabs;
+
 
 public sealed partial class OpenNewTab : TabViewItem, Interfaces.IInitTab
 {
@@ -53,20 +54,20 @@ public sealed partial class OpenNewTab : TabViewItem, Interfaces.IInitTab
         JobElementsInventor.Clear();
         JobElements.Clear();
         //JobElements.Add(new NewTabButton(typeof(Tabs.WelcomeTab), "Page d'Acceuil"));
-        JobElementsInventor.Add(new NewTabButton(typeof(Tabs.ProjectExplorerTab), "Exploration d'un assemblage"));
-        JobElements.Add(new NewTabButton(typeof(Tabs.ParameterTab), "Réglage des options", true));
-        JobElements.Add(new NewTabButton(typeof(Tabs.ContactsTab), "Contacts", true));
-        JobElements.Add(new NewTabButton(typeof(Tabs.Contacts2Tab), "Contacts 2", true));
-        JobElementsInventor.Add(new NewTabButton(typeof(Tabs.InventorLaserTab), "Creation DXF PDF"));
-        JobElementsInventor.Add(new NewTabButton(typeof(Tabs.InventorPrintTab), "Impression des plans Inventor"));
-        JobElements.Add(new NewTabButton(typeof(Tabs.FolderProjectCreationTab), "creation d'un répertoire Projet"));
-        JobElementsInventor.Add(new NewTabButton(typeof(Tabs.InventorQTTab), "Extrait la Nommenclature"));
-        JobElementsInventor.Add(new NewTabButton(typeof(Tabs.CleanProjectTab), "supprime les pièces orphelines"));
-        JobElementsInventor.Add(new NewTabButton(typeof(Tabs.PropertiesRenamerTab), "Renomme les champs", true));
-        //JobElements.Add(new NewTabButton(typeof(Tabs.Test1Tab),"test1"));
-        //JobElements.Add(new NewTabButton(typeof(Tabs.Test2Tab),"Test2"));
-        //JobElements.Add(new NewTabButton(typeof(Tabs.Test3Tab),"Test3"));
-        JobElementsInventor.Add(new NewTabButton(typeof(Tabs.DrawingBuilderTab), "Generation automatique DXF"));
+        JobElementsInventor.Add(new NewTabButton(typeof(ProjectExplorerTab), "Exploration d'un assemblage"));
+        JobElements.Add(new NewTabButton(typeof(ParameterTab), "Réglage des options", true));
+        JobElements.Add(new NewTabButton(typeof(ContactsTab), "Contacts", true));
+        JobElements.Add(new NewTabButton(typeof(Contacts2Tab), "Contacts 2", true));
+        JobElementsInventor.Add(new NewTabButton(typeof(InventorLaserTab), "Creation DXF PDF"));
+        JobElementsInventor.Add(new NewTabButton(typeof(InventorPrintTab), "Impression des plans Inventor"));
+        JobElements.Add(new NewTabButton(typeof(FolderProjectCreationTab), "creation d'un répertoire Projet"));
+        JobElementsInventor.Add(new NewTabButton(typeof(InventorQTTab), "Extrait la Nommenclature"));
+        JobElementsInventor.Add(new NewTabButton(typeof(CleanProjectTab), "supprime les pièces orphelines"));
+        JobElementsInventor.Add(new NewTabButton(typeof(PropertiesRenamerTab), "Renomme les champs", true));
+        //JobElements.Add(new NewTabButton(typeof(Test1Tab),"test1"));
+        //JobElements.Add(new NewTabButton(typeof(Test2Tab),"Test2"));
+        //JobElements.Add(new NewTabButton(typeof(Test3Tab),"Test3"));
+        JobElementsInventor.Add(new NewTabButton(typeof(DrawingBuilderTab), "Generation automatique DXF"));
     }
 
     public void InitTabAsync() => PopulateElements();

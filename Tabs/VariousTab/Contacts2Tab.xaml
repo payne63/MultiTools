@@ -1,5 +1,5 @@
 ﻿<TabViewItem
-    x:Class="SplittableDataGridSAmple.Tabs.Contacts2Tab"
+    x:Class="SplittableDataGridSAmple.Tabs.VariousTab.Contacts2Tab"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:SplittableDataGridSAmple.Tabs"

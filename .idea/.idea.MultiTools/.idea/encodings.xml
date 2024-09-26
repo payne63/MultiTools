@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="Encoding">
-    <file url="file://$PROJECT_DIR$/Tabs/ContactsTab.xaml.cs" charset="ISO-8859-1" />
-    <file url="file://$PROJECT_DIR$/Tabs/DrawingBuilderTab.xaml.cs" charset="ISO-8859-1" />
-    <file url="file://$PROJECT_DIR$/Tabs/InventorQTTab.xaml.cs" charset="windows-1252" />
+    <file url="file://$PROJECT_DIR$/Tabs/InventorTab/DrawingBuilderTab.xaml.cs" charset="ISO-8859-1" />
+    <file url="file://$PROJECT_DIR$/Tabs/InventorTab/DrawingBuilderTab.xaml.cs" charset="ISO-8859-1" />
+    <file url="file://$PROJECT_DIR$/Tabs/InventorTab/InventorQTTab.xaml.cs" charset="windows-1252" />
+    <file url="file://$PROJECT_DIR$/Tabs/InventorTab/InventorQTTab.xaml.cs" charset="windows-1252" />
+    <file url="file://$PROJECT_DIR$/Tabs/InventorTab/ProjectExplorerTab.xaml.cs" charset="ISO-8859-1" />
+    <file url="file://$PROJECT_DIR$/Tabs/InventorTab/ProjectExplorerTab.xaml.cs" charset="ISO-8859-1" />
     <file url="file://$PROJECT_DIR$/Tabs/OpenNewTab.xaml.cs" charset="ISO-8859-1" />
-    <file url="file://$PROJECT_DIR$/Tabs/ProjectExplorerTab.xaml.cs" charset="ISO-8859-1" />
+    <file url="file://$PROJECT_DIR$/Tabs/VariousTab/ContactsTab.xaml.cs" charset="ISO-8859-1" />
+    <file url="file://$PROJECT_DIR$/Tabs/VariousTab/ContactsTab.xaml.cs" charset="ISO-8859-1" />
   </component>
 </project>

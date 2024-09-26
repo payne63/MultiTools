@@ -173,14 +173,14 @@ public sealed partial class InventorPrintTab : TabViewItem, Interfaces.IInitTab,
             {
                 foreach (var file in items)
                 {
-                    if (!Directory.Exists(file.Path)) //si ce n'est pas un répertoire
+                    if (!Directory.Exists(file.Path)) //si ce n'est pas un rï¿½pertoire
                     {
                         if (file.Name.EndsWith(".idw"))
                         {
                             AddPrinterAction(file.Path);
                         }
                     }
-                    if (Directory.Exists(file.Path)) // si c'est un répertoire
+                    if (Directory.Exists(file.Path)) // si c'est un rï¿½pertoire
                     {
                         var filesInDirectory = Directory.GetFiles(file.Path);
                         foreach (var f in filesInDirectory)
@@ -269,7 +269,7 @@ public sealed partial class InventorPrintTab : TabViewItem, Interfaces.IInitTab,
 
         if (IDWPrintModels.Count == 0 || NbDrawing == 0)// si pas de plan on ne fait rien;
         {
-            OpenSimpleMessage("Pas d'impressions selectionnées");
+            OpenSimpleMessage("Pas d'impressions selectionnï¿½es");
             return;
         }
         if ((NbA4Drawing > 0 || NbA3Drawing > 0) && GetSelectedPrinterA4A3 == null)

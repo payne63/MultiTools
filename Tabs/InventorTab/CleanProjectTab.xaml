@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <TabViewItem
-    x:Class="SplittableDataGridSAmple.Tabs.CleanProjectTab"
+    x:Class="SplittableDataGridSAmple.Tabs.InventorTab.CleanProjectTab"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:SplittableDataGridSAmple.Tabs"

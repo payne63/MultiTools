@@ -25,7 +25,7 @@ using Windows.Foundation.Collections;
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
 
-namespace SplittableDataGridSAmple.Tabs;
+namespace SplittableDataGridSAmple.Tabs.VariousTab;
 
 public sealed partial class FolderProjectCreationTab : TabViewItem, Interfaces.IInitTab, INotifyPropertyChanged
 {

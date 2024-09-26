@@ -8,6 +8,7 @@ using System.Windows;
 using System.IO.Compression;
 using System.Diagnostics;
 using SplittableDataGridSAmple.Tabs;
+using SplittableDataGridSAmple.Tabs.InventorTab;
 using SplittableDataGridSAmple.Models;
 using System.Runtime.InteropServices;
 using SplittableDataGridSAmple.Services;

@@ -23,7 +23,7 @@ using System.Text.Json;
 using SplittableDataGridSAmple.Base;
 using System.Collections.ObjectModel;
 
-namespace SplittableDataGridSAmple.Tabs;
+namespace SplittableDataGridSAmple.Tabs.TestTab;
 
 public sealed partial class Test2Tab : TabViewItem
 {

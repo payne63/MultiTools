@@ -1,4 +1,5 @@
-<Window
+<winex:WindowEx
+    xmlns:winex="using:WinUIEx"
     x:Class="SplittableDataGridSAmple.MainWindow"
     x:Name="window"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -9,7 +10,9 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:tabs="using:SplittableDataGridSAmple.Tabs"
     mc:Ignorable="d"
-    Closed="MainWindow_OnClosed">
+    Closed="MainWindow_OnClosed"
+    MinWidth="820"
+    MinHeight="900">
     <Page x:Name="MainPage" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
         <Grid>
@@ -19,7 +22,6 @@
             <TabView x:Name="TabViewMain" Grid.Row="0"
                      VerticalAlignment="Stretch"
                      IsAddTabButtonVisible="False"
-                     AddTabButtonClick="TabView_AddTabButtonClick"
                      TabCloseRequested="TabView_TabCloseRequested"
                      TabWidthMode="SizeToContent"
                      Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
@@ -55,4 +57,4 @@
 
         </Grid>
     </Page>
-</Window>
+</winex:WindowEx>

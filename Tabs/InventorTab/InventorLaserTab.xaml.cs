@@ -29,7 +29,7 @@ using Microsoft.UI.Xaml.Media.Imaging;
 using SplittableDataGridSAmple.Base;
 using Windows.Storage.FileProperties;
 
-namespace SplittableDataGridSAmple.Tabs;
+namespace SplittableDataGridSAmple.Tabs.InventorTab;
 
 public sealed partial class InventorLaserTab : TabViewItem, Interfaces.IInitTab, INotifyPropertyChanged
 {

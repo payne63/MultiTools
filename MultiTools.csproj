@@ -52,6 +52,24 @@
     <Page Remove="Services\MarshalService.xaml" />
     <Page Remove="Themes\Generic.xaml" />
     <Page Remove="bin\x64\Release\net6.0-windows10.0.19041.0\win10-x64\**" />
+    <Page Update="Tabs\InventorTab\InventorLaserTab.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Tabs\InventorTab\InventorQTTab.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Tabs\VariousTab\Contacts2Tab.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Tabs\VariousTab\ContactsTab.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Tabs\VariousTab\FolderProjectCreationTab.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Tabs\VariousTab\ParameterTab.xaml">
+      <SubType>Designer</SubType>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <COMReference Include="Microsoft.Office.Interop.Outlook">
@@ -106,6 +124,7 @@
     <PackageReference Include="System.Drawing.Common" Version="7.0.0" />
     <PackageReference Include="System.Management" Version="7.0.0" />
     <Manifest Include="$(ApplicationManifest)" />
+    <PackageReference Include="WinUIEx" Version="2.4.2" />
   </ItemGroup>
   <!-- 
     Defining the "Msix" ProjectCapability here allows the Single-project MSIX Packaging
@@ -205,45 +224,9 @@
     <None Update="JsonData\users.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <Page Update="Tabs\CleanProjectTab.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Update="Tabs\DrawingBuilderTab.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Update="Tabs\InventorQTTab.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Update="Tabs\Contacts2Tab.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <None Update="Themes\Generic.xaml">
       <Generator>MSBuild:Compile</Generator>
     </None>
-    <Page Update="Tabs\FolderProjectCreationTab.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Update="Tabs\InventorLaserTab.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Update="Tabs\InventorPrintTab.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Update="Tabs\ContactsTab.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Update="Tabs\ParameterTab.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Update="Tabs\Test3Tab.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Update="Tabs\Test2Tab.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Update="Tabs\Test1Tab.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Update="Pages\WelcomePage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -295,6 +278,24 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Remove="bin\x64\Release\net6.0-windows10.0.19041.0\win10-x64\**" />
+    <Resource Remove="TabsInventor\CleanProjectTab.xaml" />
+    <Resource Remove="TabsInventor\Contacts2Tab.xaml" />
+    <Resource Remove="TabsInventor\ContactsTab.xaml" />
+    <Resource Remove="TabsInventor\DrawingBuilderTab.xaml" />
+    <Resource Remove="TabsInventor\FolderProjectCreationTab.xaml" />
+    <Resource Remove="TabsInventor\InventorLaserTab.xaml" />
+    <Resource Remove="TabsInventor\InventorPrintTab.xaml" />
+    <Resource Remove="TabsInventor\InventorQTTab.xaml" />
+    <Resource Remove="TabsInventor\OpenNewTab.xaml" />
+    <Resource Remove="TabsInventor\ParameterTab.xaml" />
+    <Resource Remove="TabsInventor\ProjectExplorerTab.xaml" />
+    <Resource Remove="TabsInventor\PropertiesRenamerTab.xaml" />
+    <Resource Remove="TabsInventor\Test1Tab.xaml" />
+    <Resource Remove="TabsInventor\Test2Tab.xaml" />
+    <Resource Remove="TabsInventor\Test3Tab.xaml" />
+    <Resource Remove="Tabs\InventorTab\TestTab\Test1Tab.xaml" />
+    <Resource Remove="Tabs\InventorTab\TestTab\Test2Tab.xaml" />
+    <Resource Remove="Tabs\InventorTab\TestTab\Test3Tab.xaml" />
   </ItemGroup>
   <!-- 
     Defining the "HasPackageAndPublishMenuAddedByProject" property here allows the Solution 

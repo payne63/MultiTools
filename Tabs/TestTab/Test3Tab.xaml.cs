@@ -32,7 +32,7 @@ using DocumentFormat.OpenXml.Math;
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
 
-namespace SplittableDataGridSAmple.Tabs;
+namespace SplittableDataGridSAmple.Tabs.TestTab;
 
 public sealed partial class Test3Tab : TabViewItem, IInitTab
 {
@@ -110,6 +110,7 @@ public sealed partial class Test3Tab : TabViewItem, IInitTab
         if (appI == null) { return; }
         if (appI.ActiveDocument is Inventor.PartDocument part)
         {
+            
             if (part.ComponentDefinition is SheetMetalComponentDefinition sheetMetalComponentDefinition)
             {
                 if (sheetMetalComponentDefinition.HasFlatPattern)

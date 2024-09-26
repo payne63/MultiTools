@@ -37,10 +37,12 @@ using System.Net.Mail;
 using Windows.UI.ViewManagement;
 using Windows.UI.WindowManagement;
 using Application = Microsoft.UI.Xaml.Application;
+using AppWindow = Microsoft.UI.Windowing.AppWindow;
+using WinUIEx;
 
 namespace SplittableDataGridSAmple;
 
-public sealed partial class MainWindow : Window, INotifyPropertyChanged
+public sealed partial class MainWindow : WindowEx, INotifyPropertyChanged
 {
     public static TabView tabViewStaticRef;
     public static MainWindow Instance;
@@ -68,6 +70,8 @@ public sealed partial class MainWindow : Window, INotifyPropertyChanged
 
     public User GetSelectedUser => ComboBoxUsers.SelectedItem as User;
 
+    private Microsoft.UI.Windowing.AppWindow? appWindow;
+    
     public MainWindow()
     {
         this.InitializeComponent();
@@ -75,6 +79,7 @@ public sealed partial class MainWindow : Window, INotifyPropertyChanged
         Instance = this;
         tabViewStaticRef = TabViewMain;
         ResizeWindows(1800, 1000);
+        
         UsersNameUpdate();
         //ExtendsContentIntoTitleBar = true;
         window.Title = "MultiTools";
@@ -95,10 +100,19 @@ public sealed partial class MainWindow : Window, INotifyPropertyChanged
 
     private void ResizeWindows(int width, int height)
     {
+        width = width < 900 ? 800 : width;
+        height = height < 900 ? 600 : height;
+
+        appWindow = appWindow?? GetAppWindow();
+        appWindow.Resize(new Windows.Graphics.SizeInt32(width, height));
+    }
+
+    private AppWindow GetAppWindow()
+    {
         var hWnd = WinRT.Interop.WindowNative.GetWindowHandle(this);
         Microsoft.UI.WindowId windowId = Microsoft.UI.Win32Interop.GetWindowIdFromWindow(hWnd);
         Microsoft.UI.Windowing.AppWindow appWindow = Microsoft.UI.Windowing.AppWindow.GetFromWindowId(windowId);
-        appWindow.Resize(new Windows.Graphics.SizeInt32(width, height));
+        return appWindow;
     }
 
     public event PropertyChangedEventHandler PropertyChanged;
@@ -121,14 +135,6 @@ public sealed partial class MainWindow : Window, INotifyPropertyChanged
         }
 
         ComboBoxUsers.UpdateLayout();
-    }
-
-    private void TabView_AddTabButtonClick(TabView tabViewSender, object args)
-    {
-        var tabViewInstance = new Tabs.OpenNewTab();
-        ((Interfaces.IInitTab)tabViewInstance).InitTabAsync();
-        tabViewStaticRef.TabItems.Add(tabViewInstance);
-        tabViewStaticRef.SelectedItem = tabViewInstance;
     }
 
     private void TabView_TabCloseRequested(TabView sender, TabViewTabCloseRequestedEventArgs args) =>
