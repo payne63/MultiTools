@@ -12,7 +12,11 @@
     mc:Ignorable="d"
     Closed="MainWindow_OnClosed"
     MinWidth="820"
-    MinHeight="900">
+    MinHeight="900"
+    Width="1800"
+    Height="1000"
+    Title="MultiTools"
+    >
     <Page x:Name="MainPage" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
         <Grid>

@@ -70,19 +70,15 @@ public sealed partial class MainWindow : WindowEx, INotifyPropertyChanged
 
     public User GetSelectedUser => ComboBoxUsers.SelectedItem as User;
 
-    private Microsoft.UI.Windowing.AppWindow? appWindow;
-    
     public MainWindow()
     {
         this.InitializeComponent();
         LoadPaths();
         Instance = this;
         tabViewStaticRef = TabViewMain;
-        ResizeWindows(1800, 1000);
         
         UsersNameUpdate();
         //ExtendsContentIntoTitleBar = true;
-        window.Title = "MultiTools";
     }
 
     private static void LoadPaths()
@@ -98,22 +94,6 @@ public sealed partial class MainWindow : WindowEx, INotifyPropertyChanged
                 "JsonData\\users.json");
     }
 
-    private void ResizeWindows(int width, int height)
-    {
-        width = width < 900 ? 800 : width;
-        height = height < 900 ? 600 : height;
-
-        appWindow = appWindow?? GetAppWindow();
-        appWindow.Resize(new Windows.Graphics.SizeInt32(width, height));
-    }
-
-    private AppWindow GetAppWindow()
-    {
-        var hWnd = WinRT.Interop.WindowNative.GetWindowHandle(this);
-        Microsoft.UI.WindowId windowId = Microsoft.UI.Win32Interop.GetWindowIdFromWindow(hWnd);
-        Microsoft.UI.Windowing.AppWindow appWindow = Microsoft.UI.Windowing.AppWindow.GetFromWindowId(windowId);
-        return appWindow;
-    }
 
     public event PropertyChangedEventHandler PropertyChanged;
 
