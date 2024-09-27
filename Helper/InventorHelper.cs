@@ -14,7 +14,7 @@ internal class InventorHelper
 
     public static void CloseAllInstance() => inventorApplications.ForEach(x =>
     {
-        x.Quit();
+        x?.Quit();
         x = null;
     });
 

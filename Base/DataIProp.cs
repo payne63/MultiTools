@@ -3,15 +3,14 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Windows.Storage.FileProperties;
 using Microsoft.UI.Xaml.Media.Imaging;
-using I=Inventor;
+using I = Inventor;
 
 namespace SplittableDataGridSAmple.Base;
 
 public class DataIProp : DataIBase
 {
-
     public List<string> bom = new();
-    
+
     private string _customerName;
 
     public string CustomerName
@@ -27,54 +26,89 @@ public class DataIProp : DataIBase
         }
     }
 
-    private string _ProjectName;
+    private string _projectName;
 
     public string ProjectName
     {
         get
         {
-            return _ProjectName;
+            return _projectName;
         }
         set
         {
-            _ProjectName = value;
+            _projectName = value;
             NotifyPropertyChanged();
         }
     }
 
-    private string _AuthorName;
+    private string _authorName;
 
     public string AuthorName
     {
         get
         {
-            return _AuthorName;
+            return _authorName;
         }
         set
         {
-            _AuthorName = value;
+            _authorName = value;
             NotifyPropertyChanged();
         }
     }
-    
+
     private BitmapImage _BitmapImage;
 
     public BitmapImage BitmapImage
     {
-        get { return _BitmapImage; }
-        set { _BitmapImage = value; NotifyPropertyChanged(); }
-    }
-    private string _Status = string.Empty;
-
-    public string Status
-    {
-        get => _Status;
+        get
+        {
+            return _BitmapImage;
+        }
         set
         {
-            _Status = value; NotifyPropertyChanged();
+            _BitmapImage = value;
+            NotifyPropertyChanged();
         }
     }
 
+    private StatusEnum _status = StatusEnum.WaitForUpdate;
+
+    public StatusEnum Status
+    {
+        get => _status;
+        set
+        {
+            _status = value;
+            NotifyPropertyChanged();
+            NotifyPropertyChanged(nameof(GetStatusString));
+            NotifyPropertyChanged(nameof( OpacityStatus));
+        }
+    }
+
+    public string GetStatusString =>
+        Status switch
+        {
+            StatusEnum.WaitForUpdate => "Waiting for update...",
+            StatusEnum.Updating => "Updating...",
+            StatusEnum.Updated => "Updated",
+            StatusEnum.NotUpdateRequired => "Not update",
+            _ => throw new ArgumentOutOfRangeException()
+        };
+
+
+    public enum StatusEnum
+    {
+        WaitForUpdate,
+        Updating,
+        Updated,
+        NotUpdateRequired,
+    }
+
+    public bool AsTheGoodProperties(string _projectName, string _customerName, string _authorName) =>
+        _projectName == ProjectName && _customerName == CustomerName && _authorName == AuthorName;
+
+    public double OpacityStatus => Status == StatusEnum.NotUpdateRequired? 0.6 : 1.0;
+    
     public DataIProp(string fullPathDocument)
     {
         I.ApprenticeServerDocument document = GetAppServer.Open(fullPathDocument);
@@ -87,12 +121,12 @@ public class DataIProp : DataIBase
         CustomerName = (string)document.PropertySets["Design Tracking Properties"].ItemByPropId[9].Value;
         ProjectName = (string)document.PropertySets["Design Tracking Properties"].ItemByPropId[7].Value;
         AuthorName = (string)document.PropertySets["Inventor Summary Information"].ItemByPropId[4].Value;
-        
+
         if (DocumentType == I.DocumentTypeEnum.kAssemblyDocumentObject)
         {
             I.AssemblyComponentDefinition
                 ass = document.ComponentDefinition as I.AssemblyComponentDefinition; //convertion en assemblage
-            
+
             foreach (I.BOMRow row in
                      ass.BOM.BOMViews[1]
                          .BOMRows) // 1 - bom standard - 2 structured - 3 part only (2 et 3 need activation)
@@ -102,7 +136,8 @@ public class DataIProp : DataIBase
                 try
                 {
                     // var a = row.ComponentDefinitions[1];
-                    var FullDocumentName = ((I.ApprenticeServerDocument)row.ComponentDefinitions[1].Document).FullDocumentName;
+                    var FullDocumentName = ((I.ApprenticeServerDocument)row.ComponentDefinitions[1].Document)
+                        .FullDocumentName;
                     bom.Add(FullDocumentName);
                 }
                 catch (Exception)
@@ -112,7 +147,7 @@ public class DataIProp : DataIBase
             }
         }
     }
-    
+
     public async Task UpdateThumbnail()
     {
         if (BitmapImage != null) return;

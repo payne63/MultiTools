@@ -1,5 +1,3 @@
-using System.ComponentModel;
-using Microsoft.UI.Xaml.Controls;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -12,13 +10,13 @@ using Windows.Storage;
 using Windows.Storage.FileProperties;
 using Windows.Storage.Pickers;
 using CommunityToolkit.WinUI.UI;
-using DocumentFormat.OpenXml.Wordprocessing;
 using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media.Imaging;
 using SplittableDataGridSAmple.Base;
 using SplittableDataGridSAmple.Helper;
 
-namespace SplittableDataGridSAmple.Tabs;
+namespace SplittableDataGridSAmple.Tabs.InventorTab;
 
 public sealed partial class PropertiesRenamerTab : TabViewItem, Interfaces.IInitTab, INotifyPropertyChanged
 {
@@ -33,28 +31,28 @@ public sealed partial class PropertiesRenamerTab : TabViewItem, Interfaces.IInit
 
     #endregion
 
-    public ObservableCollection<DataIProp> SourceFilesCollection = new();
-    private bool _IsInterfaceEnabled = true;
+    public readonly ObservableCollection<DataIProp> SourceFilesCollection = new();
+    private bool _isInterfaceEnabled = true;
 
     public bool IsInterfaceEnabled
     {
-        get => _IsInterfaceEnabled;
+        get => _isInterfaceEnabled;
         set
         {
-            _IsInterfaceEnabled = value;
+            _isInterfaceEnabled = value;
             OnPropertyChanged();
         }
     }
 
-    private InventorHelper InventorHelper;
-    private bool _RingInProgress;
+    private InventorHelper _inventorHelper;
+    private bool _ringInProgress;
 
     public bool RingInProgress
     {
-        get => _RingInProgress;
-        set
+        get => _ringInProgress;
+        private set
         {
-            _RingInProgress = value;
+            _ringInProgress = value;
             OnPropertyChanged();
             OnPropertyChanged(nameof(InventorHelperReady));
         }
@@ -70,7 +68,6 @@ public sealed partial class PropertiesRenamerTab : TabViewItem, Interfaces.IInit
         this.InitializeComponent();
     }
 
-   
 
     public async void InitTabAsync()
     {
@@ -82,13 +79,13 @@ public sealed partial class PropertiesRenamerTab : TabViewItem, Interfaces.IInit
             RingInProgress = false;
             ProgressRingLabel.Text = "Inventor Prêt";
         };
-        InventorHelper = await InventorHelper.CreateAsync();
+        _inventorHelper = await InventorHelper.CreateAsync();
         CloseRequested += (sender, args) =>
         {
-            if (InventorHelper != null)
+            if (_inventorHelper != null)
             {
-                InventorHelper.App?.Quit();
-                InventorHelper = null;
+                _inventorHelper.App?.Quit();
+                _inventorHelper = null;
             }
         };
     }
@@ -96,35 +93,34 @@ public sealed partial class PropertiesRenamerTab : TabViewItem, Interfaces.IInit
     private async void Button_Click_SelectFiles(object sender, RoutedEventArgs e)
     {
         var file = await GetFileOpenPicker(".ipt", ".iam");
-        if (file == null) return;
-        AddItems(file);
+        if (file != null)
+        {
+            AddItems(file);
+        }
     }
 
     private void AddItems(IStorageItem file)
     {
         if (!file.Name.EndsWith(".ipt") && !file.Name.EndsWith(".iam"))
-            OpenSimpleMessage("seul des pièces ou des assemblages Inventor sont utilisable");
+        {
+            _ = OpenSimpleMessage("seul des pièces ou des assemblages Inventor sont utilisable");
+        }
 
         foreach (var dataIProp in GetParts(file.Path))
         {
-            // if (dataIQT.Category != DataIBase.CategoryType.Laser) continue;
-            // if (dataIQT.IsTrueSheetMetal || dataIQT.IsLaserType)
-            // {
-            dataIProp.Status = "en attente";
+            dataIProp.Status = DataIProp.StatusEnum.WaitForUpdate;
             SourceFilesCollection.Add(dataIProp);
-            // }
         }
     }
 
-    public IEnumerable<DataIProp> GetParts(string firstPathFullName)
+    private IEnumerable<DataIProp> GetParts(string firstPathFullName)
     {
-        var Parts = new List<DataIProp>();
-        GetPartsRecursive(Parts, firstPathFullName);
+        var parts = new List<DataIProp>();
+        GetPartsRecursive(parts, firstPathFullName);
         var dic = new Dictionary<string, DataIProp>();
-        foreach (DataIProp data in Parts)
+        foreach (var data in parts)
         {
-            if (!dic.ContainsKey(data.FullPathName))
-                dic.Add(data.FullPathName, data);
+            dic.TryAdd(data.FullPathName, data);
         }
 
         return dic.Select(x => x.Value);
@@ -139,7 +135,7 @@ public sealed partial class PropertiesRenamerTab : TabViewItem, Interfaces.IInit
         }
         catch (Exception ex)
         {
-            OpenSimpleMessage($"Erreur!!{ex.Message} \n fichier {PathFullName}");
+            _ = OpenSimpleMessage($"Erreur!!{ex.Message} \n fichier {PathFullName}");
             return;
         }
 
@@ -165,27 +161,30 @@ public sealed partial class PropertiesRenamerTab : TabViewItem, Interfaces.IInit
 
     private async void Button_Click_RenameIProperty(object sender, RoutedEventArgs e)
     {
-        if (NewAuthorName.Text == string.Empty || NewProjectName.Text == string.Empty || NewCustomerName.Text == string.Empty)
+        if (NewAuthorName.Text == string.Empty || NewProjectName.Text == string.Empty ||
+            NewCustomerName.Text == string.Empty)
         {
-            OpenSimpleMessage("Veuillez remplir touts les champs avant de renommer");
+            await OpenSimpleMessage("Veuillez remplir touts les champs avant de renommer");
             return;
         }
-        _IsInterfaceEnabled = false;
+
+        _isInterfaceEnabled = false;
         foreach (var dataIProp in SourceFilesCollection)
         {
-            GetProgressRingStatus(dataIProp).IsActive = true;
-            var isAlreadyGoodIProperties = dataIProp.CustomerName == NewCustomerName.Text && dataIProp.ProjectName == NewProjectName.Text && dataIProp.AuthorName== NewAuthorName.Text;
-            if (isAlreadyGoodIProperties)
+            if (dataIProp.Status == DataIProp.StatusEnum.NotUpdateRequired)
             {
-                dataIProp.Status = "non modifié";
                 continue;
             }
-            dataIProp.CustomerName = NewCustomerName.Text; 
+
+            dataIProp.Status = DataIProp.StatusEnum.Updating;
+            GetProgressRingStatus(dataIProp).IsActive = true;
+
+            dataIProp.CustomerName = NewCustomerName.Text;
             dataIProp.ProjectName = NewProjectName.Text;
             dataIProp.AuthorName = NewAuthorName.Text;
             await Task.Run(() =>
             {
-                var inventorFile = InventorHelper.App.Documents.Open(dataIProp.FullPathName);
+                var inventorFile = _inventorHelper.App.Documents.Open(dataIProp.FullPathName);
                 inventorFile.PropertySets["Design Tracking Properties"].ItemByPropId[9].Value = dataIProp.CustomerName;
                 inventorFile.PropertySets["Design Tracking Properties"].ItemByPropId[7].Value = dataIProp.ProjectName;
                 inventorFile.PropertySets["Inventor Summary Information"].ItemByPropId[4].Value = dataIProp.AuthorName;
@@ -194,11 +193,12 @@ public sealed partial class PropertiesRenamerTab : TabViewItem, Interfaces.IInit
                 inventorFile.Close();
                 // await Task.Delay(200);
             });
-            dataIProp.Status = "Renommer";
+            dataIProp.Status = DataIProp.StatusEnum.Updated;
             GetProgressRingStatus(dataIProp).IsActive = false;
         }
-        CloseIApprenticeServerDocument(); 
-        _IsInterfaceEnabled = true;
+
+        CloseIApprenticeServerDocument();
+        _isInterfaceEnabled = true;
     }
 
     private void CloseIApprenticeServerDocument() => SourceFilesCollection.First().Document.Close();
@@ -206,7 +206,7 @@ public sealed partial class PropertiesRenamerTab : TabViewItem, Interfaces.IInit
     private ProgressRing GetProgressRingStatus(DataIProp dataIProp)
     {
         var container = ListViewParts.ContainerFromItem(dataIProp) as ListViewItem;
-        return container.FindChild<ProgressRing>();
+        return (container ?? throw new Exception("container is null")).FindChild<ProgressRing>();
     }
 
     private void TabViewItem_DragOver(object sender, DragEventArgs e) =>
@@ -216,61 +216,61 @@ public sealed partial class PropertiesRenamerTab : TabViewItem, Interfaces.IInit
     {
         if (!e.DataView.Contains(StandardDataFormats.StorageItems))
         {
-            OpenSimpleMessage("Format non compatible");
+            _ = OpenSimpleMessage("Format non compatible");
             return;
         }
 
         var items = await e.DataView.GetStorageItemsAsync();
-        AddItems(items.First());
+        if (items != null)
+        {
+            AddItems(items.First());
+        }
     }
 
     private void Button_Click_Remove(object sender, RoutedEventArgs e)
     {
         if (!IsInterfaceEnabled) return;
-        var contextIDWModel = ((FrameworkElement)sender).DataContext as DataIProp;
-        SourceFilesCollection.Remove(contextIDWModel);
+        var contextIdwModel = ((FrameworkElement)sender).DataContext as DataIProp;
+        SourceFilesCollection.Remove(contextIdwModel);
     }
 
     private async void GetThumbNailAsync(object sender, RoutedEventArgs e)
     {
-        if (((FrameworkElement)sender).DataContext is DataIBase DataIBaseContext)
+        if (((FrameworkElement)sender).DataContext is DataIBase dataIBaseContext)
         {
-            if (TeachingTipThumbNail.IsOpen == true && ThumbNailPartNumber.Text == DataIBaseContext.FileInfoData.Name)
+            if (TeachingTipThumbNail.IsOpen == true && ThumbNailPartNumber.Text == dataIBaseContext.FileInfoData.Name)
             {
                 TeachingTipThumbNail.IsOpen = false;
                 return;
             }
 
-            var file = await Windows.Storage.StorageFile.GetFileFromPathAsync(DataIBaseContext.FileInfoData.FullName);
+            var file = await Windows.Storage.StorageFile.GetFileFromPathAsync(dataIBaseContext.FileInfoData.FullName);
             var iconThumbnail = await file.GetThumbnailAsync(ThumbnailMode.SingleItem, 256);
             var bitmapImage = new BitmapImage();
             bitmapImage.SetSource(iconThumbnail);
-            if (bitmapImage != null)
-            {
-                DataIBaseContext.bitmapImage = bitmapImage;
-                ImageThumbNail.Source = bitmapImage;
-                ThumbNailPartNumber.Text = DataIBaseContext.FileInfoData.Name;
-                ThumbNailDescription.Text = string.Empty;
-                ThumbNailCustomer.Text = string.Empty;
-                TeachingTipThumbNail.IsOpen = true;
-            }
+            dataIBaseContext.bitmapImage = bitmapImage;
+            ImageThumbNail.Source = bitmapImage;
+            ThumbNailPartNumber.Text = dataIBaseContext.FileInfoData.Name;
+            ThumbNailDescription.Text = string.Empty;
+            ThumbNailCustomer.Text = string.Empty;
+            TeachingTipThumbNail.IsOpen = true;
         }
     }
 
-    private async Task OpenSimpleMessage(string Message, string content = null)
+    private async Task OpenSimpleMessage(string message, string content = null)
     {
-        ContentDialog dialog = new ContentDialog
+        var dialog = new ContentDialog
         {
             XamlRoot = XamlRoot,
-            Title = Message,
+            Title = message,
             Content = content,
             PrimaryButtonText = "Ok",
             DefaultButton = ContentDialogButton.Primary,
         };
         _ = await dialog.ShowAsync();
     }
-
-    private async Task<StorageFile> GetFileOpenPicker(params String[] filters)
+    
+    private static async Task<StorageFile> GetFileOpenPicker(params string[] filters)
     {
         var openPicker = new Windows.Storage.Pickers.FileOpenPicker();
         var window = App.m_window;
@@ -283,9 +283,16 @@ public sealed partial class PropertiesRenamerTab : TabViewItem, Interfaces.IInit
         {
             openPicker.FileTypeFilter.Add(filter);
         }
-
         // Open the picker for the user to pick a file
         return await openPicker.PickSingleFileAsync();
     }
-    
+
+    private void _OnTextChanged(object sender, TextChangedEventArgs e)
+    {
+        foreach (var dataIProp in SourceFilesCollection)
+        {
+            var asTheGoodProperties = dataIProp.AsTheGoodProperties(NewProjectName.Text, NewCustomerName.Text, NewAuthorName.Text);
+            dataIProp.Status = asTheGoodProperties ? DataIProp.StatusEnum.NotUpdateRequired : DataIProp.StatusEnum.WaitForUpdate;
+        }
+    }
 }
