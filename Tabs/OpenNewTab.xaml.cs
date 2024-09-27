@@ -19,14 +19,14 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using static MsgReader.Outlook.Storage;
-using SplittableDataGridSAmple.Elements;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using SplittableDataGridSAmple.Tabs.InventorTab;
-using SplittableDataGridSAmple.Tabs.TestTab;
-using SplittableDataGridSAmple.Tabs.VariousTab;
+using MultiTools.Elements;
+using MultiTools.Tabs.InventorTab;
+using MultiTools.Tabs.VariousTab;
+using MultiTools.Tabs.TestTab;
 
-namespace SplittableDataGridSAmple.Tabs;
+namespace MultiTools.Tabs;
 
 
 public sealed partial class OpenNewTab : TabViewItem, Interfaces.IInitTab

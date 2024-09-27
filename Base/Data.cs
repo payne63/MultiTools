@@ -5,7 +5,7 @@ using System.ComponentModel;
 using System.Collections.Generic;
 using System.Diagnostics;
 
-namespace SplittableDataGridSAmple.Base
+namespace MultiTools.Base
 {
     public class Data : INotifyPropertyChanged
     {

@@ -10,7 +10,7 @@ using I = Inventor;
 using Inventor;
 using Microsoft.UI.Xaml.Media.Imaging;
 
-namespace SplittableDataGridSAmple.Models;
+namespace MultiTools.Models;
 
 public class IDWPrintModel : INotifyPropertyChanged
 {

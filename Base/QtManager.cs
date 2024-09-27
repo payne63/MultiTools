@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 using System.Xml.Linq;
 using I = Inventor;
 
-namespace SplittableDataGridSAmple.Base
+namespace MultiTools.Base
 {
     static class QtManager
     {

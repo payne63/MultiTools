@@ -17,12 +17,11 @@ using Microsoft.UI.Xaml.Navigation;
 using System.Collections.ObjectModel;
 using muxc = Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media.Imaging;
-using SplittableDataGridSAmple.Base;
 using WindowsFormsTest;
 using System.Diagnostics;
 using CommunityToolkit.WinUI.Helpers;
 using Windows.Graphics.Printing;
-using SplittableDataGridSAmple.Services;
+using MultiTools.Services;
 using I = Inventor;
 using Windows.ApplicationModel.DataTransfer;
 using System;
@@ -33,13 +32,14 @@ using Windows.Storage;
 using System.Text;
 using Windows.Storage.FileProperties;
 using AvitechTools.Models;
-using SplittableDataGridSAmple.Models;
+using MultiTools.Models;
 using Inventor;
 using Microsoft.VisualBasic.FileIO;
 using RtfPipe.Tokens;
 using System.Threading;
+using MultiTools.Base;
 
-namespace SplittableDataGridSAmple.Tabs;
+namespace MultiTools.Tabs;
 
 public sealed partial class ProjectExplorerTab : TabViewItem, Interfaces.IInitTab, INotifyPropertyChanged
 {

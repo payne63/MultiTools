@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SplittableDataGridSAmple.Base
+namespace MultiTools.Base
 {
     public sealed class DeepMaxToWidthConverter : IValueConverter
     {

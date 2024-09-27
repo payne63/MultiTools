@@ -4,7 +4,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Runtime.CompilerServices;
 
-namespace SplittableDataGridSAmple.Models
+namespace MultiTools.Models
 {
     public class IDWModel : INotifyPropertyChanged
     {

@@ -1,9 +1,9 @@
 <TabViewItem
-    x:Class="SplittableDataGridSAmple.Tabs.InventorTab.PropertiesRenamerTab"
+    x:Class="MultiTools.Tabs.InventorTab.PropertiesRenamerTab"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:SplittableDataGridSAmple.Tabs"
-    xmlns:base="using:SplittableDataGridSAmple.Base"
+    xmlns:local="using:MultiTools.Tabs"
+    xmlns:base="using:MultiTools.Base"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"

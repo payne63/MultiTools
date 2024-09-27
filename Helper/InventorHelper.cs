@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using ColorCode.Compilation.Languages;
 using Inventor;
 
-namespace SplittableDataGridSAmple.Helper;
+namespace MultiTools.Helper;
 internal class InventorHelper
 {
 

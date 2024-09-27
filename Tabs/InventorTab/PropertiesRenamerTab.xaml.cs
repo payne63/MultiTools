@@ -13,10 +13,10 @@ using CommunityToolkit.WinUI.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media.Imaging;
-using SplittableDataGridSAmple.Base;
-using SplittableDataGridSAmple.Helper;
+using MultiTools.Base;
+using MultiTools.Helper;
 
-namespace SplittableDataGridSAmple.Tabs.InventorTab;
+namespace MultiTools.Tabs.InventorTab;
 
 public sealed partial class PropertiesRenamerTab : TabViewItem, Interfaces.IInitTab, INotifyPropertyChanged
 {

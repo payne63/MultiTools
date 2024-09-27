@@ -14,7 +14,6 @@ using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using SplittableDataGridSAmple.Base;
 using System.Collections.ObjectModel;
 using CommunityToolkit.WinUI.UI.Controls;
 using System.Data;
@@ -22,9 +21,10 @@ using Microsoft.UI.Xaml.Media.Imaging;
 using Windows.Storage.FileProperties;
 using System.Threading.Tasks;
 using System.Diagnostics;
-using static SplittableDataGridSAmple.Base.DataIBase;
+using MultiTools.Base;
+using static MultiTools.Base.DataIBase;
 
-namespace SplittableDataGridSAmple.Elements
+namespace MultiTools.Elements
 {
     public sealed partial class DataGridQT : StackPanel, INotifyPropertyChanged
     {
@@ -37,10 +37,10 @@ namespace SplittableDataGridSAmple.Elements
         }
         #endregion
 
-        public delegate void MoveDataHandler(DataIQT dataIQT,CategoryType fromCategoryType, CategoryType toCategoryType);
+        public delegate void MoveDataHandler(DataIQT dataIQT,DataIBase.CategoryType fromCategoryType, DataIBase.CategoryType toCategoryType);
         public event MoveDataHandler MoveData;
 
-        public delegate void SelectionHandler(CategoryType fromCategoryType);
+        public delegate void SelectionHandler(DataIBase.CategoryType fromCategoryType);
         public event SelectionHandler Selection;
 
         private string _Title;
@@ -57,7 +57,7 @@ namespace SplittableDataGridSAmple.Elements
             set { _IsVisible = value; OnPropertyChanged(); }
         }
 
-        public readonly CategoryType category;
+        public readonly DataIBase.CategoryType category;
         public int CountElement => Datas.Count;
 
         private ObservableCollection<DataIQT> _Datas;
@@ -68,7 +68,7 @@ namespace SplittableDataGridSAmple.Elements
             this.InitializeComponent();
         }
 
-        public DataGridQT(CategoryType categoryType, ObservableCollection<DataIQT> datas) : this()
+        public DataGridQT(DataIBase.CategoryType categoryType, ObservableCollection<DataIQT> datas) : this()
         {
             if (datas == null) { throw new Exception("erreur"); }
             category = categoryType;
@@ -157,7 +157,7 @@ namespace SplittableDataGridSAmple.Elements
             if (e.RemovedItems.Count == 0) return;
             if (e.RemovedItems[0].ToString() == e.AddedItems[0].ToString()) return;
 
-            MoveData.Invoke(((FrameworkElement)sender).DataContext as DataIQT, (CategoryType)e.RemovedItems.First(),(CategoryType)e.AddedItems.First());
+            MoveData.Invoke(((FrameworkElement)sender).DataContext as DataIQT, (DataIBase.CategoryType)e.RemovedItems.First(),(DataIBase.CategoryType)e.AddedItems.First());
  
         }
     }

@@ -15,7 +15,6 @@ using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
-using SplittableDataGridSAmple.Base;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
@@ -25,18 +24,19 @@ using ctWinUI = CommunityToolkit.WinUI.UI.Controls;
 using CommunityToolkit.WinUI.UI.Controls;
 using Microsoft.Office.Interop.Outlook;
 using System.Globalization;
-using SplittableDataGridSAmple.Helper;
 using CommunityToolkit.WinUI.Helpers;
 using Inventor;
 using Windows.Graphics.Printing;
-using SplittableDataGridSAmple.Elements;
 using Windows.Storage.Pickers;
 using Windows.Storage;
 using CommunityToolkit.WinUI.UI;
 using System.Windows.Input;
 using System.Diagnostics;
+using MultiTools.Base;
+using MultiTools.Elements;
+using MultiTools.Helper;
 
-namespace SplittableDataGridSAmple.Tabs;
+namespace MultiTools.Tabs;
 
 public sealed partial class InventorQTTab : TabViewItem, Interfaces.IInitTab, INotifyPropertyChanged
 {

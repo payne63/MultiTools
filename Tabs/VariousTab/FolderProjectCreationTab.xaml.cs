@@ -8,7 +8,7 @@ using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
-using SplittableDataGridSAmple.Models;
+using MultiTools.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -25,7 +25,7 @@ using Windows.Foundation.Collections;
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
 
-namespace SplittableDataGridSAmple.Tabs.VariousTab;
+namespace MultiTools.Tabs.VariousTab;
 
 public sealed partial class FolderProjectCreationTab : TabViewItem, Interfaces.IInitTab, INotifyPropertyChanged
 {

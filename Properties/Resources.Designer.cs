@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace SplittableDataGridSAmple.Properties {
+namespace MultiTools.Properties {
     using System;
     
     

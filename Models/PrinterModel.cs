@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using System.Drawing;
 using System.Management;
 
-namespace SplittableDataGridSAmple.Models
+namespace MultiTools.Models
 {
     public class PrinterModel
     {

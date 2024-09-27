@@ -9,7 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using static MsgReader.Outlook.Storage;
 
-namespace SplittableDataGridSAmple.Services
+namespace MultiTools.Services
 {
     public class PrintService
     {

@@ -15,24 +15,24 @@ using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
-using SplittableDataGridSAmple.Base;
+using MultiTools.Base;
 using System.Collections.ObjectModel;
 //using System.Text.Json;
 using System.Diagnostics;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Storage;
 using MsgReader.Outlook;
-using SplittableDataGridSAmple.Helper;
 using System.Threading.Tasks;
-using SplittableDataGridSAmple.Interfaces;
 using AvitechTools.Models;
 using Inventor;
 using DocumentFormat.OpenXml.Math;
+using MultiTools.Helper;
+using MultiTools.Interfaces;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
 
-namespace SplittableDataGridSAmple.Tabs.TestTab;
+namespace MultiTools.Tabs.TestTab;
 
 public sealed partial class Test3Tab : TabViewItem, IInitTab
 {

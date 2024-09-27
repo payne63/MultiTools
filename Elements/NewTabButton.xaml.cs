@@ -9,7 +9,7 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Navigation;
-using SplittableDataGridSAmple.Tabs;
+using MultiTools.Tabs;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -21,7 +21,7 @@ using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI.Core.AnimationMetrics;
 
-namespace SplittableDataGridSAmple.Elements;
+namespace MultiTools.Elements;
 
 public sealed partial class NewTabButton : Button
 {

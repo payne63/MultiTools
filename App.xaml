@@ -2,11 +2,11 @@
 <!-- Licensed under the MIT License. -->
 
 <Application
-    x:Class="SplittableDataGridSAmple.App"
+    x:Class="MultiTools.App"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:Microsoft.UI.Xaml.Controls"
-    xmlns:local="using:SplittableDataGridSAmple">
+    xmlns:local="using:MultiTools">
     <Application.Resources>
 
         <controls:XamlControlsResources>

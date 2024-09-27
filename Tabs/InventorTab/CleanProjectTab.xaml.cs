@@ -14,7 +14,6 @@ using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using SplittableDataGridSAmple.Base;
 using System.Threading.Tasks;
 using Windows.Storage.Pickers;
 using Windows.Storage;
@@ -24,16 +23,17 @@ using Windows.ApplicationModel.DataTransfer;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Windows.Storage.FileProperties;
 using DocumentFormat.OpenXml.Spreadsheet;
-using SplittableDataGridSAmple.Helper;
-using SplittableDataGridSAmple.Interfaces;
+using MultiTools.Interfaces;
 using System.Reflection;
 using I=Inventor;
 using System.Diagnostics;
+using MultiTools.Base;
+using MultiTools.Helper;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
 
-namespace SplittableDataGridSAmple.Tabs.InventorTab;
+namespace MultiTools.Tabs.InventorTab;
 
 public sealed partial class CleanProjectTab : TabViewItem, Interfaces.IInitTab, INotifyPropertyChanged
 {

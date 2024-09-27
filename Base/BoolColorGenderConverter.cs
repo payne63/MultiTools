@@ -8,7 +8,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace SplittableDataGridSAmple.Base {
+namespace MultiTools.Base {
     public sealed class BoolColorGenderConverter : IValueConverter {
         public object Convert(object value, Type targetType, object parameter, string language) {
             var boolValue = (bool)value;

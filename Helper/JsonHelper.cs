@@ -1,5 +1,5 @@
 ﻿using Microsoft.UI.Xaml;
-using SplittableDataGridSAmple.Base;
+using MultiTools.Base;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -8,7 +8,7 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-namespace SplittableDataGridSAmple.Helper
+namespace MultiTools.Helper
 {
     static class JsonHelper
     {

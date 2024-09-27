@@ -8,9 +8,9 @@ using AvitechTools.Models;
 using DocumentFormat.OpenXml.Drawing;
 using DocumentFormat.OpenXml.Spreadsheet;
 using Inventor;
-using SplittableDataGridSAmple.Base;
+using MultiTools.Base;
 
-namespace SplittableDataGridSAmple.Helper;
+namespace MultiTools.Helper;
 internal class DXFBuilderHelper
 {
     private static Application InventorApp;

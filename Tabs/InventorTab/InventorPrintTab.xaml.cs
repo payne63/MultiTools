@@ -17,7 +17,6 @@ using AvitechTools.Models;
 using System.Diagnostics;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Storage;
-using SplittableDataGridSAmple.Models;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Collections.Specialized;
@@ -27,9 +26,10 @@ using System.Threading.Tasks;
 using System.Threading;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Windows.Storage.FileProperties;
-using SplittableDataGridSAmple.Base;
+using MultiTools.Base;
+using MultiTools.Models;
 
-namespace SplittableDataGridSAmple.Tabs;
+namespace MultiTools.Tabs;
 
 public sealed partial class InventorPrintTab : TabViewItem, Interfaces.IInitTab, INotifyPropertyChanged
 {

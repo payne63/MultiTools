@@ -13,9 +13,9 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using System.Collections.ObjectModel;
-using SplittableDataGridSAmple.Helper;
+using MultiTools.Helper;
 
-namespace SplittableDataGridSAmple.Tabs.VariousTab;
+namespace MultiTools.Tabs.VariousTab;
 
 public sealed partial class ParameterTab : TabViewItem, Interfaces.IInitTab
 {

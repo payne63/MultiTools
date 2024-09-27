@@ -5,7 +5,7 @@ using System.IO;
 using System.Runtime.CompilerServices;
 using I = Inventor;
 
-namespace SplittableDataGridSAmple.Base;
+namespace MultiTools.Base;
 
 public abstract class DataIBase : INotifyPropertyChanged
 {

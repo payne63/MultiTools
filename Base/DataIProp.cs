@@ -5,7 +5,7 @@ using Windows.Storage.FileProperties;
 using Microsoft.UI.Xaml.Media.Imaging;
 using I = Inventor;
 
-namespace SplittableDataGridSAmple.Base;
+namespace MultiTools.Base;
 
 public class DataIProp : DataIBase
 {

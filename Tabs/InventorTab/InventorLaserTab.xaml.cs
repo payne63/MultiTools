@@ -17,7 +17,6 @@ using AvitechTools.Models;
 using System.Diagnostics;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Storage;
-using SplittableDataGridSAmple.Models;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Collections.Specialized;
@@ -26,10 +25,11 @@ using Microsoft.VisualBasic;
 using System.Threading.Tasks;
 using System.Threading;
 using Microsoft.UI.Xaml.Media.Imaging;
-using SplittableDataGridSAmple.Base;
+using MultiTools.Base;
 using Windows.Storage.FileProperties;
+using MultiTools.Models;
 
-namespace SplittableDataGridSAmple.Tabs.InventorTab;
+namespace MultiTools.Tabs.InventorTab;
 
 public sealed partial class InventorLaserTab : TabViewItem, Interfaces.IInitTab, INotifyPropertyChanged
 {

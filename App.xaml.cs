@@ -26,7 +26,7 @@ using Windows.Foundation.Collections;
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
 
-namespace SplittableDataGridSAmple;
+namespace MultiTools;
 
 /// <summary>
 /// Provides application-specific behavior to supplement the default Application class.
@@ -50,7 +50,7 @@ public partial class App : Application
     {
         m_window = new MainWindow();
         m_window.Activate();
-        ((SplittableDataGridSAmple.MainWindow)m_window)._currentElementTheme = RequestedTheme == ApplicationTheme.Light? ElementTheme.Light:ElementTheme.Dark;
+        ((MainWindow)m_window)._currentElementTheme = RequestedTheme == ApplicationTheme.Light? ElementTheme.Light:ElementTheme.Dark;
         LoadIcon("Images\\travail-evolution.ico");
     }
 

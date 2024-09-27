@@ -7,7 +7,7 @@ using System.Net.Mail;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SplittableDataGridSAmple.Base
+namespace MultiTools.Base
 {
     public static class MailManager
     {

@@ -3,9 +3,9 @@ using System.IO;
 using System.Linq;
 using ClosedXML.Excel;
 using DocumentFormat.OpenXml.Spreadsheet;
-using SplittableDataGridSAmple.Models;
+using MultiTools.Models;
 
-namespace SplittableDataGridSAmple.Handler;
+namespace MultiTools.Handler;
 
 public static class StockHandler
 {

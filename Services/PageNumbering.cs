@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SplittableDataGridSAmple.Services
+namespace MultiTools.Services
 {
     public enum PageNumbering
     {

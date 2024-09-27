@@ -15,20 +15,20 @@ using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
-using SplittableDataGridSAmple.Base;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Diagnostics;
 using Microsoft.UI.Xaml.Documents;
-using SplittableDataGridSAmple.Helper;
 using Windows.System;
 using System.Net.Mail;
 using System.Threading;
+using MultiTools.Base;
+using MultiTools.Helper;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
 
-namespace SplittableDataGridSAmple.Tabs.VariousTab
+namespace MultiTools.Tabs.VariousTab
 {
     public sealed partial class ContactsTab : TabViewItem, Interfaces.IInitTab
     {

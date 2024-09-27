@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using static SplittableDataGridSAmple.Base.DataI;
+using static MultiTools.Base.DataI;
 using System.Xml.Linq;
 using I = Inventor;
 using System.Diagnostics;
@@ -18,7 +18,7 @@ using System.ComponentModel;
 using Microsoft.VisualStudio.OLE.Interop;
 using Microsoft.VisualStudio.Shell.Interop;
 
-namespace SplittableDataGridSAmple.Base
+namespace MultiTools.Base
 {
     public class DataIQT : DataIBase
     {

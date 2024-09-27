@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using I = Inventor;
 
-namespace SplittableDataGridSAmple.Base;
+namespace MultiTools.Base;
 public class DataIClean : DataIBase, IEqualityComparer<DataIClean>
 {
     private string relativeFolderPath;

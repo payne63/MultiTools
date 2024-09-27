@@ -29,18 +29,18 @@ using System.Reflection;
 using Microsoft.UI.Xaml.Shapes;
 using Microsoft.UI;
 using System.Text;
-using SplittableDataGridSAmple.Helper;
-using SplittableDataGridSAmple.Base;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Net.Mail;
 using Windows.UI.ViewManagement;
 using Windows.UI.WindowManagement;
+using MultiTools.Base;
+using MultiTools.Helper;
 using Application = Microsoft.UI.Xaml.Application;
 using AppWindow = Microsoft.UI.Windowing.AppWindow;
 using WinUIEx;
 
-namespace SplittableDataGridSAmple;
+namespace MultiTools;
 
 public sealed partial class MainWindow : WindowEx, INotifyPropertyChanged
 {

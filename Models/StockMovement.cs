@@ -1,6 +1,6 @@
 using System;
 
-namespace SplittableDataGridSAmple.Models;
+namespace MultiTools.Models;
 
 public record StockMovement
 {

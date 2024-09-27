@@ -5,9 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using I = Inventor;
 using System.IO;
-using SplittableDataGridSAmple.Base;
-using SplittableDataGridSAmple.Elements;
-using SplittableDataGridSAmple.Tabs;
+using MultiTools.Base;
+using MultiTools.Elements;
+using MultiTools.Tabs;
 
 namespace WindowsFormsTest
 {

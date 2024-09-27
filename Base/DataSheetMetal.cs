@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SplittableDataGridSAmple.Base;
+namespace MultiTools.Base;
 internal class DataSheetMetal
 {
     public string Name;

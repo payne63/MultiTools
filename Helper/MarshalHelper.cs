@@ -7,7 +7,7 @@ using System.Security;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SplittableDataGridSAmple.Helper
+namespace MultiTools.Helper
 {
     public static class Marshal2
     {

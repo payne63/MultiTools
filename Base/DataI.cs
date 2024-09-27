@@ -8,9 +8,8 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Imaging;
 using SixLabors.ImageSharp;
-using SplittableDataGridSAmple.Helper;
-using SplittableDataGridSAmple.Models;
-using SplittableDataGridSAmple.Tabs;
+using MultiTools.Helper;
+using MultiTools.Models;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -23,10 +22,11 @@ using System.Text;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.FileProperties;
+using MultiTools.Tabs;
 using static System.Collections.Specialized.BitVector32;
 using I = Inventor;
 
-namespace SplittableDataGridSAmple.Base;
+namespace MultiTools.Base;
 
 public class DataI : DataIBase, INotifyPropertyChanged
 {

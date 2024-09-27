@@ -8,12 +8,12 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
-using static SplittableDataGridSAmple.MainWindow;
+using static MultiTools.MainWindow;
 using Outlook = Microsoft.Office.Interop.Outlook;
-using SplittableDataGridSAmple.Helper;
+using MultiTools.Helper;
 using System.Runtime.InteropServices;
 
-namespace SplittableDataGridSAmple.Helper
+namespace MultiTools.Helper
 {
     internal class OutlookHelper
     {

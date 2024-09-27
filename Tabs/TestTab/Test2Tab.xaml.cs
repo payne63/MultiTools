@@ -14,16 +14,16 @@ using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using Microsoft.UI.Xaml.Shapes;
 using Microsoft.UI;
-using SplittableDataGridSAmple.Helper;
 using Windows.ApplicationModel.DataTransfer;
 using System.Diagnostics;
 using Windows.Storage;
 using MsgReader.Outlook;
 using System.Text.Json;
-using SplittableDataGridSAmple.Base;
+using MultiTools.Base;
 using System.Collections.ObjectModel;
+using MultiTools.Helper;
 
-namespace SplittableDataGridSAmple.Tabs.TestTab;
+namespace MultiTools.Tabs.TestTab;
 
 public sealed partial class Test2Tab : TabViewItem
 {

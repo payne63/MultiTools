@@ -5,9 +5,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using SplittableDataGridSAmple.Base;
+using MultiTools.Base;
 
-namespace SplittableDataGridSAmple.DerivedFrameworkElement
+namespace MultiTools.DerivedFrameworkElement
 {
     class TeachingTipContext : TeachingTip
     {

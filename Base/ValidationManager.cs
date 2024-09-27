@@ -6,9 +6,9 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using static SplittableDataGridSAmple.Base.ValidationItem;
+using static MultiTools.Base.ValidationItem;
 
-namespace SplittableDataGridSAmple.Base
+namespace MultiTools.Base
 {
     public class ValidationManager
     {
@@ -19,32 +19,32 @@ namespace SplittableDataGridSAmple.Base
         {
             ValidationItems.Add(new ValidationItem("Absence Nom Dessinateur ?",
                 "Nom du dessinateur non renseigné",
-                (dataI) => { return dataI.Author == string.Empty ? SeverityValidEnum.Low : SeverityValidEnum.NoProblem; }));
+                (dataI) => { return dataI.Author == string.Empty ? ValidationItem.SeverityValidEnum.Low : ValidationItem.SeverityValidEnum.NoProblem; }));
 
             ValidationItems.Add(new ValidationItem("Absence Description ?",
                 "Description non renseignée",
-                (dataI) => { return dataI.Description == string.Empty ? SeverityValidEnum.Low : SeverityValidEnum.NoProblem; }));
+                (dataI) => { return dataI.Description == string.Empty ? ValidationItem.SeverityValidEnum.Low : ValidationItem.SeverityValidEnum.NoProblem; }));
 
             ValidationItems.Add(new ValidationItem("Absence Nom Client ?",
                 "Client non renseigné",
-                (dataI) => { return dataI.CostCenter == string.Empty ? SeverityValidEnum.Low : SeverityValidEnum.NoProblem; }));
+                (dataI) => { return dataI.CostCenter == string.Empty ? ValidationItem.SeverityValidEnum.Low : ValidationItem.SeverityValidEnum.NoProblem; }));
 
             ValidationItems.Add(new ValidationItem("Absence Nom projet?",
                 "Projet non renseigné",
-                (dataI) => { return dataI.Project == string.Empty ? SeverityValidEnum.Low : SeverityValidEnum.NoProblem; }));
+                (dataI) => { return dataI.Project == string.Empty ? ValidationItem.SeverityValidEnum.Low : ValidationItem.SeverityValidEnum.NoProblem; }));
 
             ValidationItems.Add(new ValidationItem("Absence plan ?",
                 "Aucun Plan",
                 (dataI) =>
                 {
                     if (dataI.Category == DataI.CategoryType.Commerce || dataI.Category == DataI.CategoryType.ElementClient)
-                        return SeverityValidEnum.NoProblem;
-                    return dataI.drawingDocuments.Count == 0 ? SeverityValidEnum.Medium : SeverityValidEnum.NoProblem;
+                        return ValidationItem.SeverityValidEnum.NoProblem;
+                    return dataI.drawingDocuments.Count == 0 ? ValidationItem.SeverityValidEnum.Medium : ValidationItem.SeverityValidEnum.NoProblem;
                 }));
 
             ValidationItems.Add(new ValidationItem("Code = Nom du fichier ?",
                 "Code pièce différent du nom de fichier",
-                (dataI) => { return dataI.PartNumber != System.IO.Path.GetFileNameWithoutExtension(dataI.FullPathName) ? SeverityValidEnum.High : SeverityValidEnum.NoProblem; }));
+                (dataI) => { return dataI.PartNumber != System.IO.Path.GetFileNameWithoutExtension(dataI.FullPathName) ? ValidationItem.SeverityValidEnum.High : ValidationItem.SeverityValidEnum.NoProblem; }));
         }
     }
 }

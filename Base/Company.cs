@@ -8,7 +8,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SplittableDataGridSAmple.Base
+namespace MultiTools.Base
 {
     public class Company : INotifyPropertyChanged
     {

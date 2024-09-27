@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <TabViewItem
-    x:Class="SplittableDataGridSAmple.Tabs.InventorTab.CleanProjectTab"
+    x:Class="MultiTools.Tabs.InventorTab.CleanProjectTab"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:SplittableDataGridSAmple.Tabs"
+    xmlns:local="using:MultiTools.Tabs"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:base="using:SplittableDataGridSAmple.Base"
+    xmlns:base="using:MultiTools.Base"
     mc:Ignorable="d"
     Header="Nettoyage Project"
     x:Name="Page"
