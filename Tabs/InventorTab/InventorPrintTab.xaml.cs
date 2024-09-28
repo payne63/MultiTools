@@ -297,7 +297,7 @@ public sealed partial class InventorPrintTab : TabViewItem, Interfaces.IInitTab,
 
     private async void Button_Click_Print(object sender, RoutedEventArgs e)
     {
-        if (IDWPrintModels.Count == 0 || NbDrawing == 0) // si pas de plan on ne fait rien;
+        if ( NbDrawing == 0) // si pas de plan on ne fait rien;
         {
             OpenSimpleMessage("Pas d'impressions selectionn�es");
             return;
