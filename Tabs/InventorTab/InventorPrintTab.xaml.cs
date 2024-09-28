@@ -26,6 +26,7 @@ using System.Threading.Tasks;
 using System.Threading;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Windows.Storage.FileProperties;
+using Inventor;
 using MultiTools.Base;
 using MultiTools.Models;
 
@@ -38,110 +39,131 @@ public sealed partial class InventorPrintTab : TabViewItem, Interfaces.IInitTab,
     InventorManagerHelper inventorManager;
 
     #region PropertyChanged
+
     public event PropertyChangedEventHandler PropertyChanged;
+
     private void OnPropertyChanged([CallerMemberName] string name = null)
     {
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
     }
+
     #endregion
 
     private ObservableCollection<PrinterModel> _PrinterA4A3;
+
     public ObservableCollection<PrinterModel> PrinterA4A3
     {
-        get => _PrinterA4A3; set
+        get => _PrinterA4A3;
+        set
         {
             var actualUserName = GetSelectedPrinterA4A3;
             if (_PrinterA4A3 != null)
             {
                 ComboBoxPrinterA4A3.SelectedItem = actualUserName;
             }
-            _PrinterA4A3 = value; OnPropertyChanged();
+
+            _PrinterA4A3 = value;
+            OnPropertyChanged();
         }
     }
 
     private ObservableCollection<PrinterModel> _PrinterA2A1A0;
+
     public ObservableCollection<PrinterModel> PrinterA2A1A0
     {
-        get => _PrinterA2A1A0; set
+        get => _PrinterA2A1A0;
+        set
         {
             var actualUserName = GetSelectedPrinterA4A3;
             if (_PrinterA2A1A0 != null)
             {
                 ComboBoxPrinterA4A3.SelectedItem = actualUserName;
             }
-            _PrinterA2A1A0 = value; OnPropertyChanged();
+
+            _PrinterA2A1A0 = value;
+            OnPropertyChanged();
         }
     }
 
     public PrinterModel GetSelectedPrinterA4A3 => ComboBoxPrinterA4A3.SelectedItem as PrinterModel;
     public PrinterModel GetSelectedPrinterA2A1A0 => ComboBoxPrinterA2A1A0.SelectedItem as PrinterModel;
 
-    private bool _IsViewApp;
+    private bool _isViewApp;
+
     public bool IsViewApp
     {
-        get => _IsViewApp;
-        set { _IsViewApp = value; OnPropertyChanged(); }
+        get => _isViewApp;
+        set
+        {
+            _isViewApp = value;
+            OnPropertyChanged();
+        }
     }
 
-    private double _ProgressBarValue;
+    private double _progressBarValue;
 
     public double ProgressBarValue
     {
-        get => _ProgressBarValue;
-        set { _ProgressBarValue = value; OnPropertyChanged(); }
+        get => _progressBarValue;
+        set
+        {
+            _progressBarValue = value;
+            OnPropertyChanged();
+        }
     }
 
-    private string _ProgressBarStatus = string.Empty;
+    private string _progressBarStatus = string.Empty;
 
     public string ProgressBarStatus
     {
-        get => _ProgressBarStatus;
-        set { _ProgressBarStatus = value; OnPropertyChanged(); }
+        get => _progressBarStatus;
+        set
+        {
+            _progressBarStatus = value;
+            OnPropertyChanged();
+        }
     }
 
-    private bool _IsInderterminateProgressBar;
+    private bool _isInderterminateProgressBar;
 
     public bool IsInderterminateProgressBar
     {
-        get => _IsInderterminateProgressBar;
-        set { _IsInderterminateProgressBar = value; OnPropertyChanged(); }
+        get => _isInderterminateProgressBar;
+        set
+        {
+            _isInderterminateProgressBar = value;
+            OnPropertyChanged();
+        }
     }
 
-    private bool _IsInterfaceEnabled = true;
+    private bool _isInterfaceEnabled = true;
 
     public bool IsInterfaceEnabled
     {
-        get => _IsInterfaceEnabled;
-        set { _IsInterfaceEnabled = value; OnPropertyChanged(); }
+        get => _isInterfaceEnabled;
+        set
+        {
+            _isInterfaceEnabled = value;
+            OnPropertyChanged();
+        }
     }
 
+    public int NbDrawing => IDWPrintModels.Where(x => x.IsPrint).Count();
 
-    public int NbDrawing { get => IDWPrintModels.Where(x => x.IsPrint).Count(); }
-    public int NbA4Drawing
-    {
-        get => IDWPrintModels.Where(
-        x => x.SheetSize == Inventor.DrawingSheetSizeEnum.kA4DrawingSheetSize && x.IsPrint).Count();
-    }
-    public int NbA3Drawing
-    {
-        get => IDWPrintModels.Where(
-        x => x.SheetSize == Inventor.DrawingSheetSizeEnum.kA3DrawingSheetSize && x.IsPrint).Count();
-    }
-    public int NbA2Drawing
-    {
-        get => IDWPrintModels.Where(
-        x => x.SheetSize == Inventor.DrawingSheetSizeEnum.kA2DrawingSheetSize && x.IsPrint).Count();
-    }
-    public int NbA1Drawing
-    {
-        get => IDWPrintModels.Where(
-        x => x.SheetSize == Inventor.DrawingSheetSizeEnum.kA1DrawingSheetSize && x.IsPrint).Count();
-    }
-    public int NbA0Drawing
-    {
-        get => IDWPrintModels.Where(
-        x => x.SheetSize == Inventor.DrawingSheetSizeEnum.kA0DrawingSheetSize && x.IsPrint).Count();
-    }
+    public int NbA4Drawing =>
+        IDWPrintModels.Count(x => x.SheetSize == DrawingSheetSizeEnum.kA4DrawingSheetSize && x.IsPrint);
+
+    public int NbA3Drawing =>
+        IDWPrintModels.Count(x => x.SheetSize == DrawingSheetSizeEnum.kA3DrawingSheetSize && x.IsPrint);
+
+    public int NbA2Drawing =>
+        IDWPrintModels.Count(x => x.SheetSize == DrawingSheetSizeEnum.kA2DrawingSheetSize && x.IsPrint);
+
+    public int NbA1Drawing =>
+        IDWPrintModels.Count(x => x.SheetSize == DrawingSheetSizeEnum.kA1DrawingSheetSize && x.IsPrint);
+
+    public int NbA0Drawing =>
+        IDWPrintModels.Count(x => x.SheetSize == DrawingSheetSizeEnum.kA0DrawingSheetSize && x.IsPrint);
 
     public InventorPrintTab()
     {
@@ -180,6 +202,7 @@ public sealed partial class InventorPrintTab : TabViewItem, Interfaces.IInitTab,
                             AddPrinterAction(file.Path);
                         }
                     }
+
                     if (Directory.Exists(file.Path)) // si c'est un r�pertoire
                     {
                         var filesInDirectory = Directory.GetFiles(file.Path);
@@ -194,9 +217,10 @@ public sealed partial class InventorPrintTab : TabViewItem, Interfaces.IInitTab,
                 }
             }
         }
+
         var sortableList = new List<IDWPrintModel>(IDWPrintModels);
-        sortableList.Sort((IDWPrintModel A, IDWPrintModel B) => string.Compare(A.Name, B.Name));
-        for (int i = 0; i < sortableList.Count; i++)
+        sortableList.Sort((IDWPrintModel a, IDWPrintModel b) => string.CompareOrdinal(a.Name, b.Name));
+        for (var i = 0; i < sortableList.Count; i++)
         {
             IDWPrintModels.Move(IDWPrintModels.IndexOf(sortableList[i]), i);
         }
@@ -204,7 +228,7 @@ public sealed partial class InventorPrintTab : TabViewItem, Interfaces.IInitTab,
 
     private void AddPrinterAction(string filePath)
     {
-        foreach (var printAction in IDWPrintModel.GetIDWPrintModels(filePath,nbPDFDXFPropertyChanged))
+        foreach (var printAction in IDWPrintModel.GetIDWPrintModels(filePath, nbPDFDXFPropertyChanged))
         {
             IDWPrintModels.Add(printAction);
         }
@@ -219,45 +243,52 @@ public sealed partial class InventorPrintTab : TabViewItem, Interfaces.IInitTab,
     {
         if (((FrameworkElement)sender).DataContext is IDWPrintModel IDWPrintModelContext)
         {
-            if (IDWPrintModelContext.PageNumber >1)
+            if (IDWPrintModelContext.PageNumber > 1)
             {
                 return;
             }
-            if (TeachingTipThumbNail.IsOpen == true && ThumbNailPartNumber.Text == IDWPrintModelContext.FileInfoData.Name)
+
+            if (TeachingTipThumbNail.IsOpen == true &&
+                ThumbNailPartNumber.Text == IDWPrintModelContext.FileInfoData.Name)
             {
                 TeachingTipThumbNail.IsOpen = false;
                 return;
             }
-            var file = await Windows.Storage.StorageFile.GetFileFromPathAsync(IDWPrintModelContext.FileInfoData.FullName);
+
+            var file = await Windows.Storage.StorageFile.GetFileFromPathAsync(
+                IDWPrintModelContext.FileInfoData.FullName);
             var iconThumbnail = await file.GetThumbnailAsync(ThumbnailMode.SingleItem, 256);
             var bitmapImage = new BitmapImage();
             bitmapImage.SetSource(iconThumbnail);
-            if (bitmapImage != null)
-            {
-                var sheetSizeConverter = new SheetSizeEnumToStringConverter();
-                var sheetOrientationConverter = new OrientationTypeToStringConverter();
-                IDWPrintModelContext.bitmapImage = bitmapImage;
-                ImageThumbNail.Source = bitmapImage;
-                ThumbNailPartNumber.Text = IDWPrintModelContext.FileInfoData.Name;
-                ThumbNailDescription.Text = sheetSizeConverter.Convert(IDWPrintModelContext.SheetSize, typeof(string), null, "").ToString();
-                ThumbNailCustomer.Text = sheetOrientationConverter.Convert(IDWPrintModelContext.Orientation, typeof(string), null, "").ToString();
-                TeachingTipThumbNail.IsOpen = true;
-            }
+
+            var sheetSizeConverter = new SheetSizeEnumToStringConverter();
+            var sheetOrientationConverter = new OrientationTypeToStringConverter();
+            IDWPrintModelContext.bitmapImage = bitmapImage;
+            ImageThumbNail.Source = bitmapImage;
+            ThumbNailPartNumber.Text = IDWPrintModelContext.FileInfoData.Name;
+            ThumbNailDescription.Text = sheetSizeConverter
+                .Convert(IDWPrintModelContext.SheetSize, typeof(string), null, "").ToString();
+            ThumbNailCustomer.Text = sheetOrientationConverter
+                .Convert(IDWPrintModelContext.Orientation, typeof(string), null, "").ToString();
+            TeachingTipThumbNail.IsOpen = true;
         }
     }
 
     private void Button_Click_OpenDrawing(object sender, RoutedEventArgs e)
     {
-        if (((FrameworkElement)sender).DataContext is IDWPrintModel contextIDWModel)
+        if (((FrameworkElement)sender).DataContext is not IDWPrintModel contextIDWModel)
         {
-            InventorManagerHelper.GetActualInventorApp()?.Documents.Open(contextIDWModel.FileInfoData.FullName);
-            if (InventorManagerHelper.GetActualInventorApp()?.ActiveDocument is Inventor.DrawingDocument drawing)
-            {
-                var sheetToOpen = drawing.Sheets[contextIDWModel.PageNumber];
-                sheetToOpen.Activate(); 
-            }
+            return;
+        }
+
+        InventorManagerHelper.GetActualInventorApp()?.Documents.Open(contextIDWModel.FileInfoData.FullName);
+        if (InventorManagerHelper.GetActualInventorApp()?.ActiveDocument is DrawingDocument drawing)
+        {
+            var sheetToOpen = drawing.Sheets[contextIDWModel.PageNumber];
+            sheetToOpen.Activate();
         }
     }
+
     private void Button_Click_Remove(object sender, RoutedEventArgs e)
     {
         var contextIDWModel = ((FrameworkElement)sender).DataContext as IDWPrintModel;
@@ -266,22 +297,24 @@ public sealed partial class InventorPrintTab : TabViewItem, Interfaces.IInitTab,
 
     private async void Button_Click_Print(object sender, RoutedEventArgs e)
     {
-
-        if (IDWPrintModels.Count == 0 || NbDrawing == 0)// si pas de plan on ne fait rien;
+        if (IDWPrintModels.Count == 0 || NbDrawing == 0) // si pas de plan on ne fait rien;
         {
             OpenSimpleMessage("Pas d'impressions selectionn�es");
             return;
         }
+
         if ((NbA4Drawing > 0 || NbA3Drawing > 0) && GetSelectedPrinterA4A3 == null)
         {
             OpenSimpleMessage("Selectioner une imprimante pour la A4 et A3");
             return;
         }
+
         if ((NbA2Drawing > 0 || NbA1Drawing > 0 || NbA0Drawing > 0) && GetSelectedPrinterA2A1A0 == null)
         {
             OpenSimpleMessage("Selectioner une imprimante pour la A2 et A1 et A0");
             return;
         }
+
         if (IsInterfaceEnabled == false) return;
         IsInterfaceEnabled = false;
         await inventorManager.PrintList(new List<IDWPrintModel>(IDWPrintModels));
@@ -316,9 +349,17 @@ public sealed partial class InventorPrintTab : TabViewItem, Interfaces.IInitTab,
     }
 
     private void MenuFlyoutItem_Click_AllPrint(object sender, RoutedEventArgs e)
-        => IDWPrintModels.ToList().ForEach(x => { x.IsPrint = true; });
+        => IDWPrintModels.ToList().ForEach(x =>
+        {
+            x.IsPrint = true;
+        });
+
     private void MenuFlyoutItem_Click_NonePrint(object sender, RoutedEventArgs e)
-        => IDWPrintModels.ToList().ForEach(x => { x.IsPrint = false; });
+        => IDWPrintModels.ToList().ForEach(x =>
+        {
+            x.IsPrint = false;
+        });
+
     private void MenuFlyoutItem_Click_AutoPrintA4A3(object sender, RoutedEventArgs e)
     {
         foreach (var x in IDWPrintModels)
@@ -331,6 +372,7 @@ public sealed partial class InventorPrintTab : TabViewItem, Interfaces.IInitTab,
             x.IsPrint = true;
         }
     }
+
     private void MenuFlyoutItem_Click_AutoPrintA2A1A0(object sender, RoutedEventArgs e)
     {
         foreach (var x in IDWPrintModels)
