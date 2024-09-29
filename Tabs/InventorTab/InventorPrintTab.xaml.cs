@@ -1,37 +1,22 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
-using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls.Primitives;
-using Microsoft.UI.Xaml.Data;
-using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Media;
-using Microsoft.UI.Xaml.Navigation;
-using System.Collections.ObjectModel;
-using AvitechTools.Models;
-using System.Diagnostics;
-using Windows.ApplicationModel.DataTransfer;
-using Windows.Storage;
-using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using System.Collections.Specialized;
-using CommunityToolkit.WinUI.UI.Triggers;
-using Microsoft.VisualBasic;
-using System.Threading.Tasks;
-using System.Threading;
-using Microsoft.UI.Xaml.Media.Imaging;
+using Windows.ApplicationModel.DataTransfer;
 using Windows.Storage.FileProperties;
 using Inventor;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Media.Imaging;
 using MultiTools.Base;
 using MultiTools.Models;
 using SplittableDataGridSAmple.Helper;
 
-namespace MultiTools.Tabs;
+namespace MultiTools.Tabs.InventorTab;
 
 public sealed partial class InventorPrintTab : TabViewItem, Interfaces.IInitTab, INotifyPropertyChanged
 {
@@ -297,19 +282,19 @@ public sealed partial class InventorPrintTab : TabViewItem, Interfaces.IInitTab,
     {
         if (NbDrawing == 0) // si pas de plan on ne fait rien;
         {
-            OpenSimpleMessage("Pas d'impressions selectionn�es");
+            OpenSimpleMessage("Pas d'impressions sélectionnées");
             return;
         }
 
         if ((NbA4Drawing > 0 || NbA3Drawing > 0) && GetSelectedPrinterA4A3 == null)
         {
-            OpenSimpleMessage("Selectioner une imprimante pour la A4 et A3");
+            OpenSimpleMessage("Sélectionner une imprimante pour la A4 et A3");
             return;
         }
 
         if ((NbA2Drawing > 0 || NbA1Drawing > 0 || NbA0Drawing > 0) && GetSelectedPrinterA2A1A0 == null)
         {
-            OpenSimpleMessage("Selectioner une imprimante pour la A2 et A1 et A0");
+            OpenSimpleMessage("Sélectionner une imprimante pour la A2 et A1 et A0");
             return;
         }
 

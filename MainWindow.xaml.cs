@@ -85,8 +85,18 @@ public sealed partial class MainWindow : WindowEx, INotifyPropertyChanged
             ToggleSwitchInventor.Toggled += toggleSwitchInventor_Toggled; 
         };
         ToggleSwitchInventor.Toggled += toggleSwitchInventor_Toggled;
-            
-        
+               
+        ToggleSwitchShowInventor.Toggled += (sender, e) =>
+        {
+            if (ToggleSwitchShowInventor.IsOn)
+            {
+                InventorHelper2.ShowApp();
+            }
+            else
+            {
+                InventorHelper2.HideApp();
+            }
+        };
         
         UsersNameUpdate();
         //ExtendsContentIntoTitleBar = true;
@@ -161,7 +171,5 @@ public sealed partial class MainWindow : WindowEx, INotifyPropertyChanged
         InventorHelper.CloseAllInstance();
         GC.Collect();
         GC.WaitForPendingFinalizers();
-        Console.WriteLine("fermeture du program");
-        ;
     }
 }

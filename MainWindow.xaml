@@ -15,8 +15,7 @@
     MinHeight="900"
     Width="1800"
     Height="1000"
-    Title="MultiTools"
-    >
+    Title="MultiTools">
     <Page x:Name="MainPage" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
         <Grid>
@@ -31,12 +30,24 @@
                      Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
                 <TabView.TabStripFooter>
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                        <ToggleSwitch Name="ToggleSwitchInventor" OffContent="démarrage Inventor" OnContent="Inventor Pret" />
+                        <Border Margin="10,0" HorizontalAlignment="Center" VerticalAlignment="Center" Background="{ThemeResource AccentAcrylicBackgroundFillColorDefaultBrush}">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock VerticalAlignment="Center" Text="Etat Inventor"  Padding="10,0" />
+                                <ToggleSwitch Name="ToggleSwitchInventor" OffContent="démarrage" OnContent="Prêt"
+                                              ToolTipService.ToolTip="état de l'application Inventor" Width="150" />
+
+                                <FontIcon Glyph="&#xE890;" />
+                                <ToggleSwitch Name="ToggleSwitchShowInventor" OffContent="Invisible"
+                                              OnContent="Visible"
+                                              ToolTipService.ToolTip="Modifie la visibilité de l'application Inventor"
+                                              Width="150" />
+                            </StackPanel>
+                        </Border>
                         <ComboBox x:Name="ComboBoxUsers"
                                   ItemsSource="{x:Bind UsersName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                   DisplayMemberPath="Name"
                                   SelectionChanged="ListBox_SelectionChanged"
-                                  PlaceholderText="Selectionner un utilisateur"
+                                  PlaceholderText="Sélectionner un utilisateur"
                                   VerticalAlignment="Center"
                                   HorizontalAlignment="Right"
                                   Width="250">
