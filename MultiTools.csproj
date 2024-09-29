@@ -141,7 +141,8 @@
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Autodesk.Inventor.Interop">
-      <HintPath>..\..\..\..\..\Program Files\Autodesk\Inventor 2019\Bin\Public Assemblies\Autodesk.Inventor.Interop.dll</HintPath>
+<!--      <HintPath>..\..\..\..\..\Program Files\Autodesk\Inventor 2019\Bin\Public Assemblies\Autodesk.Inventor.Interop.dll</HintPath>-->
+      <HintPath>Assemblies\autodesk.inventor.interop.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

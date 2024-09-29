@@ -32,11 +32,11 @@ using System.Text;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Net.Mail;
+using System.Threading.Tasks;
 using Windows.UI.ViewManagement;
 using Windows.UI.WindowManagement;
 using MultiTools.Base;
 using MultiTools.Helper;
-using SplittableDataGridSAmple.Helper;
 using Application = Microsoft.UI.Xaml.Application;
 using AppWindow = Microsoft.UI.Windowing.AppWindow;
 using WinUIEx;
@@ -54,7 +54,7 @@ public sealed partial class MainWindow : WindowEx, INotifyPropertyChanged
     private ObservableCollection<Base.User> _Users = new();
     public ElementTheme _currentElementTheme = ElementTheme.Default;
 
-    
+
     public ObservableCollection<Base.User> UsersName
     {
         get => _Users;
@@ -65,6 +65,7 @@ public sealed partial class MainWindow : WindowEx, INotifyPropertyChanged
             {
                 ComboBoxUsers.SelectedItem = actualUserName;
             }
+
             _Users = value;
             OnPropertyChanged();
         }
@@ -97,15 +98,34 @@ public sealed partial class MainWindow : WindowEx, INotifyPropertyChanged
                 InventorHelper2.HideApp();
             }
         };
-        InventorHelper2.Visibility += b => ToggleSwitchShowInventor.IsOn = b; 
-
-    UsersNameUpdate();
+        Task.Run(VisibilityChangedEvent);
+        InventorHelper2.AppClosed += () => ToggleSwitchShowInventor.IsOn = false;
+        UsersNameUpdate();
         //ExtendsContentIntoTitleBar = true;
     }
 
+    private void VisibilityChangedEvent()
+    {
+        var visible = false;
+        while (true)
+        {
+            Task.Delay(1000).Wait();
+            if (InventorHelper2.AppIsVisible != visible)
+            {
+                visible = InventorHelper2.AppIsVisible;
+                Task.Delay(500).Wait();
+                DispatcherQueue.TryEnqueue(() =>
+                {
+                    ToggleSwitchShowInventor.IsOn = visible;
+                });
+            }
+        }
+    }
+
+
     private void toggleSwitchInventor_Toggled(object sender, RoutedEventArgs e)
     {
-        ToggleSwitchInventor.Toggled -= toggleSwitchInventor_Toggled; 
+        ToggleSwitchInventor.Toggled -= toggleSwitchInventor_Toggled;
         ToggleSwitchInventor.IsOn = !ToggleSwitchInventor.IsOn;
         ToggleSwitchInventor.Toggled += toggleSwitchInventor_Toggled;
     }

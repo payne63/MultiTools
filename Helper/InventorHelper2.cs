@@ -6,7 +6,7 @@ using MultiTools.Models;
 using File = System.IO.File;
 using Path = System.IO.Path;
 
-namespace SplittableDataGridSAmple.Helper;
+namespace MultiTools.Helper;
 
 public static class InventorHelper2
 {
@@ -14,33 +14,38 @@ public static class InventorHelper2
 
     public static bool IsUse; //TODO create an 'in use' system to avoid collision
     public static event Action AppReady;
-    public static event Action<bool> Visibility;
+
+    public static bool AppIsVisible
+    {
+        get
+        {
+            if (_App == null ) return false;
+            return _App.Visible;
+        }
+    }
+
+    public static event Action AppClosed;
 
     public static void ShowApp()
     {
         if (_App != null)
         {
             _App.Visible = true;
-            Visibility?.Invoke(true);
         }
     }
-
+    
     public static void HideApp()
     {
         if (_App != null)
         {
             _App.Visible = false;
-            Visibility?.Invoke(false);
         }
     }
 
     public static void CloseInstance() => _App?.Quit();
 
-    
-    //public static Application? GetInventorApp() => _App;
     public static async Task GetInventorAppAsync()
     {
-
         if (_App != null) return;
         await Task.Run(() =>
         {
@@ -52,7 +57,8 @@ public static class InventorHelper2
                 instance.Visible = false;
                 while (!instance.Ready)
                 {
-                } 
+                }
+
                 _App = instance;
             }
             catch (Exception e)
@@ -60,7 +66,8 @@ public static class InventorHelper2
                 throw new Exception("impossible d'obtenir une app inventor", e);
             }
         });
-        AppReady?.Invoke();// must be outside the task.run
+
+        AppReady?.Invoke(); // must be outside the task.run
     }
 
     public static Document? GetDocument(string fullPathFileName)
@@ -127,12 +134,14 @@ public static class InventorHelper2
             _ => throw new ArgumentOutOfRangeException(nameof(orientationTypeEnum), orientationTypeEnum, null)
         };
 
-    public static async Task<bool> PrintFileAsync(IdwPrintModel plan, int indexPage, Dictionary<DrawingSheetSizeEnum,string> printerSettings)
+    public static async Task<bool> PrintFileAsync(IdwPrintModel plan, int indexPage,
+        Dictionary<DrawingSheetSizeEnum, string> printerSettings)
     {
         var doc = _App.Documents;
         await Task.Run(() => doc.Open(plan.FileInfoData.FullName));
         var documentToPrint = (DrawingDocument)_App.ActiveDocument;
-        if (await Print(documentToPrint, plan.PageNumber, printerSettings[documentToPrint.Sheets[indexPage].Size]) == false) return false;
+        if (await Print(documentToPrint, plan.PageNumber, printerSettings[documentToPrint.Sheets[indexPage].Size]) ==
+            false) return false;
         doc.CloseAll();
         return true;
     }

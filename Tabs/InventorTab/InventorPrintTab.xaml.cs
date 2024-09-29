@@ -13,8 +13,8 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media.Imaging;
 using MultiTools.Base;
+using MultiTools.Helper;
 using MultiTools.Models;
-using SplittableDataGridSAmple.Helper;
 
 namespace MultiTools.Tabs.InventorTab;
 
