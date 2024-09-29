@@ -44,21 +44,7 @@ public sealed partial class PropertiesRenamerTab : TabViewItem, Interfaces.IInit
         }
     }
 
-    private InventorHelper _inventorHelper;
-    private bool _ringInProgress;
-
-    public bool RingInProgress
-    {
-        get => _ringInProgress;
-        private set
-        {
-            _ringInProgress = value;
-            OnPropertyChanged();
-            OnPropertyChanged(nameof(InventorHelperReady));
-        }
-    }
-
-    public bool InventorHelperReady => !RingInProgress;
+    // private InventorHelper _inventorHelper;
 
     public Visibility DragAndDropVisibility =>
         SourceFilesCollection.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
@@ -72,22 +58,6 @@ public sealed partial class PropertiesRenamerTab : TabViewItem, Interfaces.IInit
     public async void InitTabAsync()
     {
         SourceFilesCollection.CollectionChanged += (sender, e) => OnPropertyChanged(nameof(DragAndDropVisibility));
-        RingInProgress = true;
-        ProgressRingLabel.Text = "Chargement d'Inventor";
-        InventorHelper.Ready += () =>
-        {
-            RingInProgress = false;
-            ProgressRingLabel.Text = "Inventor Prêt";
-        };
-        _inventorHelper = await InventorHelper.CreateAsync();
-        CloseRequested += (sender, args) =>
-        {
-            if (_inventorHelper != null)
-            {
-                _inventorHelper.App?.Quit();
-                _inventorHelper = null;
-            }
-        };
     }
 
     private async void Button_Click_SelectFiles(object sender, RoutedEventArgs e)
@@ -184,7 +154,9 @@ public sealed partial class PropertiesRenamerTab : TabViewItem, Interfaces.IInit
             dataIProp.AuthorName = NewAuthorName.Text;
             await Task.Run(() =>
             {
-                var inventorFile = _inventorHelper.App.Documents.Open(dataIProp.FullPathName);
+                var inventorFile = InventorHelper2.GetDocument(dataIProp.FullPathName);
+                if (inventorFile == null) return;
+                
                 inventorFile.PropertySets["Design Tracking Properties"].ItemByPropId[9].Value = dataIProp.CustomerName;
                 inventorFile.PropertySets["Design Tracking Properties"].ItemByPropId[7].Value = dataIProp.ProjectName;
                 inventorFile.PropertySets["Inventor Summary Information"].ItemByPropId[4].Value = dataIProp.AuthorName;
