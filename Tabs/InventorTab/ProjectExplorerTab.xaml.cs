@@ -38,6 +38,7 @@ using Microsoft.VisualBasic.FileIO;
 using RtfPipe.Tokens;
 using System.Threading;
 using MultiTools.Base;
+using MultiTools.Helper;
 
 namespace MultiTools.Tabs;
 
@@ -347,7 +348,8 @@ public sealed partial class ProjectExplorerTab : TabViewItem, Interfaces.IInitTa
         var contextDataI = ((FrameworkElement)sender).DataContext as DataI;
         if (contextDataI != null)
         {
-            InventorManagerHelper.GetActualInventorApp()?.Documents.Open(contextDataI.FullPathName);
+            InventorHelper2.GetDocument(contextDataI.FullPathName);
+            InventorHelper2.ShowApp();
         }
     }
 

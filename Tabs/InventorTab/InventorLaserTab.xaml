@@ -47,10 +47,6 @@
                         <TextBlock Text="(répertoire ou fichiers)" HorizontalAlignment="Center"/>
                     </StackPanel>
                 </Button>
-                <CheckBox Content="Voir l'application" HorizontalAlignment="Center"
-                          IsChecked="{x:Bind IsViewApp, Mode=TwoWay}"
-                          ToolTipService.ToolTip="Permet de voir l'application durant la generation des fichiers"
-                          IsEnabled="{x:Bind IsInterfaceEnabled, Mode=OneWay}"/>
                 <CheckBox Content="Compression Zip" HorizontalAlignment="Center"
                           IsChecked="{x:Bind IsZipCompres, Mode=TwoWay}"
                           ToolTipService.ToolTip="Creer une archive ZIP des répertoires PDF et DXF"
@@ -58,19 +54,13 @@
                 <Button 
                     Margin="10" 
                     HorizontalAlignment="Stretch"
-                    Click="Button_Click_GeneratePDFDXF">
+                    Click="Button_Click_GeneratePdfDxf">
                     <StackPanel Orientation="Vertical" >
                         <Viewbox MaxHeight="30" MaxWidth="30" Margin="10" >
                             <FontIcon  Glyph="&#xE945;" />
                         </Viewbox>
                         <TextBlock Text="Démarrer la génération" HorizontalAlignment="Center"/>
                         <TextBlock Text="des PDF et DXF" HorizontalAlignment="Center" />
-                        <ProgressBar x:Name="progressBar" 
-                                     Margin="0,10,0,10"
-                                     Value="{x:Bind ProgressBarValue, Mode=OneWay}"
-                                     Minimum="0" Maximum="100"
-                                     IsIndeterminate="{x:Bind IsInderterminateProgressBar, Mode=OneWay}"/>
-                        <TextBlock Text="{x:Bind ProgressBarStatus, Mode=OneWay}" HorizontalAlignment="Center" Margin="5"/>
                     </StackPanel>
                 </Button>
                 <Grid>
@@ -125,7 +115,7 @@
                 </DropDownButton.Flyout>
             </DropDownButton>
         </StackPanel>
-        <ListView ItemsSource="{x:Bind IDWModels}"
+        <ListView ItemsSource="{x:Bind IdwModels}"
                       x:Name="ListViewIDW"
                       Grid.Column="1" Grid.Row="1"
                       CanBeScrollAnchor="True"

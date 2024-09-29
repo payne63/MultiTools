@@ -20,6 +20,7 @@ using MultiTools.DialogPage;
 
 namespace AvitechTools.Models;
 
+[Obsolete("utiliser InventorHelper2",true)]
 public class InventorManagerHelper
 {
     InventorLaserTab instanceLaserTab;
@@ -67,14 +68,14 @@ public class InventorManagerHelper
     /// <param name="NbExportationToDo"></param>
     public async Task GenerateFile(List<IDWModel> listIDWModels)
     {
-        instanceLaserTab.IsInderterminateProgressBar = true;
-        instanceLaserTab.ProgressBarStatus = "Démarrage Inventor";
+        // instanceLaserTab.IsInderterminateProgressBar = true;
+        // instanceLaserTab.ProgressBarStatus = "Démarrage Inventor";
 
-        await Task.Run(() => StartInventorNewInstance(instanceLaserTab.IsViewApp));
+        // await Task.Run(() => StartInventorNewInstance(instanceLaserTab.IsViewApp));
 
-        instanceLaserTab.ProgressBarStatus = "Creation des PDF/DXF";
-        instanceLaserTab.IsInderterminateProgressBar = false;
-        instanceLaserTab.ProgressBarValue = 0;
+        // instanceLaserTab.ProgressBarStatus = "Creation des PDF/DXF";
+        // instanceLaserTab.IsInderterminateProgressBar = false;
+        // instanceLaserTab.ProgressBarValue = 0;
 
         int NbExportationToDo = instanceLaserTab.NbPDFDrawing + instanceLaserTab.NbDXFDrawing;
         int NbJobDone = 0;
@@ -100,13 +101,13 @@ public class InventorManagerHelper
             if (plan.MakePDF)
             {
                 NbJobDone++;
-                instanceLaserTab.ProgressBarValue = (NbJobDone * 100) / NbExportationToDo;
+                // instanceLaserTab.ProgressBarValue = (NbJobDone * 100) / NbExportationToDo;
                 await Task.Run(() => SavePDF(drawingDoc, PDFFolder));
             }
             if (plan.MakeDXF)
             {
                 NbJobDone++;
-                instanceLaserTab.ProgressBarValue = (NbJobDone * 100) / NbExportationToDo;
+                // instanceLaserTab.ProgressBarValue = (NbJobDone * 100) / NbExportationToDo;
                 await Task.Run(() => SaveDXF(drawingDoc, DXFFolder));
             }
             drawingDoc.Close();
@@ -117,7 +118,7 @@ public class InventorManagerHelper
 
         if (instanceLaserTab.IsZipCompres)
         {
-            instanceLaserTab.ProgressBarStatus = "Compression Zip";
+            // instanceLaserTab.ProgressBarStatus = "Compression Zip";
             if (Directory.Exists(PDFFolder))
             {
                 if (Directory.GetFiles(PDFFolder).Length != 0)
@@ -136,11 +137,11 @@ public class InventorManagerHelper
                 }
             }
         }
-        await Task.Delay(1000);
-        instanceLaserTab.ProgressBarStatus = @"Creation Terminée";
-        await Task.Delay(1500);
-        instanceLaserTab.ProgressBarValue = 0;
-        instanceLaserTab.ProgressBarStatus = string.Empty;
+        // await Task.Delay(1000);
+        // instanceLaserTab.ProgressBarStatus = @"Creation Terminée";
+        // await Task.Delay(1500);
+        // instanceLaserTab.ProgressBarValue = 0;
+        // instanceLaserTab.ProgressBarStatus = string.Empty;
     }
 
     /// <summary>

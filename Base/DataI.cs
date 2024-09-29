@@ -170,8 +170,13 @@ public class DataI : DataIBase, INotifyPropertyChanged
         foreach (var drawing in drawingDocuments)
         {
             var flyOutItem = new MenuFlyoutItem { Text = drawing.NameFile, Icon = new FontIcon { Glyph = "\uEC88" } };
-            flyOutItem.Click += (object sender, RoutedEventArgs e) => InventorManagerHelper.GetActualInventorApp()?.Documents.Open(drawing.FullPathName);
-            menuFlyout.Items.Add(flyOutItem);
+            flyOutItem.Click += (object sender, RoutedEventArgs e) =>
+            {
+                InventorHelper2.GetDocument(drawing.FullPathName);
+                InventorHelper2.ShowApp();
+                // InventorManagerHelper.GetActualInventorApp()?.Documents.Open(drawing.FullPathName);
+                menuFlyout.Items.Add(flyOutItem);
+            };
         }
         if (menuFlyout.Items.Count == 0) { menuFlyout.Items.Add(new MenuFlyoutItem { Text = "Aucun plan !", Icon = new FontIcon { Glyph = "\uE783" } }); };
         return menuFlyout;

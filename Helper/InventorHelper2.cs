@@ -24,8 +24,6 @@ public static class InventorHelper2
         }
     }
 
-    public static event Action AppClosed;
-
     public static void ShowApp()
     {
         if (_App != null)

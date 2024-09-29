@@ -1,44 +1,14 @@
-using Microsoft.Office.Interop.Outlook;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls.Primitives;
-using Microsoft.UI.Xaml.Data;
-using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Media;
-using Microsoft.UI.Xaml.Navigation;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Runtime.InteropServices.WindowsRuntime;
-using System.Runtime.Versioning;
-using System.Security;
-using System.Text.Json;
-using System.Text.Json.Serialization;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
-using Outlook = Microsoft.Office.Interop.Outlook;
-using MsgReader.Outlook;
-using Microsoft.UI.Xaml.Media.Imaging;
-using Windows.ApplicationModel.DataTransfer;
-using Windows.Storage;
 using System.Reflection;
-using Microsoft.UI.Xaml.Shapes;
-using Microsoft.UI;
-using System.Text;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using System.Net.Mail;
 using System.Threading.Tasks;
-using Windows.UI.ViewManagement;
-using Windows.UI.WindowManagement;
 using MultiTools.Base;
 using MultiTools.Helper;
-using Application = Microsoft.UI.Xaml.Application;
-using AppWindow = Microsoft.UI.Windowing.AppWindow;
 using WinUIEx;
 
 namespace MultiTools;
@@ -99,7 +69,6 @@ public sealed partial class MainWindow : WindowEx, INotifyPropertyChanged
             }
         };
         Task.Run(VisibilityChangedEvent);
-        InventorHelper2.AppClosed += () => ToggleSwitchShowInventor.IsOn = false;
         UsersNameUpdate();
         //ExtendsContentIntoTitleBar = true;
     }
