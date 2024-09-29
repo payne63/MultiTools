@@ -12,17 +12,26 @@ public static class InventorHelper2
 {
     private static Application _App;
 
-    public static bool IsUse;
+    public static bool IsUse; //TODO create an 'in use' system to avoid collision
     public static event Action AppReady;
+    public static event Action<bool> Visibility;
 
     public static void ShowApp()
     {
-        if (_App != null) _App.Visible = true;
+        if (_App != null)
+        {
+            _App.Visible = true;
+            Visibility?.Invoke(true);
+        }
     }
 
     public static void HideApp()
     {
-        if (_App != null) _App.Visible = false;
+        if (_App != null)
+        {
+            _App.Visible = false;
+            Visibility?.Invoke(false);
+        }
     }
 
     public static void CloseInstance() => _App?.Quit();
@@ -31,6 +40,7 @@ public static class InventorHelper2
     //public static Application? GetInventorApp() => _App;
     public static async Task GetInventorAppAsync()
     {
+
         if (_App != null) return;
         await Task.Run(() =>
         {

@@ -236,35 +236,31 @@ public class InventorManagerHelper
         return ActualApp;
     }
 
-    public async Task PrintList(List<IdwPrintModel> listIDWPrinterModel)
-    {
-        instancePrintTab.ProgressBarStatus = "Démarrage Inventor";
-        await Task.Run(() => StartInventorNewInstance(instancePrintTab.IsViewApp));
-        instancePrintTab.ProgressBarStatus = "Impression en cours";
-        var NbPrintDone = 0;
-        var NbPrintToDo = listIDWPrinterModel.Where(x => x.IsPrint).Count();
-        foreach (IdwPrintModel plan in listIDWPrinterModel)
-        {
-            if (plan.IsPrint)
-            {
-                Inventor.Documents doc = app.Documents;
-                await Task.Run(() => doc.Open(plan.FileInfoData.FullName));
-                Inventor.DrawingDocument documentToPrint = (Inventor.DrawingDocument)app.ActiveDocument;
-                if (await Print(documentToPrint, plan.PageNumber)) NbPrintDone++;
-                instancePrintTab.ProgressBarValue = (NbPrintDone * 100) / NbPrintToDo;
-                doc.CloseAll();
-            }
-        }
-
-        app.Quit();
-        app = null;
-
-        await Task.Delay(1000);
-        instancePrintTab.ProgressBarStatus = @"Impression terminée";
-        await Task.Delay(1500);
-        instancePrintTab.ProgressBarValue = 0;
-        instancePrintTab.ProgressBarStatus = string.Empty;
-    }
+    // public async Task PrintList(List<IdwPrintModel> listIDWPrinterModel)
+    // {
+    //     var NbPrintDone = 0;
+    //     var NbPrintToDo = listIDWPrinterModel.Where(x => x.IsPrint).Count();
+    //     foreach (IdwPrintModel plan in listIDWPrinterModel)
+    //     {
+    //         if (plan.IsPrint)
+    //         {
+    //             Inventor.Documents doc = app.Documents;
+    //             await Task.Run(() => doc.Open(plan.FileInfoData.FullName));
+    //             Inventor.DrawingDocument documentToPrint = (Inventor.DrawingDocument)app.ActiveDocument;
+    //             if (await Print(documentToPrint, plan.PageNumber)) NbPrintDone++;
+    //             doc.CloseAll();
+    //         }
+    //     }
+    //
+    //     app.Quit();
+    //     app = null;
+    //
+    //     await Task.Delay(1000);
+    //     instancePrintTab.ProgressBarStatus = @"Impression terminée";
+    //     await Task.Delay(1500);
+    //     instancePrintTab.ProgressBarValue = 0;
+    //     instancePrintTab.ProgressBarStatus = string.Empty;
+    // }
 
     /// <summary>
     /// Imprime le document avec les paramètres du cartouche

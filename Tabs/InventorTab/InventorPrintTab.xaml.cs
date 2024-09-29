@@ -71,55 +71,7 @@ public sealed partial class InventorPrintTab : TabViewItem, Interfaces.IInitTab,
 
     public PrinterModel GetSelectedPrinterA4A3 => ComboBoxPrinterA4A3.SelectedItem as PrinterModel;
     public PrinterModel GetSelectedPrinterA2A1A0 => ComboBoxPrinterA2A1A0.SelectedItem as PrinterModel;
-
-    private bool _isViewApp;
-
-    public bool IsViewApp
-    {
-        get => _isViewApp;
-        set
-        {
-            _isViewApp = value;
-            OnPropertyChanged();
-        }
-    }
-
-    private double _progressBarValue;
-
-    public double ProgressBarValue
-    {
-        get => _progressBarValue;
-        set
-        {
-            _progressBarValue = value;
-            OnPropertyChanged();
-        }
-    }
-
-    private string _progressBarStatus = string.Empty;
-
-    public string ProgressBarStatus
-    {
-        get => _progressBarStatus;
-        set
-        {
-            _progressBarStatus = value;
-            OnPropertyChanged();
-        }
-    }
-
-    private bool _isInderterminateProgressBar;
-
-    public bool IsInderterminateProgressBar
-    {
-        get => _isInderterminateProgressBar;
-        set
-        {
-            _isInderterminateProgressBar = value;
-            OnPropertyChanged();
-        }
-    }
-
+    
     private bool _isInterfaceEnabled = true;
 
     public bool IsInterfaceEnabled
@@ -212,7 +164,7 @@ public sealed partial class InventorPrintTab : TabViewItem, Interfaces.IInitTab,
 
     private void AddPrinterAction(string filePath)
     {
-        foreach (var printAction in IdwPrintModel.GetIDWPrintModels(filePath, nbPDFDXFPropertyChanged))
+        foreach (var printAction in IdwPrintModel.GetIDWPrintModels(filePath, NbPdfdxfPropertyChanged))
         {
             IdwPrintModels.Add(printAction);
         }
@@ -316,7 +268,6 @@ public sealed partial class InventorPrintTab : TabViewItem, Interfaces.IInitTab,
             await InventorHelper2.PrintFileAsync(printModel, printModel.PageNumber, printerSettings);
         }
 
-        // await inventorManager.PrintList(new List<IDWPrintModel>(IDWPrintModels));
         IsInterfaceEnabled = true;
     }
 
@@ -339,7 +290,7 @@ public sealed partial class InventorPrintTab : TabViewItem, Interfaces.IInitTab,
     private void CheckBox_Checked_PDFChange(object sender, RoutedEventArgs e) => OnPropertyChanged(nameof(NbA4Drawing));
     private void CheckBox_Checked_DXFChange(object sender, RoutedEventArgs e) => OnPropertyChanged(nameof(NbA3Drawing));
 
-    private void nbPDFDXFPropertyChanged(object sender, PropertyChangedEventArgs e)
+    private void NbPdfdxfPropertyChanged(object sender, PropertyChangedEventArgs e)
     {
         OnPropertyChanged(nameof(NbDrawing));
         OnPropertyChanged(nameof(NbA4Drawing));

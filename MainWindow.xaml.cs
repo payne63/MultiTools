@@ -80,12 +80,12 @@ public sealed partial class MainWindow : WindowEx, INotifyPropertyChanged
         tabViewStaticRef = TabViewMain;
         InventorHelper2.AppReady += () =>
         {
-            ToggleSwitchInventor.Toggled -= toggleSwitchInventor_Toggled; 
+            ToggleSwitchInventor.Toggled -= toggleSwitchInventor_Toggled;
             ToggleSwitchInventor.IsOn = true;
-            ToggleSwitchInventor.Toggled += toggleSwitchInventor_Toggled; 
+            ToggleSwitchInventor.Toggled += toggleSwitchInventor_Toggled;
         };
         ToggleSwitchInventor.Toggled += toggleSwitchInventor_Toggled;
-               
+
         ToggleSwitchShowInventor.Toggled += (sender, e) =>
         {
             if (ToggleSwitchShowInventor.IsOn)
@@ -97,8 +97,9 @@ public sealed partial class MainWindow : WindowEx, INotifyPropertyChanged
                 InventorHelper2.HideApp();
             }
         };
-        
-        UsersNameUpdate();
+        InventorHelper2.Visibility += b => ToggleSwitchShowInventor.IsOn = b; 
+
+    UsersNameUpdate();
         //ExtendsContentIntoTitleBar = true;
     }
 
