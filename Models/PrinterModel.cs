@@ -13,9 +13,11 @@ namespace MultiTools.Models
     {
         public static ObservableCollection<PrinterModel> PrinterModels;
 
-        public string Name { get; set; }
+        public string Name { get; private set; }
 
-        public PrinterModel(string name)
+        public static PrinterModel NullPrinterModel => new PrinterModel("null printer");
+
+        private PrinterModel(string name)
         {
             Name = name;
         }

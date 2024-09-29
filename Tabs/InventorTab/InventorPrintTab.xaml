@@ -139,7 +139,7 @@
             <TextBlock Text="Orientation" Width="100" VerticalAlignment="Center"/>
             <TextBlock Text="N° Page" Width="100" VerticalAlignment="Center"/>
         </StackPanel>
-        <ListView ItemsSource="{x:Bind IDWPrintModels}"
+        <ListView ItemsSource="{x:Bind IdwPrintModels}"
                       x:Name="ListViewIDW"
                       Grid.Column="1" Grid.Row="1"
                       CanBeScrollAnchor="True"
@@ -153,7 +153,7 @@
                       DragOver="TabViewItem_DragOver"
                       AllowDrop="True" IsEnabled="{x:Bind IsInterfaceEnabled, Mode=OneWay}">
             <ListView.ItemTemplate>
-                <DataTemplate x:DataType="model:IDWPrintModel">
+                <DataTemplate x:DataType="model:IdwPrintModel">
                     <ListViewItem Margin="3">
                         <StackPanel Orientation="Vertical">
                             <StackPanel Orientation="Horizontal" >

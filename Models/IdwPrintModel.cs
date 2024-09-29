@@ -12,7 +12,7 @@ using Microsoft.UI.Xaml.Media.Imaging;
 
 namespace MultiTools.Models;
 
-public class IDWPrintModel : INotifyPropertyChanged
+public class IdwPrintModel : INotifyPropertyChanged
 {
     private static readonly I.ApprenticeServerComponent appServer = new();
     public event PropertyChangedEventHandler PropertyChanged;
@@ -71,7 +71,7 @@ public class IDWPrintModel : INotifyPropertyChanged
     public bool isMultiPage => !IsOnlyOnePage;
     public string Name => FileInfoData.Name;
 
-    private IDWPrintModel(string filePath,
+    private IdwPrintModel(string filePath,
         DrawingSheetSizeEnum drawingSheetSizeEnum,
         PageOrientationTypeEnum drawingOrientationEnum,
         int pageNumber,
@@ -100,12 +100,12 @@ public class IDWPrintModel : INotifyPropertyChanged
         else if (Name.EndsWith("L.idw")) IsPrint = false; else IsPrint = true;
     }
 
-    public static IEnumerable<IDWPrintModel> GetIDWPrintModels(string filePath ,PropertyChangedEventHandler nbPDFDXFPropertyChanged)
+    public static IEnumerable<IdwPrintModel> GetIDWPrintModels(string filePath ,PropertyChangedEventHandler nbPDFDXFPropertyChanged)
     {
         var drawingDocument = appServer.Open(filePath) as I.ApprenticeServerDrawingDocument;
         for (var page = 1; page < drawingDocument.Sheets.Count+1; page++)
         {
-            yield return new IDWPrintModel(filePath,
+            yield return new IdwPrintModel(filePath,
                 drawingDocument.Sheets[page].Size,
                 drawingDocument.Sheets[page].Orientation,
                 page,

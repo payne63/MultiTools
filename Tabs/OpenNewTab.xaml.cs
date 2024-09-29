@@ -25,6 +25,7 @@ using MultiTools.Elements;
 using MultiTools.Tabs.InventorTab;
 using MultiTools.Tabs.VariousTab;
 using MultiTools.Tabs.TestTab;
+using SplittableDataGridSAmple.Helper;
 
 namespace MultiTools.Tabs;
 

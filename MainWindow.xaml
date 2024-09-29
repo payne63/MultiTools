@@ -31,7 +31,7 @@
                      Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
                 <TabView.TabStripFooter>
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-
+                        <ToggleSwitch Name="ToggleSwitchInventor" OffContent="démarrage Inventor" OnContent="Inventor Pret" />
                         <ComboBox x:Name="ComboBoxUsers"
                                   ItemsSource="{x:Bind UsersName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                   DisplayMemberPath="Name"

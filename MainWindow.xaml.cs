@@ -36,6 +36,7 @@ using Windows.UI.ViewManagement;
 using Windows.UI.WindowManagement;
 using MultiTools.Base;
 using MultiTools.Helper;
+using SplittableDataGridSAmple.Helper;
 using Application = Microsoft.UI.Xaml.Application;
 using AppWindow = Microsoft.UI.Windowing.AppWindow;
 using WinUIEx;
@@ -53,6 +54,7 @@ public sealed partial class MainWindow : WindowEx, INotifyPropertyChanged
     private ObservableCollection<Base.User> _Users = new();
     public ElementTheme _currentElementTheme = ElementTheme.Default;
 
+    
     public ObservableCollection<Base.User> UsersName
     {
         get => _Users;
@@ -76,9 +78,25 @@ public sealed partial class MainWindow : WindowEx, INotifyPropertyChanged
         LoadPaths();
         Instance = this;
         tabViewStaticRef = TabViewMain;
+        InventorHelper2.AppReady += () =>
+        {
+            ToggleSwitchInventor.Toggled -= toggleSwitchInventor_Toggled; 
+            ToggleSwitchInventor.IsOn = true;
+            ToggleSwitchInventor.Toggled += toggleSwitchInventor_Toggled; 
+        };
+        ToggleSwitchInventor.Toggled += toggleSwitchInventor_Toggled;
+            
+        
         
         UsersNameUpdate();
         //ExtendsContentIntoTitleBar = true;
+    }
+
+    private void toggleSwitchInventor_Toggled(object sender, RoutedEventArgs e)
+    {
+        ToggleSwitchInventor.Toggled -= toggleSwitchInventor_Toggled; 
+        ToggleSwitchInventor.IsOn = !ToggleSwitchInventor.IsOn;
+        ToggleSwitchInventor.Toggled += toggleSwitchInventor_Toggled;
     }
 
     private static void LoadPaths()
@@ -139,6 +157,7 @@ public sealed partial class MainWindow : WindowEx, INotifyPropertyChanged
 
     private void MainWindow_OnClosed(object sender, WindowEventArgs args)
     {
+        InventorHelper2.CloseInstance();
         InventorHelper.CloseAllInstance();
         GC.Collect();
         GC.WaitForPendingFinalizers();

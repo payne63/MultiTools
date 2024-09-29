@@ -236,14 +236,14 @@ public class InventorManagerHelper
         return ActualApp;
     }
 
-    public async Task PrintList(List<IDWPrintModel> listIDWPrinterModel)
+    public async Task PrintList(List<IdwPrintModel> listIDWPrinterModel)
     {
         instancePrintTab.ProgressBarStatus = "Démarrage Inventor";
         await Task.Run(() => StartInventorNewInstance(instancePrintTab.IsViewApp));
         instancePrintTab.ProgressBarStatus = "Impression en cours";
         var NbPrintDone = 0;
         var NbPrintToDo = listIDWPrinterModel.Where(x => x.IsPrint).Count();
-        foreach (IDWPrintModel plan in listIDWPrinterModel)
+        foreach (IdwPrintModel plan in listIDWPrinterModel)
         {
             if (plan.IsPrint)
             {
