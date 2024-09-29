@@ -52,11 +52,9 @@
                 <Button Margin="10"
                         HorizontalAlignment="Stretch"
                         Padding="15"
-                        IsEnabled="{x:Bind InventorHelperReady, Mode=OneWay}"
+                        IsEnabled="{x:Bind _isInterfaceEnabled, Mode=OneWay}"
                         Click="Button_Click_RenameIProperty">
                     <StackPanel Orientation="Vertical">
-                        <TextBlock Text="Chargement Inventor" x:Name="ProgressRingLabel" HorizontalAlignment="Center" />
-                        <ProgressRing IsActive="{x:Bind RingInProgress, Mode=OneWay}" Width="32" />
                         <TextBlock Text="Renommer" HorizontalAlignment="Center" />
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="5">
                             <Viewbox MaxHeight="30" MaxWidth="30">
