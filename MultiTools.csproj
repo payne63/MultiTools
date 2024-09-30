@@ -11,6 +11,7 @@
     <PublishProfile>win10-$(Platform).pubxml</PublishProfile>
     <UseWinUI>true</UseWinUI>
     <EnableMsixTooling>true</EnableMsixTooling>
+    <EnableIncrementalBuild>true</EnableIncrementalBuild>
     <WindowsPackageType>None</WindowsPackageType>
     <WindowsAppSDKSelfContained>true</WindowsAppSDKSelfContained>
     <ApplicationIcon>Images\cropped-copietravail-evolution6.ico</ApplicationIcon>
@@ -142,7 +143,7 @@
   <ItemGroup>
     <Reference Include="Autodesk.Inventor.Interop">
 <!--      <HintPath>..\..\..\..\..\Program Files\Autodesk\Inventor 2019\Bin\Public Assemblies\Autodesk.Inventor.Interop.dll</HintPath>-->
-      <HintPath>Assemblies\autodesk.inventor.interop.dll</HintPath>
+      <HintPath>Assemblies\inventor2025\autodesk.inventor.interop.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
