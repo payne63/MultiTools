@@ -128,7 +128,7 @@
                       DragOver="TabViewItem_DragOver"
                       AllowDrop="True" IsEnabled="{x:Bind IsInterfaceEnabled, Mode=OneWay}">
             <ListView.ItemTemplate>
-                <DataTemplate x:DataType="model:IDWModel">
+                <DataTemplate x:DataType="model:IdwModel">
                     <ListViewItem Margin="3" >
                         <StackPanel Orientation="Vertical">
                             <StackPanel Orientation="Horizontal" >

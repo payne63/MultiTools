@@ -165,7 +165,6 @@ public sealed partial class MainWindow : WindowEx, INotifyPropertyChanged
     {
         ctsVisibilityChangeTask.Cancel();
         InventorHelper2.CloseInstance();
-        InventorHelper.CloseAllInstance();
         GC.Collect();
         GC.WaitForPendingFinalizers();
     }

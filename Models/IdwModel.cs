@@ -6,7 +6,7 @@ using System.Runtime.CompilerServices;
 
 namespace MultiTools.Models
 {
-    public class IDWModel : INotifyPropertyChanged
+    public class IdwModel : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
         protected void OnPropertyChanged([CallerMemberName] string name = null)
@@ -34,7 +34,7 @@ namespace MultiTools.Models
             set { _MakeDXF = value; OnPropertyChanged(); }
         }
 
-        public IDWModel(FileInfo fileInfo,PropertyChangedEventHandler propertyChangedEventHandler)
+        public IdwModel(FileInfo fileInfo,PropertyChangedEventHandler propertyChangedEventHandler)
         {
             FileInfoData = fileInfo;
             AutoSelectPDFStatus();

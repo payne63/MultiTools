@@ -7,6 +7,8 @@ using ColorCode.Compilation.Languages;
 using Inventor;
 
 namespace MultiTools.Helper;
+
+[Obsolete ("use InventorHelper2",true)]
 internal class InventorHelper
 {
 

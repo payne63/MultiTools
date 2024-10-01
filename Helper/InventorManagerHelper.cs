@@ -20,7 +20,7 @@ using MultiTools.DialogPage;
 
 namespace AvitechTools.Models;
 
-[Obsolete("utiliser InventorHelper2",true)]
+[Obsolete("use InventorHelper2",true)]
 public class InventorManagerHelper
 {
     InventorLaserTab instanceLaserTab;
@@ -66,7 +66,7 @@ public class InventorManagerHelper
     /// Réalise l'ouverture des fichiers et les exports
     /// </summary>
     /// <param name="NbExportationToDo"></param>
-    public async Task GenerateFile(List<IDWModel> listIDWModels)
+    public async Task GenerateFile(List<IdwModel> listIDWModels)
     {
         // instanceLaserTab.IsInderterminateProgressBar = true;
         // instanceLaserTab.ProgressBarStatus = "Démarrage Inventor";
@@ -89,7 +89,7 @@ public class InventorManagerHelper
         if (listIDWModels.Exists(x => x.MakeDXF) && !Directory.Exists(DXFFolder)) Directory.CreateDirectory(DXFFolder);
 
 
-        foreach (IDWModel plan in listIDWModels)
+        foreach (IdwModel plan in listIDWModels)
         {
             if (!plan.MakePDF && !plan.MakeDXF) continue; // si pas de pdf ni de dxf on passe au fichier suivant
 

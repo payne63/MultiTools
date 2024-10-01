@@ -37,7 +37,7 @@ namespace MultiTools.Tabs.InventorTab;
 
 public sealed partial class InventorLaserTab : TabViewItem, Interfaces.IInitTab, INotifyPropertyChanged
 {
-    public readonly ObservableCollection<IDWModel> IdwModels = new();
+    public readonly ObservableCollection<IdwModel> IdwModels = new();
 
     #region PropertyChanged
 
@@ -125,7 +125,7 @@ public sealed partial class InventorLaserTab : TabViewItem, Interfaces.IInitTab,
                         if (file.Name.EndsWith(".idw"))
                         {
                             FileInfo fileInfo = new FileInfo(file.Path);
-                            IdwModels.Add(new IDWModel(fileInfo, nbPDFDXFPropertyChanged));
+                            IdwModels.Add(new IdwModel(fileInfo, nbPDFDXFPropertyChanged));
                         }
                     }
 
@@ -136,15 +136,15 @@ public sealed partial class InventorLaserTab : TabViewItem, Interfaces.IInitTab,
                         if (f.EndsWith(".idw"))
                         {
                             FileInfo fileInfo = new FileInfo(f);
-                            IdwModels.Add(new IDWModel(fileInfo, nbPDFDXFPropertyChanged));
+                            IdwModels.Add(new IdwModel(fileInfo, nbPDFDXFPropertyChanged));
                         }
                     }
                 }
             }
         }
 
-        var sortableList = new List<IDWModel>(IdwModels);
-        sortableList.Sort((IDWModel A, IDWModel B) => string.Compare(A.Name, B.Name));
+        var sortableList = new List<IdwModel>(IdwModels);
+        sortableList.Sort((IdwModel A, IdwModel B) => string.Compare(A.Name, B.Name));
         for (int i = 0; i < sortableList.Count; i++)
         {
             IdwModels.Move(IdwModels.IndexOf(sortableList[i]), i);
@@ -158,7 +158,7 @@ public sealed partial class InventorLaserTab : TabViewItem, Interfaces.IInitTab,
 
     private async void GetThumbNailAsync(object sender, RoutedEventArgs e)
     {
-        if (((FrameworkElement)sender).DataContext is IDWModel IDWModelContext)
+        if (((FrameworkElement)sender).DataContext is IdwModel IDWModelContext)
         {
             if (TeachingTipThumbNail.IsOpen == true && ThumbNailPartNumber.Text == IDWModelContext.FileInfoData.Name)
             {
@@ -184,7 +184,7 @@ public sealed partial class InventorLaserTab : TabViewItem, Interfaces.IInitTab,
 
     private void Button_Click_OpenDrawing(object sender, RoutedEventArgs e)
     {
-        var contextIdwModel = ((FrameworkElement)sender).DataContext as IDWModel;
+        var contextIdwModel = ((FrameworkElement)sender).DataContext as IdwModel;
         if (contextIdwModel != null)
         {
             InventorHelper2.GetDocument(contextIdwModel.FileInfoData.FullName);
@@ -194,7 +194,7 @@ public sealed partial class InventorLaserTab : TabViewItem, Interfaces.IInitTab,
 
     private void Button_Click_Remove(object sender, RoutedEventArgs e)
     {
-        var contextIDWModel = ((FrameworkElement)sender).DataContext as IDWModel;
+        var contextIDWModel = ((FrameworkElement)sender).DataContext as IdwModel;
         IdwModels.Remove(contextIDWModel);
     }
 
@@ -208,7 +208,7 @@ public sealed partial class InventorLaserTab : TabViewItem, Interfaces.IInitTab,
         IsInterfaceEnabled = true;
     }
 
-    private async Task GeneratePdfDxfAsync(List<IDWModel> IdwModels)
+    private async Task GeneratePdfDxfAsync(List<IdwModel> IdwModels)
     {
         var rootPathOfFile = IdwModels.First()?.FileInfoData?.Directory?.FullName;
         if (rootPathOfFile == null) return;
@@ -219,7 +219,7 @@ public sealed partial class InventorLaserTab : TabViewItem, Interfaces.IInitTab,
         string DXFFolder = rootPathOfFile + @"\DXF";
         if (IdwModels.Exists(x => x.MakeDXF) && !Directory.Exists(DXFFolder)) Directory.CreateDirectory(DXFFolder);
 
-        foreach (IDWModel plan in IdwModels)
+        foreach (IdwModel plan in IdwModels)
         {
             var drawingDoc = InventorHelper2.GetDocument(plan.FileInfoData.FullName) as DrawingDocument;
 
