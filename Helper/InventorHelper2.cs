@@ -8,7 +8,7 @@ using Path = System.IO.Path;
 
 namespace MultiTools.Helper;
 
-public static class InventorHelper2
+public class InventorHelper2
 {
     private static Application _App;
 
@@ -42,6 +42,11 @@ public static class InventorHelper2
 
     public static void CloseInstance() => _App?.Quit();
 
+    public static void CloseActiveDocument()
+    {
+        _App?.ActiveDocument?.Close(true);
+    }
+
     public static async Task GetInventorAppAsync()
     {
         if (_App != null) return;
@@ -56,7 +61,6 @@ public static class InventorHelper2
                 while (!instance.Ready)
                 {
                 }
-
                 _App = instance;
             }
             catch (Exception e)
@@ -64,7 +68,6 @@ public static class InventorHelper2
                 throw new Exception("impossible d'obtenir une app inventor", e);
             }
         });
-
         AppReady?.Invoke(); // must be outside the task.run
     }
 
@@ -163,4 +166,10 @@ public static class InventorHelper2
 
         return true;
     }
+    
+    public static DrawingDocument BuildTrueSheetMetal(string PartPath, string templatePath) => 
+    DXFBuilderHelper.BuildTrueSheetMetal( _App, PartPath, templatePath);
+    
+    public static DrawingDocument BuildNotSheetMetal(string PartPath, string templatePath) =>
+    DXFBuilderHelper.BuildNotSheetMetal( _App, PartPath, templatePath);
 }

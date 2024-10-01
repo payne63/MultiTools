@@ -64,7 +64,7 @@ public sealed partial class CleanProjectTab : TabViewItem, Interfaces.IInitTab, 
 
     public async void InitTabAsync()
     {
-        InventorHelper = await InventorHelper.CreateAsync();
+        // InventorHelper = await InventorHelper.CreateAsync();
     }
 
 
@@ -132,12 +132,12 @@ public sealed partial class CleanProjectTab : TabViewItem, Interfaces.IInitTab, 
 
         //};
         //await eventCompleted.Task; // ne fonctionne pas !!!!
-        while (InventorHelper == null)
-        {
-            await Task.Delay(500);
-            Trace.WriteLine("wait");
-        }
-        var doc = InventorHelper.App.Documents.Open(path);
+        // while (InventorHelper == null)
+        // {
+        //     await Task.Delay(500);
+        //     Trace.WriteLine("wait");
+        // }
+        var doc = InventorHelper2.GetDocument(path);
 
         if (doc is I.AssemblyDocument assemblyDoc)
         {
@@ -188,7 +188,7 @@ public sealed partial class CleanProjectTab : TabViewItem, Interfaces.IInitTab, 
 
     public Visibility DragAndDropVisibility => OrphansPart.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
 
-    private InventorHelper InventorHelper;
+    // private InventorHelper InventorHelper;
 
     private void TabViewItem_DragOver(object sender, DragEventArgs e)
     {

@@ -57,11 +57,10 @@
                 <Button Margin="10" 
                 HorizontalAlignment="Stretch"
                 Padding="15"
-                IsEnabled="{x:Bind InventorHelperReady, Mode=OneWay}"
                     Click="Button_Click_BuildDrawing">
                     <StackPanel Orientation="Vertical" >
                         <TextBlock Text="Chargement d'Inventor" x:Name="ProgressRingLabel" HorizontalAlignment="Center"/>
-                        <ProgressRing  IsActive="{x:Bind RingInProgress, Mode=OneWay}" Width="32"/>
+                        <!-- <ProgressRing  IsActive="{x:Bind RingInProgress, Mode=OneWay}" Width="32"/> -->
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="5">
                             <Viewbox MaxHeight="30" MaxWidth="30" >
                                 <FontIcon Glyph="&#xEC88;" />

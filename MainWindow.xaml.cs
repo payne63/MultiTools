@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.Reflection;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Threading;
 using System.Threading.Tasks;
 using MultiTools.Base;
 using MultiTools.Helper;
@@ -23,7 +24,8 @@ public sealed partial class MainWindow : WindowEx, INotifyPropertyChanged
 
     private ObservableCollection<Base.User> _Users = new();
     public ElementTheme _currentElementTheme = ElementTheme.Default;
-
+    
+    private CancellationTokenSource ctsVisibilityChangeTask = new();
 
     public ObservableCollection<Base.User> UsersName
     {
@@ -68,21 +70,25 @@ public sealed partial class MainWindow : WindowEx, INotifyPropertyChanged
                 InventorHelper2.HideApp();
             }
         };
-        Task.Run(VisibilityChangedEvent);
+        
+        var token = ctsVisibilityChangeTask.Token;
+        Task.Run(() => VisibilityChangedEvent(token),token);
+        
         UsersNameUpdate();
         //ExtendsContentIntoTitleBar = true;
     }
 
-    private void VisibilityChangedEvent()
+    private void VisibilityChangedEvent(CancellationToken token)
     {
         var visible = false;
         while (true)
         {
             Task.Delay(1000).Wait();
+            if (token.IsCancellationRequested) break;
             if (InventorHelper2.AppIsVisible != visible)
             {
                 visible = InventorHelper2.AppIsVisible;
-                Task.Delay(500).Wait();
+                // Task.Delay(500).Wait();
                 DispatcherQueue.TryEnqueue(() =>
                 {
                     ToggleSwitchShowInventor.IsOn = visible;
@@ -157,6 +163,7 @@ public sealed partial class MainWindow : WindowEx, INotifyPropertyChanged
 
     private void MainWindow_OnClosed(object sender, WindowEventArgs args)
     {
+        ctsVisibilityChangeTask.Cancel();
         InventorHelper2.CloseInstance();
         InventorHelper.CloseAllInstance();
         GC.Collect();

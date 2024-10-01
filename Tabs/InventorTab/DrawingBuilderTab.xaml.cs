@@ -48,25 +48,26 @@ public sealed partial class DrawingBuilderTab : TabViewItem, Interfaces.IInitTab
 
     private StorageFile gabaritFile = null;
 
-    private bool _RingInProgress;
+    // private bool _RingInProgress;
+    //
+    // public bool RingInProgress
+    // {
+    //     get => _RingInProgress;
+    //     set
+    //     {
+    //         _RingInProgress = value; OnPropertyChanged(); OnPropertyChanged(nameof(InventorHelperReady));
+    //     }
+    // }
+    //
+    // public bool InventorHelperReady => !RingInProgress;
 
-    public bool RingInProgress
-    {
-        get => _RingInProgress;
-        set
-        {
-            _RingInProgress = value; OnPropertyChanged(); OnPropertyChanged(nameof(InventorHelperReady));
-        }
-    }
-
-    public bool InventorHelperReady => !RingInProgress;
-
-    private bool _isInterfaceEnabled = true;
-    private InventorHelper _inventorHelper;
+    // private InventorHelper _inventorHelper;
 
     public readonly ObservableCollection<DataIQT> SourceLaserCollection = new();
 
     public Visibility DragAndDropVisibility => SourceLaserCollection.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
+    
+    private bool _isInterfaceEnabled = true;
     public bool IsInterfaceEnabled
     {
         get => _isInterfaceEnabled;
@@ -79,18 +80,18 @@ public sealed partial class DrawingBuilderTab : TabViewItem, Interfaces.IInitTab
     public async void InitTabAsync()
     {
         SourceLaserCollection.CollectionChanged += (sender, e) => OnPropertyChanged(nameof(DragAndDropVisibility));
-        RingInProgress = true;
+        // RingInProgress = true;
         ProgressRingLabel.Text = "Chargement d'Inventor";
-        InventorHelper.Ready += () => { RingInProgress = false; ProgressRingLabel.Text = "Inventor Prêt"; };
-        _inventorHelper = await InventorHelper.CreateAsync();
-        CloseRequested += (sender, args) =>
-        {
-            if (_inventorHelper != null)
-            {
-                _inventorHelper.App.Quit();
-                _inventorHelper = null;
-            }
-        };
+        // InventorHelper.Ready += () => { RingInProgress = false; ProgressRingLabel.Text = "Inventor Prêt"; };
+        // _inventorHelper = await InventorHelper.CreateAsync();
+        // CloseRequested += (sender, args) =>
+        // {
+        //     if (_inventorHelper != null)
+        //     {
+        //         _inventorHelper.App.Quit();
+        //         _inventorHelper = null;
+        //     }
+        // };
     }
 
     public DrawingBuilderTab()
@@ -176,7 +177,8 @@ public sealed partial class DrawingBuilderTab : TabViewItem, Interfaces.IInitTab
         }
         if (!IsInterfaceEnabled) return;
         IsInterfaceEnabled = false;
-        _inventorHelper.ShowApp();
+        InventorHelper2.ShowApp();
+        // _inventorHelper.ShowApp();
         foreach (var dataIqt in SourceLaserCollection)
         {
             dataIqt.Status = "en Cours";
@@ -189,26 +191,28 @@ public sealed partial class DrawingBuilderTab : TabViewItem, Interfaces.IInitTab
                 {
                     try
                     {
-                        drawingDocument = DXFBuilderHelper.BuildTrueSheetMetal(_inventorHelper, dataIqt.FullPathName, gabaritFile.Path); 
+                        drawingDocument = InventorHelper2.BuildTrueSheetMetal( dataIqt.FullPathName, gabaritFile.Path); 
                     }
                     catch (Exception ex)
                     {
                         abordOperation = (true,ex.Message);   
                     }
                 });
-                if (abordOperation.status)
+                if (abordOperation.status == true)
                 { 
                     await OpenSimpleMessage(abordOperation.message);
                     dataIqt.Status = abordOperation.message;
                     GetProgressRingStatus(dataIqt).IsActive = false;
-                    _inventorHelper.App.ActiveDocument.Close(true);
-                    _inventorHelper.App.ActiveDocument.Close(true);
+                    InventorHelper2.CloseActiveDocument();
+                    InventorHelper2.CloseActiveDocument();
+                    // _inventorHelper.App.ActiveDocument.Close(true);
+                    // _inventorHelper.App.ActiveDocument.Close(true);
                     continue; 
                 }
             }
             else
             {
-                await Task.Run(() => drawingDocument = DXFBuilderHelper.BuildNotSheetMetal(_inventorHelper, dataIqt.FullPathName, gabaritFile.Path));
+                await Task.Run(() => drawingDocument = InventorHelper2.BuildNotSheetMetal( dataIqt.FullPathName, gabaritFile.Path));
             }
             var drawingSavePath = dataIqt.FileInfoData.Directory.FullName + @"\Auto DXF\" +
                     System.IO.Path.GetFileNameWithoutExtension(dataIqt.FileInfoData.Name) + ".idw";
@@ -229,7 +233,8 @@ public sealed partial class DrawingBuilderTab : TabViewItem, Interfaces.IInitTab
                     System.IO.File.Delete(drawingSavePath);
                 }
                 drawingDocument.SaveAs(drawingSavePath, false);
-                _inventorHelper.SaveDXF(drawingDocument, System.IO.Path.GetDirectoryName(drawingSavePath));
+                InventorHelper2.SaveDxf(drawingDocument, System.IO.Path.GetDirectoryName(drawingSavePath));
+                // _inventorHelper.SaveDXF(drawingDocument, System.IO.Path.GetDirectoryName(drawingSavePath));
                 dataIqt.Status = "Fait";
             }
             else if (dialogResult == ContentDialogResult.Secondary)
@@ -239,7 +244,8 @@ public sealed partial class DrawingBuilderTab : TabViewItem, Interfaces.IInitTab
             GetProgressRingStatus(dataIqt).IsActive = false;
             drawingDocument.Close(true);
         }
-        _inventorHelper.HideApp();
+        InventorHelper2.HideApp();
+        // _inventorHelper.HideApp();
         IsInterfaceEnabled = true;
 
     }
