@@ -9,12 +9,12 @@ public abstract class TabViewItemExtend : TabViewItem
     
     public event PropertyChangedEventHandler PropertyChanged;
 
-    private void OnPropertyChanged([CallerMemberName] string name = null)
+    protected void OnPropertyChanged([CallerMemberName] string name = null)
     {
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
     }
 
-    private bool _isInterfaceEnabled = true;
+    protected bool _isInterfaceEnabled = true;
 
     public bool IsInterfaceEnabled
     {
@@ -25,7 +25,6 @@ public abstract class TabViewItemExtend : TabViewItem
             OnPropertyChanged();
         }
     }
-
-    public abstract void InitTabAsync();
-
+    
+    
 }

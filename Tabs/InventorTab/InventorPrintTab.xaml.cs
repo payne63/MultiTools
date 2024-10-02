@@ -18,20 +18,20 @@ using MultiTools.Models;
 
 namespace MultiTools.Tabs.InventorTab;
 
-public sealed partial class InventorPrintTab : TabViewItem, Interfaces.IInitTab, INotifyPropertyChanged
+public sealed partial class InventorPrintTab : TabViewItemExtend, Interfaces.IInitTab, INotifyPropertyChanged
 {
     public readonly ObservableCollection<IdwPrintModel> IdwPrintModels = new();
 
-    #region PropertyChanged
-
-    public event PropertyChangedEventHandler PropertyChanged;
-
-    private void OnPropertyChanged([CallerMemberName] string name = null)
-    {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
-    }
-
-    #endregion
+    // #region PropertyChanged
+    //
+    // public event PropertyChangedEventHandler PropertyChanged;
+    //
+    // private void OnPropertyChanged([CallerMemberName] string name = null)
+    // {
+    //     PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+    // }
+    //
+    // #endregion
 
     private ObservableCollection<PrinterModel> _printerA4A3;
 
@@ -72,17 +72,17 @@ public sealed partial class InventorPrintTab : TabViewItem, Interfaces.IInitTab,
     public PrinterModel GetSelectedPrinterA4A3 => ComboBoxPrinterA4A3.SelectedItem as PrinterModel;
     public PrinterModel GetSelectedPrinterA2A1A0 => ComboBoxPrinterA2A1A0.SelectedItem as PrinterModel;
     
-    private bool _isInterfaceEnabled = true;
-
-    public bool IsInterfaceEnabled
-    {
-        get => _isInterfaceEnabled;
-        set
-        {
-            _isInterfaceEnabled = value;
-            OnPropertyChanged();
-        }
-    }
+    // private bool _isInterfaceEnabled = true;
+    //
+    // public bool IsInterfaceEnabled
+    // {
+    //     get => _isInterfaceEnabled;
+    //     set
+    //     {
+    //         _isInterfaceEnabled = value;
+    //         OnPropertyChanged();
+    //     }
+    // }
 
     public int NbDrawing => IdwPrintModels.Where(x => x.IsPrint).Count();
 
