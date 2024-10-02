@@ -11,7 +11,6 @@
     <PublishProfile>win10-$(Platform).pubxml</PublishProfile>
     <UseWinUI>true</UseWinUI>
     <EnableMsixTooling>true</EnableMsixTooling>
-    <EnableIncrementalBuild>true</EnableIncrementalBuild>
     <WindowsPackageType>None</WindowsPackageType>
     <WindowsAppSDKSelfContained>true</WindowsAppSDKSelfContained>
     <ApplicationIcon>Images\cropped-copietravail-evolution6.ico</ApplicationIcon>
@@ -31,6 +30,7 @@
     <None Remove="Elements\OpenNewTab.xaml" />
     <None Remove="Elements\ProjectExplorerElements.xaml" />
     <None Remove="Elements\TestControlWithConverter.xaml" />
+    <None Remove="Elements\ToolTipInventor.xaml" />
     <None Remove="forms\MenuTabView.xaml" />
     <None Remove="Pages\WelcomePage.xaml" />
     <None Remove="Services\MarshalService.xaml" />
@@ -160,6 +160,9 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Update="Elements\DataGridQT.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Elements\ToolTipInventor.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <None Update="Images\AvitechLogo.png">

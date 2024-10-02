@@ -7,6 +7,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:model="using:MultiTools.Models"
     xmlns:base="using:MultiTools.Base"
+    xmlns:elements="using:MultiTools.Elements"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
@@ -143,6 +144,9 @@
             <ListView.ItemTemplate>
                 <DataTemplate x:DataType="model:IdwPrintModel">
                     <ListViewItem Margin="3">
+                        <ToolTipService.ToolTip>
+                            <elements:ToolTipInventor FileInfoData="{x:Bind FileInfoData}"/>
+                        </ToolTipService.ToolTip>
                         <StackPanel Orientation="Vertical">
                             <StackPanel Orientation="Horizontal" >
                                 <TextBlock Text="{x:Bind Name}" MinWidth="320" VerticalAlignment="Center"/>
