@@ -43,15 +43,15 @@
                                               Width="150" />
                             </StackPanel>
                         </Border>
-                        <ComboBox x:Name="ComboBoxUsers"
-                                  ItemsSource="{x:Bind UsersName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                  DisplayMemberPath="Name"
-                                  SelectionChanged="ListBox_SelectionChanged"
-                                  PlaceholderText="Sélectionner un utilisateur"
-                                  VerticalAlignment="Center"
-                                  HorizontalAlignment="Right"
-                                  Width="250">
-                        </ComboBox>
+                        <!-- <ComboBox x:Name="ComboBoxUsers" -->
+                        <!--           ItemsSource="{x:Bind UsersName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" -->
+                        <!--           DisplayMemberPath="Name" -->
+                        <!--           SelectionChanged="ListBox_SelectionChanged" -->
+                        <!--           PlaceholderText="Sélectionner un utilisateur" -->
+                        <!--           VerticalAlignment="Center" -->
+                        <!--           HorizontalAlignment="Right" -->
+                        <!--           Width="250"> -->
+                        <!-- </ComboBox> -->
                         <Button
                             x:Name="ThemeButton"
                             Height="32"

@@ -8,6 +8,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Storage.FileProperties;
+using CommunityToolkit.WinUI.UI;
 using Inventor;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -64,22 +65,22 @@ public sealed partial class InventorPrintTab : TabViewItemExtend, Interfaces.IIn
     public PrinterModel GetSelectedPrinterA2A1A0 => ComboBoxPrinterA2A1A0.SelectedItem as PrinterModel;
 
 
-    public int NbDrawing => IdwPrintModels.Where(x => x.IsPrint).Count();
+    public int NbDrawing => IdwPrintModels.Where(x => x.MustBePrint).Count();
 
     public int NbA4Drawing =>
-        IdwPrintModels.Count(x => x.SheetSize == DrawingSheetSizeEnum.kA4DrawingSheetSize && x.IsPrint);
+        IdwPrintModels.Count(x => x.SheetSize == DrawingSheetSizeEnum.kA4DrawingSheetSize && x.MustBePrint);
 
     public int NbA3Drawing =>
-        IdwPrintModels.Count(x => x.SheetSize == DrawingSheetSizeEnum.kA3DrawingSheetSize && x.IsPrint);
+        IdwPrintModels.Count(x => x.SheetSize == DrawingSheetSizeEnum.kA3DrawingSheetSize && x.MustBePrint);
 
     public int NbA2Drawing =>
-        IdwPrintModels.Count(x => x.SheetSize == DrawingSheetSizeEnum.kA2DrawingSheetSize && x.IsPrint);
+        IdwPrintModels.Count(x => x.SheetSize == DrawingSheetSizeEnum.kA2DrawingSheetSize && x.MustBePrint);
 
     public int NbA1Drawing =>
-        IdwPrintModels.Count(x => x.SheetSize == DrawingSheetSizeEnum.kA1DrawingSheetSize && x.IsPrint);
+        IdwPrintModels.Count(x => x.SheetSize == DrawingSheetSizeEnum.kA1DrawingSheetSize && x.MustBePrint);
 
     public int NbA0Drawing =>
-        IdwPrintModels.Count(x => x.SheetSize == DrawingSheetSizeEnum.kA0DrawingSheetSize && x.IsPrint);
+        IdwPrintModels.Count(x => x.SheetSize == DrawingSheetSizeEnum.kA0DrawingSheetSize && x.MustBePrint);
 
     public InventorPrintTab()
     {
@@ -131,43 +132,6 @@ public sealed partial class InventorPrintTab : TabViewItemExtend, Interfaces.IIn
         }    
         
     }
-    //
-    // private async void TabViewItem_Drop(object sender, DragEventArgs e)
-    // {
-    //     if (e.DataView.Contains(StandardDataFormats.StorageItems))
-    //     {
-    //         foreach (var file in await e.DataView.GetStorageItemsAsync())
-    //         {
-    //             if (!Directory.Exists(file.Path)) //si ce n'est pas un répertoire
-    //             {
-    //                 if (file.Name.EndsWith(".idw")) AddPrinterAction(file.Path);
-    //             }
-    //
-    //             if (Directory.Exists(file.Path)) // si c'est un répertoire
-    //             {
-    //                 foreach (var f in Directory.GetFiles(file.Path))
-    //                 {
-    //                     if (f.EndsWith(".idw")) AddPrinterAction(f);
-    //                 }
-    //             }
-    //         }
-    //     }
-    //
-    //     var sortableList = new List<IdwPrintModel>(IdwPrintModels);
-    //     sortableList.Sort((IdwPrintModel a, IdwPrintModel b) => string.CompareOrdinal(a.Name, b.Name));
-    //     for (var i = 0; i < sortableList.Count; i++)
-    //     {
-    //         IdwPrintModels.Move(IdwPrintModels.IndexOf(sortableList[i]), i);
-    //     }
-    // }
-
-    // private async void AddPrinterAction(string filePath)
-    // {
-    //     await foreach (var printAction in IdwPrintModel.GetIdwPrintModels(filePath, NbPdfdxfPropertyChanged))
-    //     {
-    //         IdwPrintModels.Add(printAction);
-    //     }
-    // }
 
     private void TabViewItem_DragOver(object sender, DragEventArgs e)
     {
@@ -240,28 +204,33 @@ public sealed partial class InventorPrintTab : TabViewItemExtend, Interfaces.IIn
                 GetSelectedPrinterA4A3?.Name ?? PrinterModel.NullPrinterModel.Name
             }
         };
-
+        foreach (var idwPrintModel in IdwPrintModels)
+        {
+            idwPrintModel.ButtonEnable = false;
+        }
+        
         foreach (var printModel in IdwPrintModels)
         {
-            if (printModel.IsPrint != true) continue;
+            if (printModel.MustBePrint == false) continue;
+            GetProgressRingStatus(printModel).IsActive = true;
             await InventorHelper2.PrintFileAsync(printModel, printModel.PageNumber, printerSettings);
+            GetProgressRingStatus(printModel).IsActive = false;
+            printModel.MustBePrint = false;
+        }
+
+        foreach (var idwPrintModel in IdwPrintModels)
+        {
+            idwPrintModel.ButtonEnable = true;
         }
 
         IsInterfaceEnabled = true;
     }
-
-
-    // private async void OpenSimpleMessage(string Message)
-    // {
-    //     ContentDialog dialog = new ContentDialog
-    //     {
-    //         XamlRoot = XamlRoot,
-    //         Title = Message,
-    //         PrimaryButtonText = "Ok",
-    //         DefaultButton = ContentDialogButton.Primary,
-    //     };
-    //     _ = await dialog.ShowAsync();
-    // }
+    
+    private ProgressRing GetProgressRingStatus(IdwPrintModel idwPrintModel)
+    {
+        var container = ListViewIDW.ContainerFromItem(idwPrintModel) as ListViewItem;
+        return container.FindChild<ProgressRing>();
+    }
 
     private void Button_Click_ClearAllList(object sender, RoutedEventArgs e) => IdwPrintModels.Clear();
 
@@ -281,25 +250,25 @@ public sealed partial class InventorPrintTab : TabViewItemExtend, Interfaces.IIn
     private void MenuFlyoutItem_Click_AllPrint(object sender, RoutedEventArgs e)
         => IdwPrintModels.ToList().ForEach(x =>
         {
-            x.IsPrint = true;
+            x.MustBePrint = true;
         });
 
     private void MenuFlyoutItem_Click_NonePrint(object sender, RoutedEventArgs e)
         => IdwPrintModels.ToList().ForEach(x =>
         {
-            x.IsPrint = false;
+            x.MustBePrint = false;
         });
 
     private void MenuFlyoutItem_Click_AutoPrintA4A3(object sender, RoutedEventArgs e)
     {
         foreach (var x in IdwPrintModels)
         {
-            x.IsPrint = false;
+            x.MustBePrint = false;
             if (x.Name.EndsWith("L.idw")) continue;
             if (x.SheetSize == Inventor.DrawingSheetSizeEnum.kA2DrawingSheetSize) continue;
             if (x.SheetSize == Inventor.DrawingSheetSizeEnum.kA1DrawingSheetSize) continue;
             if (x.SheetSize == Inventor.DrawingSheetSizeEnum.kA0DrawingSheetSize) continue;
-            x.IsPrint = true;
+            x.MustBePrint = true;
         }
     }
 
@@ -307,11 +276,11 @@ public sealed partial class InventorPrintTab : TabViewItemExtend, Interfaces.IIn
     {
         foreach (var x in IdwPrintModels)
         {
-            x.IsPrint = false;
+            x.MustBePrint = false;
             if (x.Name.EndsWith("L.idw")) continue;
             if (x.SheetSize == Inventor.DrawingSheetSizeEnum.kA3DrawingSheetSize) continue;
             if (x.SheetSize == Inventor.DrawingSheetSizeEnum.kA4DrawingSheetSize) continue;
-            x.IsPrint = true;
+            x.MustBePrint = true;
         }
     }
 }

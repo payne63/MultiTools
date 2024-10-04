@@ -16,29 +16,25 @@ namespace MultiTools.Models;
 
 public class IdwPrintModel : NotifyPropertyChangedBase
 {
-    // private static readonly I.ApprenticeServerComponent appServer = new();
-
-    // public event PropertyChangedEventHandler PropertyChanged;
-    // protected void OnPropertyChanged([CallerMemberName] string name = null)
-    // {
-    //     PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
-    // }
-
-    // public BitmapImage bitmapImage;
-
     public FileInfo FileInfoData
     {
         get;
     }
 
-    private bool _IsPrint;
-
-    public bool IsPrint
+    private bool _buttonEnable;
+    public bool ButtonEnable
     {
-        get => _IsPrint;
+        get => _buttonEnable;
+        set { _buttonEnable = value; OnPropertyChanged(); }
+    }
+
+    private bool _mustBePrint;
+    public bool MustBePrint
+    {
+        get => _mustBePrint;
         set
         {
-            _IsPrint = value;
+            _mustBePrint = value;
             OnPropertyChanged();
         }
     }
@@ -118,27 +114,29 @@ public class IdwPrintModel : NotifyPropertyChangedBase
         PageNumber = pageNumber;
         IsOnlyOnePage = isOnlyOnePage;
         FileInfoData = new FileInfo(filePath);
-        DefineSelectPrint();
+        // DefineSelectPrint();
+        _mustBePrint = false;
         PropertyChanged += propertyChangedEventHandler;
+        _buttonEnable = true;      
     }
 
-    public void DefineSelectPrint()
-    {
-        if (Name.EndsWith(".idw"))
-        {
-            if (SheetSize == DrawingSheetSizeEnum.kA4DrawingSheetSize ||
-                SheetSize == DrawingSheetSizeEnum.kA3DrawingSheetSize)
-            {
-                IsDrawing = true;
-            }
-            else
-            {
-                IsDrawing = false;
-            }
-        }
-        else if (Name.EndsWith("L.idw")) IsPrint = false;
-        else IsPrint = true;
-    }
+    // public void DefineSelectPrint()
+    // {
+    //     if (Name.EndsWith(".idw"))
+    //     {
+    //         if (SheetSize == DrawingSheetSizeEnum.kA4DrawingSheetSize ||
+    //             SheetSize == DrawingSheetSizeEnum.kA3DrawingSheetSize)
+    //         {
+    //             IsDrawing = true;
+    //         }
+    //         else
+    //         {
+    //             IsDrawing = false;
+    //         }
+    //     }
+    //     else if (Name.EndsWith("L.idw")) MustBePrint = false;
+    //     else MustBePrint = true;
+    // }
 
     public static async IAsyncEnumerable<IdwPrintModel> GetIdwPrintModels(string filePath, PropertyChangedEventHandler nbPDFDXFPropertyChanged)
     {

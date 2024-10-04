@@ -11,7 +11,8 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    Header="Imprimer des Plans" >
+    Header="Imprimer des Plans" 
+    x:Name="TabViewInventorPrint">
     <model:TabViewItemExtend.IconSource>
         <FontIconSource Glyph="&#xE749;"/>
     </model:TabViewItemExtend.IconSource>
@@ -116,8 +117,8 @@
             </StackPanel>
         </Border>
         <StackPanel Orientation="Horizontal" Margin="20,10,0,0" Grid.Column="1" Grid.Row="0">
-            <TextBlock Text="Nom du Plan" Width="290" VerticalAlignment="Center"/>
-            <DropDownButton Content="Imprimer" Width="100" Margin="5,0,24,0" IsEnabled="{x:Bind IsInterfaceEnabled, Mode=OneWay}">
+            <TextBlock Text="Nom du Plan" Width="330" VerticalAlignment="Center"/>
+            <DropDownButton Content="Imprimer" Width="125" Margin="5,0,24,0" IsEnabled="{x:Bind IsInterfaceEnabled, Mode=OneWay}">
                 <DropDownButton.Flyout>
                     <MenuFlyout Placement="Bottom">
                         <MenuFlyoutItem Text="Tous" Click="MenuFlyoutItem_Click_AllPrint"/>
@@ -143,7 +144,7 @@
                       Margin="0,10,10,10"
                       Drop="TabViewItem_Drop" 
                       DragOver="TabViewItem_DragOver"
-                      AllowDrop="True" IsEnabled="{x:Bind IsInterfaceEnabled, Mode=OneWay}">
+                      AllowDrop="True" >
             <ListView.ItemTemplate>
                 <DataTemplate x:DataType="model:IdwPrintModel">
                     <ListViewItem Margin="3">
@@ -153,18 +154,22 @@
                         <StackPanel Orientation="Vertical">
                             <StackPanel Orientation="Horizontal" >
                                 <TextBlock Text="{x:Bind Name}" MinWidth="320" VerticalAlignment="Center"/>
-                                <CheckBox Content="" IsChecked="{x:Bind IsPrint, Mode=TwoWay}"
+                                <ProgressRing x:Name="ProgressRingStatus" IsActive="False" Margin="10,0,10,0"/>
+                                <CheckBox Content="" IsChecked="{x:Bind MustBePrint, Mode=TwoWay}"
                                           HorizontalAlignment="Center" 
                                           Checked="CheckBox_Checked_PDFChange" 
-                                          Unchecked="CheckBox_Checked_PDFChange" Width="50" MaxWidth="60"/>
+                                          Unchecked="CheckBox_Checked_PDFChange" Width="50" MaxWidth="60"
+                                          IsEnabled="{Binding IsInterfaceEnabled,ElementName=TabViewInventorPrint, Mode=OneWay}"/>
                                 <TextBlock Text="{x:Bind SheetSize, Mode=OneWay, Converter={StaticResource SheetSizeEnumToStringConverter}}" Width="100"/>
                                 <TextBlock Text="{x:Bind Orientation, Mode=OneWay, Converter={StaticResource OrientationTypeToStringConverter}}" Width="100"/>
-                                <TextBlock Text="{x:Bind PageNumber, Mode=OneWay}" Width="100"/>
-                                <Button  Click="Button_Click_OpenDrawing" Margin="5,0,5,0">
+                                <TextBlock Text="{x:Bind PageNumber, Mode=OneWay}" Width="40"/>
+                                <Button  Click="Button_Click_OpenDrawing" Margin="5,0,5,0" 
+                                         IsEnabled="{x:Bind ButtonEnable, Mode=OneWay}">
                                     <SymbolIcon Symbol="OpenFile" 
                                             ToolTipService.ToolTip="ouvrir le plan"/>
                                 </Button>
-                                <Button  Click="Button_Click_Remove" Margin="5,0,5,0">
+                                <Button  Click="Button_Click_Remove" Margin="5,0,5,0"
+                                         IsEnabled="{x:Bind ButtonEnable, Mode=OneWay}">
                                     <SymbolIcon Symbol="Delete"
                                             ToolTipService.ToolTip="supprimer le plan de la liste"/>
                                 </Button>

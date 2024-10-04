@@ -16,12 +16,12 @@ public abstract class TabViewItemExtend : TabViewItem
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
     }
 
-    protected bool _isInterfaceEnabled = true;
+    private bool _isInterfaceEnabled = true;
 
-    protected bool IsInterfaceEnabled
+    public bool IsInterfaceEnabled
     {
         get => _isInterfaceEnabled;
-        set
+        protected set
         {
             _isInterfaceEnabled = value;
             OnPropertyChanged();

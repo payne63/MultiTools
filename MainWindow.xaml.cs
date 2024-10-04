@@ -27,23 +27,23 @@ public sealed partial class MainWindow : WindowEx, INotifyPropertyChanged
     
     private CancellationTokenSource ctsVisibilityChangeTask = new();
 
-    public ObservableCollection<Base.User> UsersName
-    {
-        get => _Users;
-        set
-        {
-            var actualUserName = GetSelectedUser;
-            if (_Users != null)
-            {
-                ComboBoxUsers.SelectedItem = actualUserName;
-            }
+    // public ObservableCollection<Base.User> UsersName
+    // {
+    //     get => _Users;
+    //     set
+    //     {
+    //         var actualUserName = GetSelectedUser;
+    //         if (_Users != null)
+    //         {
+    //             ComboBoxUsers.SelectedItem = actualUserName;
+    //         }
+    //
+    //         _Users = value;
+    //         OnPropertyChanged();
+    //     }
+    // }
 
-            _Users = value;
-            OnPropertyChanged();
-        }
-    }
-
-    public User GetSelectedUser => ComboBoxUsers.SelectedItem as User;
+    // public User GetSelectedUser => ComboBoxUsers.SelectedItem as User;
 
     public MainWindow()
     {
@@ -74,7 +74,7 @@ public sealed partial class MainWindow : WindowEx, INotifyPropertyChanged
         var token = ctsVisibilityChangeTask.Token;
         Task.Run(() => VisibilityChangedEvent(token),token);
         
-        UsersNameUpdate();
+        // UsersNameUpdate();
         //ExtendsContentIntoTitleBar = true;
     }
 
@@ -124,35 +124,35 @@ public sealed partial class MainWindow : WindowEx, INotifyPropertyChanged
     private void OnPropertyChanged([CallerMemberName] string name = null) =>
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
 
-    public async void UsersNameUpdate()
-    {
-        UsersName.Clear();
-        var data = await JsonHelper.LoadArray<Base.User>(UsersDataPath);
-        foreach (var user in data)
-        {
-            UsersName.Add(user);
-        }
-
-        foreach (var user in ComboBoxUsers.Items)
-        {
-            Trace.WriteLine(user);
-        }
-
-        ComboBoxUsers.UpdateLayout();
-    }
+    // public async void UsersNameUpdate()
+    // {
+    //     UsersName.Clear();
+    //     var data = await JsonHelper.LoadArray<Base.User>(UsersDataPath);
+    //     foreach (var user in data)
+    //     {
+    //         UsersName.Add(user);
+    //     }
+    //
+    //     foreach (var user in ComboBoxUsers.Items)
+    //     {
+    //         Trace.WriteLine(user);
+    //     }
+    //
+    //     ComboBoxUsers.UpdateLayout();
+    // }
 
     private void TabView_TabCloseRequested(TabView sender, TabViewTabCloseRequestedEventArgs args) =>
         sender.TabItems.Remove(args.Tab);
 
 
-    private void ListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
-    {
-        var listBox = sender as ListBox;
-        if (listBox != null)
-        {
-            Trace.WriteLine(listBox.SelectedItem);
-        }
-    }
+    // private void ListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    // {
+    //     var listBox = sender as ListBox;
+    //     if (listBox != null)
+    //     {
+    //         Trace.WriteLine(listBox.SelectedItem);
+    //     }
+    // }
 
     private void OnThemeButtonClick(object sender, RoutedEventArgs e)
     {
