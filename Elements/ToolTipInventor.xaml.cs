@@ -54,8 +54,6 @@ public sealed partial class ToolTipInventor : ToolTip
         
         ImageThumbNail.Source = bitmapImage;
         PartNumber.Text = FileInfoData.Name;
-        Description.Text = FileInfoData.LastWriteTime.ToString("MM/dd/yyyy");
-        
     }
 
     public ToolTipInventor()

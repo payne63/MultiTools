@@ -7,7 +7,7 @@ using System.Diagnostics;
 
 namespace MultiTools.Base
 {
-    public class Data : INotifyPropertyChanged
+    public class Data : NotifyPropertyChangedBase
     {
         public string Code { get { return NameFile.Substring(0, NameFile.LastIndexOf('.')); } }
         public string NameFile { get; set; } = String.Empty;
@@ -41,7 +41,7 @@ namespace MultiTools.Base
                 if (m_isSelected != value)
                 {
                     m_isSelected = value;
-                    NotifyPropertyChanged("IsSelected");
+                    OnPropertyChanged("IsSelected");
                     if (m_isSelected)
                     {
                         Trace.WriteLine($" file selected : {this.Code}");
@@ -51,7 +51,6 @@ namespace MultiTools.Base
             }
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
 
         private ObservableCollection<Data> m_children;
         public ObservableCollection<Data> Children
@@ -79,14 +78,16 @@ namespace MultiTools.Base
                 if (m_isExpanded != value)
                 {
                     m_isExpanded = value;
-                    NotifyPropertyChanged("IsExpanded");
+                    OnPropertyChanged("IsExpanded");
                 }
             }
         }
-
-        private void NotifyPropertyChanged(string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
+        
+        // public event PropertyChangedEventHandler PropertyChanged;
+        //
+        // private void NotifyPropertyChanged(string propertyName)
+        // {
+        //     PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        // }
     }
 }

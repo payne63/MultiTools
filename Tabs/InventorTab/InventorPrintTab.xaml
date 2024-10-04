@@ -56,16 +56,19 @@
                 <ComboBox x:Name="ComboBoxPrinterA4A3" HorizontalAlignment="Stretch" Margin="10,0,10,0"
                 ItemsSource="{x:Bind PrinterA4A3, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                 DisplayMemberPath="Name"
-                PlaceholderText="Selection imprimante"/>
+                PlaceholderText="Selection imprimante"
+                IsEnabled="{x:Bind IsInterfaceEnabled, Mode=OneWay}"/>
                 <TextBlock Text="Imprimante A2-A1-A0:" Margin="15,5,0,5"/>
                 <ComboBox x:Name="ComboBoxPrinterA2A1A0" HorizontalAlignment="Stretch" Margin="10,0,10,10"
                 ItemsSource="{x:Bind PrinterA2A1A0, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                 DisplayMemberPath="Name"
-                PlaceholderText="Selection imprimante"/>
+                PlaceholderText="Selection imprimante"
+                IsEnabled="{x:Bind IsInterfaceEnabled, Mode=OneWay}"/>
                 <Button 
                     Margin="10" 
                     HorizontalAlignment="Stretch"
-                    Click="Button_Click_Print">
+                    Click="Button_Click_Print"
+                    IsEnabled="{x:Bind IsInterfaceEnabled, Mode=OneWay}">
                     <StackPanel Orientation="Vertical" >
                         <Viewbox MaxHeight="30" MaxWidth="30"  Margin="10">
                             <SymbolIcon Symbol="Print"/>
@@ -157,12 +160,6 @@
                                 <TextBlock Text="{x:Bind SheetSize, Mode=OneWay, Converter={StaticResource SheetSizeEnumToStringConverter}}" Width="100"/>
                                 <TextBlock Text="{x:Bind Orientation, Mode=OneWay, Converter={StaticResource OrientationTypeToStringConverter}}" Width="100"/>
                                 <TextBlock Text="{x:Bind PageNumber, Mode=OneWay}" Width="100"/>
-                                <Button x:Name="VisualButton" Click="GetThumbNailAsync" Margin="5,0,5,0" Visibility="{x:Bind IsOnlyOnePage,Mode=OneWay}">
-                                    <FontIcon Glyph="&#xE7B3;" ToolTipService.ToolTip="Aperçu"/>
-                                </Button>
-                                <Button x:Name="VisualButtonNonPossible" Click="VisualButtonNonPossible_Click" Margin="5,0,5,0" Visibility="{x:Bind isMultiPage, Mode=OneWay}" >
-                                    <FontIcon Glyph="&#xE7BA;" ToolTipService.ToolTip="Aperçu non disponible"/>
-                                </Button>
                                 <Button  Click="Button_Click_OpenDrawing" Margin="5,0,5,0">
                                     <SymbolIcon Symbol="OpenFile" 
                                             ToolTipService.ToolTip="ouvrir le plan"/>
@@ -178,18 +175,5 @@
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
-        <TeachingTip x:Name="TeachingTipThumbNail"
-                     PreferredPlacement="Right">
-            <TeachingTip.HeroContent>
-                <Image x:Name="ImageThumbNail" />
-            </TeachingTip.HeroContent>
-            <TeachingTip.Content>
-                <StackPanel Orientation="Vertical">
-                    <TextBlock x:Name="ThumbNailPartNumber" HorizontalAlignment="Center"/>
-                    <TextBlock x:Name="ThumbNailDescription" HorizontalAlignment="Center"/>
-                    <TextBlock x:Name="ThumbNailCustomer" HorizontalAlignment="Center"/>
-                </StackPanel>
-            </TeachingTip.Content>
-        </TeachingTip>
     </Grid>
 </model:TabViewItemExtend>
