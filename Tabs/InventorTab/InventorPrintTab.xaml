@@ -38,18 +38,31 @@
                 <Button
                     Margin="10" 
                     HorizontalAlignment="Stretch"
-                    Padding="15"
-                    Drop="TabViewItem_Drop" 
-                    DragOver="TabViewItem_DragOver"
+                    Padding="5"
+                    Click="ButtonPickFiles"
                     AllowDrop="True" 
                     IsEnabled="{x:Bind IsInterfaceEnabled, Mode=OneWay}">
                     <StackPanel Orientation="Vertical" >
                         <Viewbox MaxHeight="40" MaxWidth="40" >
-                            <SymbolIcon Symbol="NewWindow"  />
+                            <FontIcon Glyph="&#xE8A5;" />
                         </Viewbox>
-                        <TextBlock Text="Glisser Deposer" HorizontalAlignment="Center" />
-                        <TextBlock Text="vos fichiers" HorizontalAlignment="Center" />
-                        <TextBlock Text="(répertoire ou fichiers)" HorizontalAlignment="Center"/>
+                        <TextBlock Text="Selectionner" HorizontalAlignment="Center" />
+                        <TextBlock Text="des fichiers" HorizontalAlignment="Center" />
+                    </StackPanel>
+                </Button>
+                <Button
+                    Margin="10" 
+                    HorizontalAlignment="Stretch"
+                    Padding="5"
+                    Click="ButtonPickFolder"
+                    AllowDrop="True" 
+                    IsEnabled="{x:Bind IsInterfaceEnabled, Mode=OneWay}">
+                    <StackPanel Orientation="Vertical" >
+                        <Viewbox MaxHeight="40" MaxWidth="40" >
+                            <FontIcon Glyph="&#xE8B7;" />
+                        </Viewbox>
+                        <TextBlock Text="Selectionner" HorizontalAlignment="Center" />
+                        <TextBlock Text="un repertoire" HorizontalAlignment="Center" />
                     </StackPanel>
                 </Button>
 
@@ -132,6 +145,8 @@
             <TextBlock Text="Orientation" Width="100" VerticalAlignment="Center"/>
             <TextBlock Text="N° Page" Width="100" VerticalAlignment="Center"/>
         </StackPanel>
+        <elements:DragAndDropElement Grid.Column="1" Grid.Row="1"  
+                                     Visibility="{x:Bind  DragAndDropVisibility , Mode=OneWay}" />
         <ListView ItemsSource="{x:Bind IdwPrintModels}"
                       x:Name="ListViewIDW"
                       Grid.Column="1" Grid.Row="1"

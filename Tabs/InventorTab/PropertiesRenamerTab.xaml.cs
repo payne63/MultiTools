@@ -44,8 +44,6 @@ public sealed partial class PropertiesRenamerTab : TabViewItem, Interfaces.IInit
         }
     }
 
-    // private InventorHelper _inventorHelper;
-
     public Visibility DragAndDropVisibility =>
         SourceFilesCollection.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
 

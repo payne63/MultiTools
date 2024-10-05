@@ -9,7 +9,7 @@
     mc:Ignorable="d">
 
     <StackPanel Orientation="Vertical">
-        <Image x:Name="ImageThumbNail" Height="128" Width="128" />
+        <Image x:Name="ImageThumbNail" Height="180" Width="180" />
         <TextBlock x:Name="PartNumber" HorizontalAlignment="Center" />
     </StackPanel>
 </ToolTip>

@@ -100,12 +100,13 @@ public sealed partial class DrawingBuilderTab : TabViewItem, Interfaces.IInitTab
     }
     private async void Button_Click_SelectFiles(object sender, RoutedEventArgs e)
     {
-        var file = await GetFileOpenPicker(".ipt", ".iam");
-        AddItems(new() { file });
+        var storageFile = await GetFileOpenPicker(".ipt", ".iam");
+        if (storageFile == null) return;
+        AddItemsToCollection(new() { storageFile });
     }
 
 
-    private void AddItems(List<IStorageItem> items)
+    private void AddItemsToCollection(List<IStorageItem> items)
     {
         foreach (var file in items)
         {
@@ -274,7 +275,7 @@ public sealed partial class DrawingBuilderTab : TabViewItem, Interfaces.IInitTab
             return;
         }
         var items = await e.DataView.GetStorageItemsAsync();
-        AddItems(items.ToList());
+        AddItemsToCollection(items.ToList());
     }
 
     private void Button_Click_Remove(object sender, RoutedEventArgs e)
@@ -340,7 +341,7 @@ public sealed partial class DrawingBuilderTab : TabViewItem, Interfaces.IInitTab
         }
     }
 
-    private async Task<StorageFile> GetFileOpenPicker(params String[] filters)
+    private async Task<StorageFile?> GetFileOpenPicker(params String[] filters)
     {
         var openPicker = new Windows.Storage.Pickers.FileOpenPicker();
         var window = App.m_window;

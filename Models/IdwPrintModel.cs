@@ -21,6 +21,8 @@ public class IdwPrintModel : NotifyPropertyChangedBase
         get;
     }
 
+    public override bool Equals(object? obj) => this.FileInfoData == ((IdwPrintModel)obj).FileInfoData;
+
     private bool _buttonEnable;
     public bool ButtonEnable
     {

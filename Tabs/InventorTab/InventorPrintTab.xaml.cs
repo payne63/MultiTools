@@ -6,6 +6,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Storage.FileProperties;
 using CommunityToolkit.WinUI.UI;
@@ -23,8 +24,10 @@ namespace MultiTools.Tabs.InventorTab;
 
 public sealed partial class InventorPrintTab : TabViewItemExtend, Interfaces.IInitTab, INotifyPropertyChanged
 {
-    public readonly ObservableCollection<IdwPrintModel> IdwPrintModels;
+    public ObservableCollection<IdwPrintModel> IdwPrintModels;
 
+    public Visibility DragAndDropVisibility => IdwPrintModels.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
+    
     private ObservableCollection<PrinterModel> _printerA4A3;
 
     public ObservableCollection<PrinterModel> PrinterA4A3
@@ -98,6 +101,7 @@ public sealed partial class InventorPrintTab : TabViewItemExtend, Interfaces.IIn
             OnPropertyChanged(nameof(NbA2Drawing));
             OnPropertyChanged(nameof(NbA1Drawing));
             OnPropertyChanged(nameof(NbA0Drawing));
+            OnPropertyChanged(nameof(DragAndDropVisibility));
         };
         PrinterA4A3 = PrinterModel.GetSystemPrinter();
         PrinterA2A1A0 = PrinterModel.GetSystemPrinter();
@@ -122,6 +126,11 @@ public sealed partial class InventorPrintTab : TabViewItemExtend, Interfaces.IIn
                 if (fileInfoOrigin.FullName.EndsWith(".idw")) filesInfos.Add(fileInfoOrigin);
             }
         }
+        await SortAndAddToList(filesInfos);
+    }
+
+    private async Task SortAndAddToList(List<FileInfo> filesInfos)
+    {
         filesInfos.Sort((a,b) => a.Name.CompareTo(b.Name));
         foreach (var fileInfo in filesInfos)
         {
@@ -129,14 +138,17 @@ public sealed partial class InventorPrintTab : TabViewItemExtend, Interfaces.IIn
             {
                 IdwPrintModels.Add(idwPrintModel);
             }
-        }    
+        }
         
+        //IdwPrintModels = new ObservableCollection<IdwPrintModel>( IdwPrintModels.Distinct());
+        
+        foreach (var idwPrintModel in IdwPrintModels)
+        {
+            if (!idwPrintModel.Name.EndsWith("L.idw")) idwPrintModel.MustBePrint = true;
+        }
     }
 
-    private void TabViewItem_DragOver(object sender, DragEventArgs e)
-    {
-        e.AcceptedOperation = DataPackageOperation.Move;
-    }
+    private void TabViewItem_DragOver(object sender, DragEventArgs e) => e.AcceptedOperation = DataPackageOperation.Move;
 
     private void Button_Click_OpenDrawing(object sender, RoutedEventArgs e)
     {
@@ -155,6 +167,7 @@ public sealed partial class InventorPrintTab : TabViewItemExtend, Interfaces.IIn
     private void Button_Click_Remove(object sender, RoutedEventArgs e)
     {
         var contextIdwModel = ((FrameworkElement)sender).DataContext as IdwPrintModel;
+        if (contextIdwModel == null) return;
         IdwPrintModels.Remove(contextIdwModel);
     }
 
@@ -283,4 +296,21 @@ public sealed partial class InventorPrintTab : TabViewItemExtend, Interfaces.IIn
             x.MustBePrint = true;
         }
     }
+
+    private async void ButtonPickFiles(object sender, RoutedEventArgs e)
+    {
+        var storageFiles = await GetFilesOpenPicker(".idw");
+        if (storageFiles.Count == 0) return;
+        await SortAndAddToList( storageFiles.Select(s => new FileInfo(s.Path)).ToList());
+    }
+
+    private async void ButtonPickFolder(object sender, RoutedEventArgs e)
+    {
+        var storageFolder = await GetFolderOpenPicker();
+        var storageFiles = await storageFolder.GetFilesAsync();
+        await SortAndAddToList(storageFiles.
+            Where(f => f.Name.EndsWith(".idw"))
+            .Select(f=> new FileInfo(f.Path))
+            .ToList());
+}
 }
