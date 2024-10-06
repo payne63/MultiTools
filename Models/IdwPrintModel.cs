@@ -122,24 +122,6 @@ public class IdwPrintModel : NotifyPropertyChangedBase
         _buttonEnable = true;      
     }
 
-    // public void DefineSelectPrint()
-    // {
-    //     if (Name.EndsWith(".idw"))
-    //     {
-    //         if (SheetSize == DrawingSheetSizeEnum.kA4DrawingSheetSize ||
-    //             SheetSize == DrawingSheetSizeEnum.kA3DrawingSheetSize)
-    //         {
-    //             IsDrawing = true;
-    //         }
-    //         else
-    //         {
-    //             IsDrawing = false;
-    //         }
-    //     }
-    //     else if (Name.EndsWith("L.idw")) MustBePrint = false;
-    //     else MustBePrint = true;
-    // }
-
     public static async IAsyncEnumerable<IdwPrintModel> GetIdwPrintModels(string filePath, PropertyChangedEventHandler nbPDFDXFPropertyChanged)
     {
         ApprenticeServerDrawingDocument drawingDocument = null;

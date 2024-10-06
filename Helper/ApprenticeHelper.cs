@@ -25,6 +25,7 @@ public static class ApprenticeHelper
         _apprenticeServer?.Close();
         _apprenticeServer = null;
         GC.Collect();
+        GC.WaitForPendingFinalizers();
     }
     
 }

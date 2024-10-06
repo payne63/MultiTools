@@ -130,7 +130,9 @@ public sealed partial class InventorPrintTab : TabViewItemExtend, Interfaces.IIn
     private async Task SortAndAddToList(List<FileInfo> filesInfos)
     {
         IsInterfaceEnabled = false;
+        ApprenticeHelper.ResetApprenticeServer();
         filesInfos.Sort((a, b) => string.Compare(a.Name, b.Name, StringComparison.Ordinal));
+        
         foreach (var fileInfo in filesInfos)
         {
             await foreach (var idwPrintModel in IdwPrintModel.GetIdwPrintModels(fileInfo.FullName,
