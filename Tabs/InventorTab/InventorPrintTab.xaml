@@ -146,9 +146,10 @@
             <TextBlock Text="Orientation" Width="100" VerticalAlignment="Center"/>
             <TextBlock Text="N° Page" Width="100" VerticalAlignment="Center"/>
         </StackPanel>
-        <elements:DragAndDropElement Grid.Column="1" Grid.Row="1"  
-                                     Visibility="{x:Bind  DragAndDropVisibility , Mode=OneWay}" />
-        <ProgressRing Grid.Row="1" Grid.Column="1" IsActive="{x:Bind IsInterfaceDisabled, Mode=OneWay}" VerticalAlignment="Center" HorizontalAlignment="Center" Width="100" Height="100"/>
+        <elements:BackgroundShowVisualElement Grid.Column="1" Grid.Row="1"  
+                                     ShowDragAndDrop="{x:Bind DragAndDropVisibility, Mode=OneWay}"
+                                     ShowBusyRing="{x:Bind IsInterfaceDisabled, Mode=OneWay}"
+                                     />
         <ListView ItemsSource="{x:Bind IdwPrintModels}"
                       x:Name="ListViewIDW"
                       Grid.Column="1" Grid.Row="1"

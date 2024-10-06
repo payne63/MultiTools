@@ -157,7 +157,7 @@
     <Page Update="Elements\NewTabButton.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Update="Elements\DragAndDropElement.xaml">
+    <Page Update="Elements\BackgroundShowVisualElement.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Update="Elements\ProjectExplorerElements.xaml">
