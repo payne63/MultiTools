@@ -21,7 +21,6 @@ public abstract class TabViewItemExtend : TabViewItem
     }
 
     private bool _isInterfaceEnabled = true;
-
     public bool IsInterfaceEnabled
     {
         get => _isInterfaceEnabled;
@@ -29,8 +28,11 @@ public abstract class TabViewItemExtend : TabViewItem
         {
             _isInterfaceEnabled = value;
             OnPropertyChanged();
+            OnPropertyChanged(nameof( IsInterfaceDisabled));
         }
     }
+    
+    public bool IsInterfaceDisabled => !IsInterfaceEnabled;
 
     protected async void OpenSimpleMessage(XamlRoot xamlRoot, string message)
     {

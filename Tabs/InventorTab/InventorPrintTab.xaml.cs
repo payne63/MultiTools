@@ -99,10 +99,9 @@ public sealed partial class InventorPrintTab : TabViewItemExtend, Interfaces.IIn
             OnPropertyChanged(nameof(NbA0Drawing));
             OnPropertyChanged(nameof(DragAndDropVisibility));
         };
-
         
         PrinterA4A3 = PrinterModel.GetSystemPrinter();
-        PrinterA2A1A0 = PrinterModel.GetSystemPrinter(); // PrinterModel.GetSystemPrinter();
+        PrinterA2A1A0 = PrinterModel.GetSystemPrinter();
     }
 
     private async void TabViewItem_Drop(object sender, DragEventArgs e)
@@ -130,6 +129,7 @@ public sealed partial class InventorPrintTab : TabViewItemExtend, Interfaces.IIn
 
     private async Task SortAndAddToList(List<FileInfo> filesInfos)
     {
+        IsInterfaceEnabled = false;
         filesInfos.Sort((a, b) => string.Compare(a.Name, b.Name, StringComparison.Ordinal));
         foreach (var fileInfo in filesInfos)
         {
@@ -146,6 +146,7 @@ public sealed partial class InventorPrintTab : TabViewItemExtend, Interfaces.IIn
         {
             if (!idwPrintModel.Name.EndsWith("L.idw")) idwPrintModel.MustBePrint = true;
         }
+        IsInterfaceEnabled = true;
     }
 
     private void TabViewItem_DragOver(object sender, DragEventArgs e) =>

@@ -148,6 +148,7 @@
         </StackPanel>
         <elements:DragAndDropElement Grid.Column="1" Grid.Row="1"  
                                      Visibility="{x:Bind  DragAndDropVisibility , Mode=OneWay}" />
+        <ProgressRing Grid.Row="1" Grid.Column="1" IsActive="{x:Bind IsInterfaceDisabled, Mode=OneWay}" VerticalAlignment="Center" HorizontalAlignment="Center" Width="100" Height="100"/>
         <ListView ItemsSource="{x:Bind IdwPrintModels}"
                       x:Name="ListViewIDW"
                       Grid.Column="1" Grid.Row="1"
