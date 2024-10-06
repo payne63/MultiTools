@@ -11,18 +11,20 @@ namespace MultiTools.Models
 {
     public class PrinterModel
     {
-        public static ObservableCollection<PrinterModel> PrinterModels;
-
-        public string Name { get; private set; }
+        public static ObservableCollection<PrinterModel> PrinterModels = new ObservableCollection<PrinterModel>();
+        public string Name
+        {
+            get;
+            private set;
+        }
 
         public static PrinterModel NullPrinterModel => new PrinterModel("null printer");
 
-        private PrinterModel(string name)
+        private PrinterModel(string name) => Name = name;
+
+        public static ObservableCollection<PrinterModel> GetSystemPrinter()
         {
-            Name = name;
-        }
-         public static ObservableCollection<PrinterModel> GetSystemPrinter()
-        {
+            if (PrinterModels.Count > 0) return PrinterModels;
             PrinterModels = new ObservableCollection<PrinterModel>();
             var printerQuery = new ManagementObjectSearcher("SELECT * from Win32_Printer");
             foreach (var printer in printerQuery.Get())
@@ -35,6 +37,7 @@ namespace MultiTools.Models
                 //Console.WriteLine("{0} (Status: {1}, Default: {2}, Network: {3}",name, status, isDefault, isNetworkPrinter);
                 PrinterModels.Add(new PrinterModel((string)name));
             }
+
             return PrinterModels;
         }
     }

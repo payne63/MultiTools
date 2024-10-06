@@ -12,7 +12,8 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     Header="Imprimer des Plans" 
-    x:Name="TabViewInventorPrint">
+    x:Name="TabViewInventorPrint"
+    CloseRequested="InventorPrintTab_OnCloseRequested">
     <model:TabViewItemExtend.IconSource>
         <FontIconSource Glyph="&#xE749;"/>
     </model:TabViewItemExtend.IconSource>
@@ -68,13 +69,13 @@
 
                 <TextBlock Text="Imprimante A4-A3:" Margin="15,10,0,5"/>
                 <ComboBox x:Name="ComboBoxPrinterA4A3" HorizontalAlignment="Stretch" Margin="10,0,10,0"
-                ItemsSource="{x:Bind PrinterA4A3, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                ItemsSource="{x:Bind PrinterA4A3, Mode=OneWay}"
                 DisplayMemberPath="Name"
                 PlaceholderText="Selection imprimante"
                 IsEnabled="{x:Bind IsInterfaceEnabled, Mode=OneWay}"/>
                 <TextBlock Text="Imprimante A2-A1-A0:" Margin="15,5,0,5"/>
                 <ComboBox x:Name="ComboBoxPrinterA2A1A0" HorizontalAlignment="Stretch" Margin="10,0,10,10"
-                ItemsSource="{x:Bind PrinterA2A1A0, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                ItemsSource="{x:Bind PrinterA2A1A0, Mode=OneWay}"
                 DisplayMemberPath="Name"
                 PlaceholderText="Selection imprimante"
                 IsEnabled="{x:Bind IsInterfaceEnabled, Mode=OneWay}"/>

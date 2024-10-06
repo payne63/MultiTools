@@ -24,10 +24,10 @@ namespace MultiTools.Tabs.InventorTab;
 
 public sealed partial class InventorPrintTab : TabViewItemExtend, Interfaces.IInitTab, INotifyPropertyChanged
 {
-    public ObservableCollection<IdwPrintModel> IdwPrintModels;
+    public ObservableCollection<IdwPrintModel> IdwPrintModels ;
 
     public Visibility DragAndDropVisibility => IdwPrintModels.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
-    
+
     private ObservableCollection<PrinterModel> _printerA4A3;
 
     public ObservableCollection<PrinterModel> PrinterA4A3
@@ -36,11 +36,7 @@ public sealed partial class InventorPrintTab : TabViewItemExtend, Interfaces.IIn
         set
         {
             var actualUserName = GetSelectedPrinterA4A3;
-            if (_printerA4A3 != null)
-            {
-                ComboBoxPrinterA4A3.SelectedItem = actualUserName;
-            }
-
+            ComboBoxPrinterA4A3.SelectedItem = actualUserName;
             _printerA4A3 = value;
             OnPropertyChanged();
         }
@@ -64,11 +60,11 @@ public sealed partial class InventorPrintTab : TabViewItemExtend, Interfaces.IIn
         }
     }
 
-    public PrinterModel GetSelectedPrinterA4A3 => ComboBoxPrinterA4A3.SelectedItem as PrinterModel;
-    public PrinterModel GetSelectedPrinterA2A1A0 => ComboBoxPrinterA2A1A0.SelectedItem as PrinterModel;
+    public PrinterModel? GetSelectedPrinterA4A3 => ComboBoxPrinterA4A3?.SelectedItem as PrinterModel ?? null;
+    public PrinterModel? GetSelectedPrinterA2A1A0 => ComboBoxPrinterA2A1A0?.SelectedItem as PrinterModel ?? null;
 
 
-    public int NbDrawing => IdwPrintModels.Where(x => x.MustBePrint).Count();
+    public int NbDrawing => IdwPrintModels.Count(x => x.MustBePrint);
 
     public int NbA4Drawing =>
         IdwPrintModels.Count(x => x.SheetSize == DrawingSheetSizeEnum.kA4DrawingSheetSize && x.MustBePrint);
@@ -91,7 +87,7 @@ public sealed partial class InventorPrintTab : TabViewItemExtend, Interfaces.IIn
         this.InitializeComponent();
     }
 
-    public void InitTabAsync()
+    public async void InitTabAsync()
     {
         IdwPrintModels.CollectionChanged += (sender, e) =>
         {
@@ -103,13 +99,15 @@ public sealed partial class InventorPrintTab : TabViewItemExtend, Interfaces.IIn
             OnPropertyChanged(nameof(NbA0Drawing));
             OnPropertyChanged(nameof(DragAndDropVisibility));
         };
+
+        
         PrinterA4A3 = PrinterModel.GetSystemPrinter();
-        PrinterA2A1A0 = PrinterModel.GetSystemPrinter();
+        PrinterA2A1A0 = PrinterModel.GetSystemPrinter(); // PrinterModel.GetSystemPrinter();
     }
 
     private async void TabViewItem_Drop(object sender, DragEventArgs e)
     {
-        if (e.DataView.Contains(StandardDataFormats.StorageItems )== false )return;
+        if (e.DataView.Contains(StandardDataFormats.StorageItems) == false) return;
         var filesInfos = new List<FileInfo>();
         foreach (var storageItem in await e.DataView.GetStorageItemsAsync())
         {
@@ -126,29 +124,32 @@ public sealed partial class InventorPrintTab : TabViewItemExtend, Interfaces.IIn
                 if (fileInfoOrigin.FullName.EndsWith(".idw")) filesInfos.Add(fileInfoOrigin);
             }
         }
+
         await SortAndAddToList(filesInfos);
     }
 
     private async Task SortAndAddToList(List<FileInfo> filesInfos)
     {
-        filesInfos.Sort((a,b) => a.Name.CompareTo(b.Name));
+        filesInfos.Sort((a, b) => string.Compare(a.Name, b.Name, StringComparison.Ordinal));
         foreach (var fileInfo in filesInfos)
         {
-            await foreach (var idwPrintModel in IdwPrintModel.GetIdwPrintModels(fileInfo.FullName,NbPdfdxfPropertyChanged))
+            await foreach (var idwPrintModel in IdwPrintModel.GetIdwPrintModels(fileInfo.FullName,
+                               NbPdfdxfPropertyChanged))
             {
                 IdwPrintModels.Add(idwPrintModel);
             }
         }
-        
+
         //IdwPrintModels = new ObservableCollection<IdwPrintModel>( IdwPrintModels.Distinct());
-        
+
         foreach (var idwPrintModel in IdwPrintModels)
         {
             if (!idwPrintModel.Name.EndsWith("L.idw")) idwPrintModel.MustBePrint = true;
         }
     }
 
-    private void TabViewItem_DragOver(object sender, DragEventArgs e) => e.AcceptedOperation = DataPackageOperation.Move;
+    private void TabViewItem_DragOver(object sender, DragEventArgs e) =>
+        e.AcceptedOperation = DataPackageOperation.Move;
 
     private void Button_Click_OpenDrawing(object sender, RoutedEventArgs e)
     {
@@ -221,7 +222,7 @@ public sealed partial class InventorPrintTab : TabViewItemExtend, Interfaces.IIn
         {
             idwPrintModel.ButtonEnable = false;
         }
-        
+
         foreach (var printModel in IdwPrintModels)
         {
             if (printModel.MustBePrint == false) continue;
@@ -238,7 +239,7 @@ public sealed partial class InventorPrintTab : TabViewItemExtend, Interfaces.IIn
 
         IsInterfaceEnabled = true;
     }
-    
+
     private ProgressRing GetProgressRingStatus(IdwPrintModel idwPrintModel)
     {
         var container = ListViewIDW.ContainerFromItem(idwPrintModel) as ListViewItem;
@@ -301,16 +302,24 @@ public sealed partial class InventorPrintTab : TabViewItemExtend, Interfaces.IIn
     {
         var storageFiles = await GetFilesOpenPicker(".idw");
         if (storageFiles.Count == 0) return;
-        await SortAndAddToList( storageFiles.Select(s => new FileInfo(s.Path)).ToList());
+        await SortAndAddToList(storageFiles.Select(s => new FileInfo(s.Path)).ToList());
     }
 
     private async void ButtonPickFolder(object sender, RoutedEventArgs e)
     {
         var storageFolder = await GetFolderOpenPicker();
+        if (storageFolder == null) return;
         var storageFiles = await storageFolder.GetFilesAsync();
-        await SortAndAddToList(storageFiles.
-            Where(f => f.Name.EndsWith(".idw"))
-            .Select(f=> new FileInfo(f.Path))
+        await SortAndAddToList(storageFiles.Where(f => f.Name.EndsWith(".idw"))
+            .Select(f => new FileInfo(f.Path))
             .ToList());
-}
+    }
+
+    private void InventorPrintTab_OnCloseRequested(TabViewItem sender, TabViewTabCloseRequestedEventArgs args)
+    {
+        IdwPrintModels.Clear();
+        _printerA4A3.Clear();
+        _printerA2A1A0.Clear();
+        
+    }
 }
