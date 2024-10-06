@@ -174,8 +174,7 @@
                                 <ProgressRing x:Name="ProgressRingStatus" IsActive="False" Margin="10,0,10,0"/>
                                 <CheckBox Content="" IsChecked="{x:Bind MustBePrint, Mode=TwoWay}"
                                           HorizontalAlignment="Center" 
-                                          Checked="CheckBox_Checked_PDFChange" 
-                                          Unchecked="CheckBox_Checked_PDFChange" Width="50" MaxWidth="60"
+                                          Width="50" MaxWidth="60"
                                           IsEnabled="{Binding IsInterfaceEnabled,ElementName=TabViewInventorPrint, Mode=OneWay}"/>
                                 <TextBlock Text="{x:Bind SheetSize, Mode=OneWay, Converter={StaticResource SheetSizeEnumToStringConverter}}" Width="100"/>
                                 <TextBlock Text="{x:Bind Orientation, Mode=OneWay, Converter={StaticResource OrientationTypeToStringConverter}}" Width="100"/>

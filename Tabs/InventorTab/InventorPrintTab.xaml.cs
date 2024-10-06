@@ -134,7 +134,7 @@ public sealed partial class InventorPrintTab : TabViewItemExtend, Interfaces.IIn
         foreach (var fileInfo in filesInfos)
         {
             await foreach (var idwPrintModel in IdwPrintModel.GetIdwPrintModels(fileInfo.FullName,
-                               NbPdfdxfPropertyChanged))
+                               NbPrintChanged))
             {
                 IdwPrintModels.Add(idwPrintModel);
             }
@@ -249,10 +249,7 @@ public sealed partial class InventorPrintTab : TabViewItemExtend, Interfaces.IIn
 
     private void Button_Click_ClearAllList(object sender, RoutedEventArgs e) => IdwPrintModels.Clear();
 
-    private void CheckBox_Checked_PDFChange(object sender, RoutedEventArgs e) => OnPropertyChanged(nameof(NbA4Drawing));
-    private void CheckBox_Checked_DXFChange(object sender, RoutedEventArgs e) => OnPropertyChanged(nameof(NbA3Drawing));
-
-    private void NbPdfdxfPropertyChanged(object sender, PropertyChangedEventArgs e)
+    private void NbPrintChanged(object sender, PropertyChangedEventArgs e)
     {
         OnPropertyChanged(nameof(NbDrawing));
         OnPropertyChanged(nameof(NbA4Drawing));
