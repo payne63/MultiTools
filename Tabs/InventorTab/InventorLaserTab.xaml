@@ -147,6 +147,9 @@
             <ListView.ItemTemplate>
                 <DataTemplate x:DataType="model:IdwModel">
                     <ListViewItem Margin="3" >
+                        <ToolTipService.ToolTip>
+                            <element:ToolTipInventor FileInfoData="{x:Bind FileInfoData}"/>
+                        </ToolTipService.ToolTip>
                         <StackPanel Orientation="Vertical">
                             <StackPanel Orientation="Horizontal" >
                                 <TextBlock Text="{x:Bind Name}" MinWidth="300" VerticalAlignment="Center"/>
@@ -156,9 +159,6 @@
                                 <CheckBox Content="DXF" IsChecked="{x:Bind MakeDXF, Mode=TwoWay}"
                                       Checked="CheckBox_Checked_DXFChange" 
                                       Unchecked="CheckBox_Checked_DXFChange"/>
-                                <Button x:Name="VisualButton" Click="GetThumbNailAsync" Margin="5,0,5,0">
-                                    <FontIcon Glyph="&#xE7B3;" ToolTipService.ToolTip="Aperçu"/>
-                                </Button>
                                 <Button  Click="Button_Click_OpenDrawing" Margin="5,0,5,0">
                                     <SymbolIcon Symbol="OpenFile" 
                                                 ToolTipService.ToolTip="ouvrir le plan"/>
@@ -174,18 +174,5 @@
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
-        <TeachingTip x:Name="TeachingTipThumbNail"
-                     PreferredPlacement="Right">
-            <TeachingTip.HeroContent>
-                <Image x:Name="ImageThumbNail" />
-            </TeachingTip.HeroContent>
-            <TeachingTip.Content>
-                <StackPanel Orientation="Vertical">
-                    <TextBlock x:Name="ThumbNailPartNumber" HorizontalAlignment="Center"/>
-                    <TextBlock x:Name="ThumbNailDescription" HorizontalAlignment="Center"/>
-                    <TextBlock x:Name="ThumbNailCustomer" HorizontalAlignment="Center"/>
-                </StackPanel>
-            </TeachingTip.Content>
-        </TeachingTip>
     </Grid>
 </model:TabViewItemExtend>

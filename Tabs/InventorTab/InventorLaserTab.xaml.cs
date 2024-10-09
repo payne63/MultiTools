@@ -157,33 +157,7 @@ public sealed partial class InventorLaserTab : TabViewItemExtend, Interfaces.IIn
     {
         e.AcceptedOperation = DataPackageOperation.Move;
     }
-
-    private async void GetThumbNailAsync(object sender, RoutedEventArgs e)
-    {
-        if (((FrameworkElement)sender).DataContext is IdwModel IDWModelContext)
-        {
-            if (TeachingTipThumbNail.IsOpen == true && ThumbNailPartNumber.Text == IDWModelContext.FileInfoData.Name)
-            {
-                TeachingTipThumbNail.IsOpen = false;
-                return;
-            }
-
-            var file = await Windows.Storage.StorageFile.GetFileFromPathAsync(IDWModelContext.FileInfoData.FullName);
-            var iconThumbnail = await file.GetThumbnailAsync(ThumbnailMode.SingleItem, 256);
-            var bitmapImage = new BitmapImage();
-            bitmapImage.SetSource(iconThumbnail);
-            if (bitmapImage != null)
-            {
-                IDWModelContext.bitmapImage = bitmapImage;
-                ImageThumbNail.Source = bitmapImage;
-                ThumbNailPartNumber.Text = IDWModelContext.FileInfoData.Name;
-                ThumbNailDescription.Text = string.Empty;
-                ThumbNailCustomer.Text = string.Empty;
-                TeachingTipThumbNail.IsOpen = true;
-            }
-        }
-    }
-
+    
     private void Button_Click_OpenDrawing(object sender, RoutedEventArgs e)
     {
         var contextIdwModel = ((FrameworkElement)sender).DataContext as IdwModel;
