@@ -32,23 +32,27 @@ using Windows.Storage.FileProperties;
 using Inventor;
 using MultiTools.Helper;
 using MultiTools.Models;
+using FileAttributes = System.IO.FileAttributes;
 
 namespace MultiTools.Tabs.InventorTab;
 
-public sealed partial class InventorLaserTab : TabViewItem, Interfaces.IInitTab, INotifyPropertyChanged
+public sealed partial class InventorLaserTab : TabViewItemExtend, Interfaces.IInitTab, INotifyPropertyChanged
 {
-    public readonly ObservableCollection<IdwModel> IdwModels = new();
+    public readonly ObservableCollection<IdwModel> IdwModels;
 
-    #region PropertyChanged
+    //
+    // #region PropertyChanged
+    //
+    // public event PropertyChangedEventHandler PropertyChanged;
+    //
+    // private void OnPropertyChanged([CallerMemberName] string name = null)
+    // {
+    //     PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+    // }
+    //
+    // #endregion
+    public Visibility DragAndDropVisibility => IdwModels.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
 
-    public event PropertyChangedEventHandler PropertyChanged;
-
-    private void OnPropertyChanged([CallerMemberName] string name = null)
-    {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
-    }
-
-    #endregion
 
     private bool _IsZipCompres;
 
@@ -80,67 +84,51 @@ public sealed partial class InventorLaserTab : TabViewItem, Interfaces.IInitTab,
         }
     }
 
-    public int NbDrawing
-    {
-        get => IdwModels.Count();
-    }
+    public int NbDrawing => IdwModels.Count();
 
-    public int NbPDFDrawing
-    {
-        get => IdwModels.Where(x => x.MakePDF).Count();
-    }
+    public int NbPDFDrawing => IdwModels.Where(x => x.MakePDF).Count();
 
-    public int NbDXFDrawing
-    {
-        get => IdwModels.Where(x => x.MakeDXF).Count();
-    }
+    public int NbDXFDrawing => IdwModels.Where(x => x.MakeDXF).Count();
 
     public InventorLaserTab()
     {
+        IdwModels = new ObservableCollection<IdwModel>();
         this.InitializeComponent();
-        IdwModels.CollectionChanged += (object sender, NotifyCollectionChangedEventArgs e) =>
-        {
-            OnPropertyChanged(nameof(NbDrawing));
-            OnPropertyChanged(nameof(NbPDFDrawing));
-            OnPropertyChanged(nameof(NbDXFDrawing));
-        };
     }
 
     public void InitTabAsync()
     {
+        IdwModels.CollectionChanged += (sender, e) =>
+        {
+            OnPropertyChanged(nameof(NbDrawing));
+            OnPropertyChanged(nameof(NbPDFDrawing));
+            OnPropertyChanged(nameof(NbDXFDrawing));
+            OnPropertyChanged(nameof(DragAndDropVisibility));
+        };
     }
 
     private async void TabViewItem_Drop(object sender, DragEventArgs e)
     {
         if (e.DataView.Contains(StandardDataFormats.StorageItems))
         {
-            var items = await e.DataView.GetStorageItemsAsync();
-            if (items.Count > 0)
+            var filesInfos = new List<FileInfo>();
+            foreach (var storageItem in await e.DataView.GetStorageItemsAsync())
             {
-                foreach (var file in items)
+                var fileInfoOrigine= new FileInfo(storageItem.Path);
+                if (fileInfoOrigine.Attributes.HasFlag(FileAttributes.Directory))
                 {
-                    Trace.WriteLine(file.Path);
-                    if (!Directory.Exists(file.Path))
+                    foreach (var fileName in Directory.GetFiles(fileInfoOrigine.FullName))
                     {
-                        if (file.Name.EndsWith(".idw"))
-                        {
-                            FileInfo fileInfo = new FileInfo(file.Path);
-                            IdwModels.Add(new IdwModel(fileInfo, nbPDFDXFPropertyChanged));
-                        }
-                    }
-
-                    if (!Directory.Exists(file.Path)) continue; // si ce n'est un répertoire
-                    var filesInDirectory = Directory.GetFiles(file.Path);
-                    foreach (var f in filesInDirectory)
-                    {
-                        if (f.EndsWith(".idw"))
-                        {
-                            FileInfo fileInfo = new FileInfo(f);
-                            IdwModels.Add(new IdwModel(fileInfo, nbPDFDXFPropertyChanged));
-                        }
+                        if (fileName.EndsWith(".idw")) filesInfos.Add(new FileInfo(fileName));
                     }
                 }
+                else
+                {
+                    if (fileInfoOrigine.FullName.EndsWith(".idw")) filesInfos.Add(new FileInfo(fileInfoOrigine.FullName));
+                }
             }
+
+            await SortAndAddToList(filesInfos);
         }
 
         var sortableList = new List<IdwModel>(IdwModels);
@@ -149,6 +137,20 @@ public sealed partial class InventorLaserTab : TabViewItem, Interfaces.IInitTab,
         {
             IdwModels.Move(IdwModels.IndexOf(sortableList[i]), i);
         }
+    }
+
+    private async Task SortAndAddToList(List<FileInfo> filesInfos)
+    {
+        IsInterfaceEnabled = false;
+        ApprenticeHelper.ResetApprenticeServer();
+        filesInfos.Sort((a, b) => string.Compare(a.Name, b.Name, StringComparison.Ordinal));
+
+        foreach (var fileInfo in filesInfos)
+        {
+            IdwModels.Add(new IdwModel(fileInfo, nbPDFDXFPropertyChanged));
+        }
+
+        IsInterfaceEnabled = true;
     }
 
     private void TabViewItem_DragOver(object sender, DragEventArgs e)
@@ -297,4 +299,21 @@ public sealed partial class InventorLaserTab : TabViewItem, Interfaces.IInitTab,
     {
         x.AutoSelectDXFStatus();
     });
+
+    private async void ButtonPickFile(object sender, RoutedEventArgs e)
+    {
+        var storageFiles = await GetFilesOpenPicker(".idw");
+        if (storageFiles.Count == 0) return;
+        await SortAndAddToList(storageFiles.Select(s => new FileInfo(s.Path)).ToList());
+    }
+
+    private async void ButtonPickFolder(object sender, RoutedEventArgs e)
+    {
+        var storageFolder = await GetFolderOpenPicker();
+        if (storageFolder == null) return;
+        var storageFiles = await storageFolder.GetFilesAsync();
+        await SortAndAddToList(storageFiles.Where(f => f.Name.EndsWith(".idw"))
+            .Select(f => new FileInfo(f.Path))
+            .ToList());
+    }
 }

@@ -22,7 +22,7 @@ using FileInfo = System.IO.FileInfo;
 
 namespace MultiTools.Tabs.InventorTab;
 
-public sealed partial class InventorPrintTab : TabViewItemExtend, Interfaces.IInitTab, INotifyPropertyChanged
+public sealed partial class InventorPrintTab : TabViewItemExtend, Interfaces.IInitTab,INotifyPropertyChanged
 {
     public ObservableCollection<IdwPrintModel> IdwPrintModels ;
 
@@ -113,9 +113,9 @@ public sealed partial class InventorPrintTab : TabViewItemExtend, Interfaces.IIn
             var fileInfoOrigin = new FileInfo(storageItem.Path);
             if (fileInfoOrigin.Attributes.HasFlag(FileAttributes.Directory))
             {
-                foreach (var fileInfo in Directory.GetFiles(fileInfoOrigin.FullName))
+                foreach (var fileName in Directory.GetFiles(fileInfoOrigin.FullName))
                 {
-                    if (fileInfo.EndsWith(".idw")) filesInfos.Add(new FileInfo(fileInfo));
+                    if (fileName.EndsWith(".idw")) filesInfos.Add(new FileInfo(fileName));
                 }
             }
             else
@@ -135,19 +135,15 @@ public sealed partial class InventorPrintTab : TabViewItemExtend, Interfaces.IIn
         
         foreach (var fileInfo in filesInfos)
         {
-            await foreach (var idwPrintModel in IdwPrintModel.GetIdwPrintModels(fileInfo.FullName,
-                               NbPrintChanged))
+            await foreach (var idwPrintModel in IdwPrintModel.GetIdwPrintModels(fileInfo.FullName, NbPrintChanged))
             {
                 IdwPrintModels.Add(idwPrintModel);
             }
         }
-
-        //IdwPrintModels = new ObservableCollection<IdwPrintModel>( IdwPrintModels.Distinct());
-
-        foreach (var idwPrintModel in IdwPrintModels)
-        {
-            if (!idwPrintModel.Name.EndsWith("L.idw")) idwPrintModel.MustBePrint = true;
-        }
+        // foreach (var idwPrintModel in IdwPrintModels)
+        // {
+        //     if (!idwPrintModel.Name.EndsWith("L.idw")) idwPrintModel.MustBePrint = true;
+        // }
         IsInterfaceEnabled = true;
     }
 

@@ -116,8 +116,7 @@ public class IdwPrintModel : NotifyPropertyChangedBase
         PageNumber = pageNumber;
         IsOnlyOnePage = isOnlyOnePage;
         FileInfoData = new FileInfo(filePath);
-        // DefineSelectPrint();
-        _mustBePrint = false;
+        _mustBePrint = !Name.EndsWith("L.idw");
         PropertyChanged += propertyChangedEventHandler;
         _buttonEnable = true;      
     }
