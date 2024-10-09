@@ -40,7 +40,7 @@
                     IsEnabled="{x:Bind IsInterfaceEnabled, Mode=OneWay}">
                     <StackPanel Orientation="Vertical" >
                         <Viewbox MaxHeight="40" MaxWidth="40" >
-                            <SymbolIcon Symbol="NewWindow"  />
+                            <FontIcon Glyph="&#xE8A5;"  />
                         </Viewbox>
                         <TextBlock Text="Selectionner" HorizontalAlignment="Center" />
                         <TextBlock Text="des fichiers" HorizontalAlignment="Center" />
@@ -55,7 +55,7 @@
                     IsEnabled="{x:Bind IsInterfaceEnabled, Mode=OneWay}">
                     <StackPanel Orientation="Vertical" >
                         <Viewbox MaxHeight="40" MaxWidth="40" >
-                            <SymbolIcon Symbol="NewWindow"  />
+                            <FontIcon Glyph="&#xE8B7;" />
                         </Viewbox>
                         <TextBlock Text="Selectionner" HorizontalAlignment="Center" />
                         <TextBlock Text="un repertoire" HorizontalAlignment="Center" />

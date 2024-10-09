@@ -40,20 +40,8 @@ public sealed partial class InventorLaserTab : TabViewItemExtend, Interfaces.IIn
 {
     public readonly ObservableCollection<IdwModel> IdwModels;
 
-    //
-    // #region PropertyChanged
-    //
-    // public event PropertyChangedEventHandler PropertyChanged;
-    //
-    // private void OnPropertyChanged([CallerMemberName] string name = null)
-    // {
-    //     PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
-    // }
-    //
-    // #endregion
     public Visibility DragAndDropVisibility => IdwModels.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
-
-
+    
     private bool _IsZipCompres;
 
     public bool IsZipCompres
