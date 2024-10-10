@@ -115,7 +115,7 @@ public sealed partial class PropertiesRenamerTab : TabViewItemExtend, Interfaces
             return;
         }
 
-        _isInterfaceEnabled = false;
+        IsInterfaceEnabled = false;
         foreach (var dataIProp in SourceFilesCollection)
         {
             dataIProp.ButtonEnable = false;
@@ -128,7 +128,7 @@ public sealed partial class PropertiesRenamerTab : TabViewItemExtend, Interfaces
             }
 
             dataIProp.Status = DataIProp.StatusEnum.Updating;
-            GetProgressRingStatus(dataIProp).IsActive = true;
+            GetProgressRingStatus2(ListViewParts, dataIProp).IsActive = true;
 
             dataIProp.CustomerName = NewCustomerName.Text;
             dataIProp.ProjectName = NewProjectName.Text;
@@ -147,7 +147,7 @@ public sealed partial class PropertiesRenamerTab : TabViewItemExtend, Interfaces
                 // await Task.Delay(200);
             });
             dataIProp.Status = DataIProp.StatusEnum.Updated;
-            GetProgressRingStatus(dataIProp).IsActive = false;
+            GetProgressRingStatus2(ListViewParts, dataIProp).IsActive = false;
         }
 
         CloseIApprenticeServerDocument();
@@ -155,17 +155,11 @@ public sealed partial class PropertiesRenamerTab : TabViewItemExtend, Interfaces
         {
             dataIProp.ButtonEnable = true;
         }
-        _isInterfaceEnabled = true;
+        IsInterfaceEnabled = true;
     }
 
     private void CloseIApprenticeServerDocument() => SourceFilesCollection.First().Document.Close();
-
-    private ProgressRing GetProgressRingStatus(DataIProp dataIProp)
-    {
-        var container = ListViewParts.ContainerFromItem(dataIProp) as ListViewItem;
-        return (container ?? throw new Exception("container is null")).FindChild<ProgressRing>();
-    }
-
+    
     private void TabViewItem_DragOver(object sender, DragEventArgs e) =>
         e.AcceptedOperation = DataPackageOperation.Move;
 
@@ -190,37 +184,7 @@ public sealed partial class PropertiesRenamerTab : TabViewItemExtend, Interfaces
         var contextIdwModel = ((FrameworkElement)sender).DataContext as DataIProp;
         SourceFilesCollection.Remove(contextIdwModel);
     }
-
-    // private async Task OpenSimpleMessage(string message, string content = null)
-    // {
-    //     var dialog = new ContentDialog
-    //     {
-    //         XamlRoot = XamlRoot,
-    //         Title = message,
-    //         Content = content,
-    //         PrimaryButtonText = "Ok",
-    //         DefaultButton = ContentDialogButton.Primary,
-    //     };
-    //     _ = await dialog.ShowAsync();
-    // }
     
-    private static async Task<StorageFile> GetFileOpenPicker(params string[] filters)
-    {
-        var openPicker = new Windows.Storage.Pickers.FileOpenPicker();
-        var window = App.m_window;
-        var hWnd = WinRT.Interop.WindowNative.GetWindowHandle(window);
-        WinRT.Interop.InitializeWithWindow.Initialize(openPicker, hWnd);
-
-        // Set options for your file picker
-        openPicker.ViewMode = PickerViewMode.Thumbnail;
-        foreach (var filter in filters)
-        {
-            openPicker.FileTypeFilter.Add(filter);
-        }
-        // Open the picker for the user to pick a file
-        return await openPicker.PickSingleFileAsync();
-    }
-
     private void _OnTextChanged(object sender, TextChangedEventArgs e)
     {
         foreach (var dataIProp in SourceFilesCollection)

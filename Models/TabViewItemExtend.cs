@@ -32,6 +32,7 @@ public abstract class TabViewItemExtend : TabViewItem
             OnPropertyChanged(nameof( IsInterfaceDisabled));
         }
     }
+    public bool IsInterfaceDisabled => !IsInterfaceEnabled;
 
     protected ProgressRing GetProgressRingStatus2(ListView listView, object model)
     {
@@ -39,7 +40,6 @@ public abstract class TabViewItemExtend : TabViewItem
         return container.FindChild < ProgressRing>();
     }
     
-    public bool IsInterfaceDisabled => !IsInterfaceEnabled;
 
     protected async void OpenSimpleMessage(XamlRoot xamlRoot, string message)
     {
