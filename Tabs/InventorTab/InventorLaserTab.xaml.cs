@@ -166,11 +166,11 @@ public sealed partial class InventorLaserTab : TabViewItemExtend, Interfaces.IIn
         IsInterfaceEnabled = true;
     }
     
-    private ProgressRing GetProgressRingStatus(IdwModel idwPrintModel)
-    {
-        var container = ListViewIDW.ContainerFromItem(idwPrintModel) as ListViewItem;
-        return container.FindChild<ProgressRing>();
-    }
+    // private ProgressRing GetProgressRingStatus(IdwModel idwPrintModel)
+    // {
+    //     var container = ListViewIDW.ContainerFromItem(idwPrintModel) as ListViewItem;
+    //     return container.FindChild<ProgressRing>();
+    // }
 
     private async Task GenerateAllPdfDxfAsync(List<IdwModel> IdwModels)
     {
@@ -185,9 +185,9 @@ public sealed partial class InventorLaserTab : TabViewItemExtend, Interfaces.IIn
 
         foreach (IdwModel plan in IdwModels)
         {
-            GetProgressRingStatus(plan).IsActive = true;
+            GetProgressRingStatus2(ListViewIDW, plan).IsActive = true;
             await GeneratePdfDxfAsync(plan, PDFFolder, DXFFolder);
-            GetProgressRingStatus(plan).IsActive = false;
+            GetProgressRingStatus2(ListViewIDW, plan).IsActive = false;
         }
 
         if (IsZipCompres) await GenerateZip(PDFFolder, DXFFolder);

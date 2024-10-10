@@ -5,6 +5,7 @@ using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.Pickers;
+using CommunityToolkit.WinUI.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using MultiTools.Interfaces;
@@ -30,6 +31,12 @@ public abstract class TabViewItemExtend : TabViewItem
             OnPropertyChanged();
             OnPropertyChanged(nameof( IsInterfaceDisabled));
         }
+    }
+
+    protected ProgressRing GetProgressRingStatus2(ListView listView, object model)
+    {
+        var container = listView.ContainerFromItem(model) as ListViewItem;
+        return container.FindChild < ProgressRing>();
     }
     
     public bool IsInterfaceDisabled => !IsInterfaceEnabled;

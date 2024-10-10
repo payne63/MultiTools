@@ -226,9 +226,9 @@ public sealed partial class InventorPrintTab : TabViewItemExtend, Interfaces.IIn
         foreach (var printModel in IdwPrintModels)
         {
             if (printModel.MustBePrint == false) continue;
-            GetProgressRingStatus(printModel).IsActive = true;
+            GetProgressRingStatus2(ListViewIDW, printModel).IsActive = true;
             await InventorHelper2.PrintFileAsync(printModel, printModel.PageNumber, printerSettings);
-            GetProgressRingStatus(printModel).IsActive = false;
+            GetProgressRingStatus2(ListViewIDW, printModel).IsActive = false;
             printModel.MustBePrint = false;
         }
 
@@ -240,11 +240,11 @@ public sealed partial class InventorPrintTab : TabViewItemExtend, Interfaces.IIn
         IsInterfaceEnabled = true;
     }
 
-    private ProgressRing GetProgressRingStatus(IdwPrintModel idwPrintModel)
-    {
-        var container = ListViewIDW.ContainerFromItem(idwPrintModel) as ListViewItem;
-        return container.FindChild<ProgressRing>();
-    }
+    // private ProgressRing GetProgressRingStatus(IdwPrintModel idwPrintModel)
+    // {
+    //     var container = ListViewIDW.ContainerFromItem(idwPrintModel) as ListViewItem;
+    //     return container.FindChild<ProgressRing>();
+    // }
 
     private void Button_Click_ClearAllList(object sender, RoutedEventArgs e) => IdwPrintModels.Clear();
 
