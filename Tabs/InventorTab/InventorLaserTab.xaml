@@ -143,7 +143,7 @@
                       Margin="0,10,10,10"
                       Drop="TabViewItem_Drop" 
                       DragOver="TabViewItem_DragOver"
-                      AllowDrop="True" IsEnabled="{x:Bind IsInterfaceEnabled, Mode=OneWay}">
+                      AllowDrop="True">
             <ListView.ItemTemplate>
                 <DataTemplate x:DataType="model:IdwModel">
                     <ListViewItem Margin="3" >
@@ -153,17 +153,22 @@
                         <StackPanel Orientation="Vertical">
                             <StackPanel Orientation="Horizontal" >
                                 <TextBlock Text="{x:Bind Name}" MinWidth="300" VerticalAlignment="Center"/>
+                                <ProgressRing x:Name="ProgressRingStatus" IsActive="False" Margin="10,0,10,0"/>
                                 <CheckBox Content="PDF" IsChecked="{x:Bind MakePDF, Mode=TwoWay}"
-                                      Checked="CheckBox_Checked_PDFChange" 
-                                      Unchecked="CheckBox_Checked_PDFChange"/>
+                                          Checked="CheckBox_Checked_PDFChange" 
+                                          Unchecked="CheckBox_Checked_PDFChange"
+                                          IsEnabled="{x:Bind ButtonEnable, Mode=OneWay}"/>
                                 <CheckBox Content="DXF" IsChecked="{x:Bind MakeDXF, Mode=TwoWay}"
                                       Checked="CheckBox_Checked_DXFChange" 
-                                      Unchecked="CheckBox_Checked_DXFChange"/>
-                                <Button  Click="Button_Click_OpenDrawing" Margin="5,0,5,0">
+                                      Unchecked="CheckBox_Checked_DXFChange"
+                                      IsEnabled="{x:Bind ButtonEnable, Mode=OneWay}"/>
+                                <Button  Click="Button_Click_OpenDrawing" Margin="5,0,5,0"
+                                        IsEnabled="{x:Bind ButtonEnable, Mode=OneWay}" >
                                     <SymbolIcon Symbol="OpenFile" 
                                                 ToolTipService.ToolTip="ouvrir le plan"/>
                                 </Button>
-                                <Button  Click="Button_Click_Remove" Margin="5,0,5,0">
+                                <Button  Click="Button_Click_Remove" Margin="5,0,5,0"
+                                         IsEnabled="{x:Bind ButtonEnable, Mode=OneWay}">
                                     <SymbolIcon Symbol="Delete"
                                                 ToolTipService.ToolTip="supprimer le plan de la liste"/>
                                 </Button>

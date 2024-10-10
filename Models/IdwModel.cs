@@ -33,12 +33,20 @@ namespace MultiTools.Models
             get { return _MakeDXF; }
             set { _MakeDXF = value; OnPropertyChanged(); }
         }
-
+        
+        private bool _buttonEnable;
+        public bool ButtonEnable
+        {
+            get => _buttonEnable;
+            set { _buttonEnable = value; OnPropertyChanged(); }
+        }
+        
         public IdwModel(FileInfo fileInfo,PropertyChangedEventHandler propertyChangedEventHandler)
         {
             FileInfoData = fileInfo;
             AutoSelectPDFStatus();
             AutoSelectDXFStatus();
+            ButtonEnable = true;
             PropertyChanged += propertyChangedEventHandler;
         }
 

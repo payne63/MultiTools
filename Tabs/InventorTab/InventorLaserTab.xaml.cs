@@ -29,6 +29,7 @@ using System.Threading;
 using Microsoft.UI.Xaml.Media.Imaging;
 using MultiTools.Base;
 using Windows.Storage.FileProperties;
+using CommunityToolkit.WinUI.UI;
 using Inventor;
 using MultiTools.Helper;
 using MultiTools.Models;
@@ -53,21 +54,6 @@ public sealed partial class InventorLaserTab : TabViewItemExtend, Interfaces.IIn
         set
         {
             _IsZipCompres = value;
-            OnPropertyChanged();
-        }
-    }
-
-    private bool _IsInterfaceEnabled = true;
-
-    public bool IsInterfaceEnabled
-    {
-        get
-        {
-            return _IsInterfaceEnabled;
-        }
-        set
-        {
-            _IsInterfaceEnabled = value;
             OnPropertyChanged();
         }
     }
@@ -168,11 +154,25 @@ public sealed partial class InventorLaserTab : TabViewItemExtend, Interfaces.IIn
         if (IsInterfaceEnabled == false) return;
         IsInterfaceEnabled = false;
         // await GeneratePdfDxfAsync(new List<IDWModel>(IdwModels));
-        await GeneratePdfDxfAsync(IdwModels.Where(m => m.MakePDF || m.MakeDXF).ToList());
+        foreach (var idwModel in IdwModels)
+        {
+            idwModel.ButtonEnable = false;
+        }
+        await GenerateAllPdfDxfAsync(IdwModels.Where(m => m.MakePDF || m.MakeDXF).ToList());
+        foreach (var idwModel in IdwModels)
+        {
+            idwModel.ButtonEnable = true;
+        }
         IsInterfaceEnabled = true;
     }
+    
+    private ProgressRing GetProgressRingStatus(IdwModel idwPrintModel)
+    {
+        var container = ListViewIDW.ContainerFromItem(idwPrintModel) as ListViewItem;
+        return container.FindChild<ProgressRing>();
+    }
 
-    private async Task GeneratePdfDxfAsync(List<IdwModel> IdwModels)
+    private async Task GenerateAllPdfDxfAsync(List<IdwModel> IdwModels)
     {
         var rootPathOfFile = IdwModels.First()?.FileInfoData?.Directory?.FullName;
         if (rootPathOfFile == null) return;
@@ -185,16 +185,23 @@ public sealed partial class InventorLaserTab : TabViewItemExtend, Interfaces.IIn
 
         foreach (IdwModel plan in IdwModels)
         {
-            var drawingDoc = InventorHelper2.GetDocument(plan.FileInfoData.FullName) as DrawingDocument;
-
-            if (drawingDoc == null) continue;
-            if (plan.MakePDF) await Task.Run(() => InventorHelper2.SavePdf(drawingDoc, PDFFolder));
-            if (plan.MakeDXF) await Task.Run(() => InventorHelper2.SaveDxf(drawingDoc, DXFFolder));
-
-            drawingDoc.Close();
+            GetProgressRingStatus(plan).IsActive = true;
+            await GeneratePdfDxfAsync(plan, PDFFolder, DXFFolder);
+            GetProgressRingStatus(plan).IsActive = false;
         }
 
         if (IsZipCompres) await GenerateZip(PDFFolder, DXFFolder);
+    }
+
+    private static async Task GeneratePdfDxfAsync(IdwModel plan, string PDFFolder, string DXFFolder)
+    {
+        var drawingDoc = InventorHelper2.GetDocument(plan.FileInfoData.FullName) as DrawingDocument;
+
+        if (drawingDoc == null) return;
+        if (plan.MakePDF) await Task.Run(() => InventorHelper2.SavePdf(drawingDoc, PDFFolder));
+        if (plan.MakeDXF) await Task.Run(() => InventorHelper2.SaveDxf(drawingDoc, DXFFolder));
+
+        drawingDoc.Close();
     }
 
     private static async Task GenerateZip(string PDFFolder, string DXFFolder)
