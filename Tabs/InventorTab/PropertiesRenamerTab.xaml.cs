@@ -15,34 +15,15 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media.Imaging;
 using MultiTools.Base;
 using MultiTools.Helper;
+using MultiTools.Models;
 
 namespace MultiTools.Tabs.InventorTab;
 
-public sealed partial class PropertiesRenamerTab : TabViewItem, Interfaces.IInitTab, INotifyPropertyChanged
+public sealed partial class PropertiesRenamerTab : TabViewItemExtend, Interfaces.IInitTab, INotifyPropertyChanged
 {
-    #region PropertyChanged
-
-    public event PropertyChangedEventHandler PropertyChanged;
-
-    private void OnPropertyChanged([CallerMemberName] string name = null)
-    {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
-    }
-
-    #endregion
 
     public readonly ObservableCollection<DataIProp> SourceFilesCollection = new();
     private bool _isInterfaceEnabled = true;
-
-    public bool IsInterfaceEnabled
-    {
-        get => _isInterfaceEnabled;
-        set
-        {
-            _isInterfaceEnabled = value;
-            OnPropertyChanged();
-        }
-    }
 
     public Visibility DragAndDropVisibility =>
         SourceFilesCollection.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
@@ -51,8 +32,7 @@ public sealed partial class PropertiesRenamerTab : TabViewItem, Interfaces.IInit
     {
         this.InitializeComponent();
     }
-
-
+    
     public async void InitTabAsync()
     {
         SourceFilesCollection.CollectionChanged += (sender, e) => OnPropertyChanged(nameof(DragAndDropVisibility));
@@ -71,7 +51,7 @@ public sealed partial class PropertiesRenamerTab : TabViewItem, Interfaces.IInit
     {
         if (!file.Name.EndsWith(".ipt") && !file.Name.EndsWith(".iam"))
         {
-            _ = OpenSimpleMessage("seul des pièces ou des assemblages Inventor sont utilisable");
+            OpenSimpleMessage(XamlRoot, "seul des pièces ou des assemblages Inventor sont utilisable");
         }
 
         foreach (var dataIProp in GetParts(file.Path))
@@ -103,7 +83,7 @@ public sealed partial class PropertiesRenamerTab : TabViewItem, Interfaces.IInit
         }
         catch (Exception ex)
         {
-            _ = OpenSimpleMessage($"Erreur!!{ex.Message} \n fichier {PathFullName}");
+            OpenSimpleMessage(XamlRoot, $"Erreur!!{ex.Message} \n fichier {PathFullName}");
             return;
         }
 
@@ -123,7 +103,6 @@ public sealed partial class PropertiesRenamerTab : TabViewItem, Interfaces.IInit
         {
             dataIProp.Document.Close();
         }
-
         SourceFilesCollection.Clear();
     }
 
@@ -132,11 +111,15 @@ public sealed partial class PropertiesRenamerTab : TabViewItem, Interfaces.IInit
         if (NewAuthorName.Text == string.Empty || NewProjectName.Text == string.Empty ||
             NewCustomerName.Text == string.Empty)
         {
-            await OpenSimpleMessage("Veuillez remplir touts les champs avant de renommer");
+            OpenSimpleMessage(XamlRoot,"Veuillez remplir touts les champs avant de renommer");
             return;
         }
 
         _isInterfaceEnabled = false;
+        foreach (var dataIProp in SourceFilesCollection)
+        {
+            dataIProp.ButtonEnable = false;
+        }
         foreach (var dataIProp in SourceFilesCollection)
         {
             if (dataIProp.Status == DataIProp.StatusEnum.NotUpdateRequired)
@@ -168,6 +151,10 @@ public sealed partial class PropertiesRenamerTab : TabViewItem, Interfaces.IInit
         }
 
         CloseIApprenticeServerDocument();
+        foreach (var dataIProp in SourceFilesCollection)
+        {
+            dataIProp.ButtonEnable = true;
+        }
         _isInterfaceEnabled = true;
     }
 
@@ -186,7 +173,7 @@ public sealed partial class PropertiesRenamerTab : TabViewItem, Interfaces.IInit
     {
         if (!e.DataView.Contains(StandardDataFormats.StorageItems))
         {
-            _ = OpenSimpleMessage("Format non compatible");
+            OpenSimpleMessage(XamlRoot, "Format non compatible");
             return;
         }
 
@@ -204,41 +191,18 @@ public sealed partial class PropertiesRenamerTab : TabViewItem, Interfaces.IInit
         SourceFilesCollection.Remove(contextIdwModel);
     }
 
-    private async void GetThumbNailAsync(object sender, RoutedEventArgs e)
-    {
-        if (((FrameworkElement)sender).DataContext is DataIBase dataIBaseContext)
-        {
-            if (TeachingTipThumbNail.IsOpen == true && ThumbNailPartNumber.Text == dataIBaseContext.FileInfoData.Name)
-            {
-                TeachingTipThumbNail.IsOpen = false;
-                return;
-            }
-
-            var file = await Windows.Storage.StorageFile.GetFileFromPathAsync(dataIBaseContext.FileInfoData.FullName);
-            var iconThumbnail = await file.GetThumbnailAsync(ThumbnailMode.SingleItem, 256);
-            var bitmapImage = new BitmapImage();
-            bitmapImage.SetSource(iconThumbnail);
-            dataIBaseContext.bitmapImage = bitmapImage;
-            ImageThumbNail.Source = bitmapImage;
-            ThumbNailPartNumber.Text = dataIBaseContext.FileInfoData.Name;
-            ThumbNailDescription.Text = string.Empty;
-            ThumbNailCustomer.Text = string.Empty;
-            TeachingTipThumbNail.IsOpen = true;
-        }
-    }
-
-    private async Task OpenSimpleMessage(string message, string content = null)
-    {
-        var dialog = new ContentDialog
-        {
-            XamlRoot = XamlRoot,
-            Title = message,
-            Content = content,
-            PrimaryButtonText = "Ok",
-            DefaultButton = ContentDialogButton.Primary,
-        };
-        _ = await dialog.ShowAsync();
-    }
+    // private async Task OpenSimpleMessage(string message, string content = null)
+    // {
+    //     var dialog = new ContentDialog
+    //     {
+    //         XamlRoot = XamlRoot,
+    //         Title = message,
+    //         Content = content,
+    //         PrimaryButtonText = "Ok",
+    //         DefaultButton = ContentDialogButton.Primary,
+    //     };
+    //     _ = await dialog.ShowAsync();
+    // }
     
     private static async Task<StorageFile> GetFileOpenPicker(params string[] filters)
     {

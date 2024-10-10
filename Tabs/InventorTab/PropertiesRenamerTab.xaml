@@ -1,11 +1,13 @@
-<TabViewItem
+<models:TabViewItemExtend
     x:Class="MultiTools.Tabs.InventorTab.PropertiesRenamerTab"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:MultiTools.Tabs"
     xmlns:base="using:MultiTools.Base"
+    xmlns:elements="using:MultiTools.Elements"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:models="using:MultiTools.Models"
     mc:Ignorable="d"
     Header="Renommer IPropriétés">
     <TabViewItem.IconSource>
@@ -35,7 +37,7 @@
                     AllowDrop="True"
                     IsEnabled="{x:Bind IsInterfaceEnabled, Mode=OneWay}">
                     <StackPanel Orientation="Vertical">
-                        <FontIcon Glyph="&#xED25;" />
+                        <FontIcon Glyph="&#xE8A5;" />
                         <TextBlock Text="Selection" HorizontalAlignment="Center" />
                         <TextBlock Text="des fichiers" HorizontalAlignment="Center" />
                     </StackPanel>
@@ -100,6 +102,10 @@
 
             </TextBlock>
         </StackPanel>
+        <elements:BackgroundShowVisualElement Grid.Column="1" Grid.Row="1"  
+                                              ShowDragAndDrop="{x:Bind DragAndDropVisibility, Mode=OneWay}"
+                                              ShowBusyRing="{x:Bind IsInterfaceDisabled, Mode=OneWay}"
+        />
         <ListView ItemsSource="{x:Bind SourceFilesCollection}"
                   x:Name="ListViewParts"
                   Grid.Column="1" Grid.Row="1"
@@ -114,7 +120,10 @@
                   AllowDrop="True">
             <ListView.ItemTemplate>
                 <DataTemplate x:DataType="base:DataIProp">
-                    <ListViewItem Margin="3" Opacity="{x:Bind OpacityStatus, Mode=OneWay}"  >
+                    <ListViewItem Margin="3" Opacity="{x:Bind OpacityStatus, Mode=OneWay}">
+                        <ToolTipService.ToolTip>
+                            <elements:ToolTipInventor FileInfoData="{x:Bind FileInfoData}"/>
+                        </ToolTipService.ToolTip>
                         <StackPanel Orientation="Vertical">
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Text="{x:Bind PartNumber}" MinWidth="200" VerticalAlignment="Center" />
@@ -130,11 +139,8 @@
                                                VerticalAlignment="Center" MinWidth="90"/>
                                     <ProgressRing x:Name="ProgressRingStatus" IsActive="False" Margin="10,0,10,0" />
                                 </StackPanel>
-                                <Button x:Name="VisualButton" Click="GetThumbNailAsync" Margin="5,0,5,0">
-                                    <FontIcon Glyph="&#xE7B3;" ToolTipService.ToolTip="Aperçu" />
-                                </Button>
                                 <Button Click="Button_Click_Remove" Margin="5,0,5,0"
-                                        IsEnabled="{Binding ElementName=Page, Path=IsInterfaceEnabled ,Mode=OneWay}">
+                                        IsEnabled="{x:Bind ButtonEnable , Mode= OneWay}">
                                     <SymbolIcon Symbol="Delete"
                                                 ToolTipService.ToolTip="supprimer le plan de la liste" />
                                 </Button>
@@ -145,17 +151,5 @@
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
-        <TeachingTip x:Name="TeachingTipThumbNail" PreferredPlacement="Right">
-            <TeachingTip.HeroContent>
-                <Image x:Name="ImageThumbNail" />
-            </TeachingTip.HeroContent>
-            <TeachingTip.Content>
-                <StackPanel Orientation="Vertical">
-                    <TextBlock x:Name="ThumbNailPartNumber" HorizontalAlignment="Center" />
-                    <TextBlock x:Name="ThumbNailDescription" HorizontalAlignment="Center" />
-                    <TextBlock x:Name="ThumbNailCustomer" HorizontalAlignment="Center" />
-                </StackPanel>
-            </TeachingTip.Content>
-        </TeachingTip>
     </Grid>
-</TabViewItem>
+</models:TabViewItemExtend>

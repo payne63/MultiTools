@@ -317,6 +317,5 @@ public sealed partial class InventorPrintTab : TabViewItemExtend, Interfaces.IIn
         IdwPrintModels.Clear();
         _printerA4A3.Clear();
         _printerA2A1A0.Clear();
-        
     }
 }

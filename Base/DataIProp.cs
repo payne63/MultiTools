@@ -55,6 +55,13 @@ public class DataIProp : DataIBase
             NotifyPropertyChanged();
         }
     }
+    
+    private bool _buttonEnable;
+    public bool ButtonEnable
+    {
+        get => _buttonEnable;
+        set { _buttonEnable = value; NotifyPropertyChanged(); }
+    }
 
     private BitmapImage _BitmapImage;
 
@@ -111,6 +118,7 @@ public class DataIProp : DataIBase
     
     public DataIProp(string fullPathDocument)
     {
+        ButtonEnable = true;
         I.ApprenticeServerDocument document = GetAppServer.Open(fullPathDocument);
         Document = document;
         NameFile = document.DisplayName;
