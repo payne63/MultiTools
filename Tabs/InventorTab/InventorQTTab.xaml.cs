@@ -35,36 +35,36 @@ using System.Diagnostics;
 using MultiTools.Base;
 using MultiTools.Elements;
 using MultiTools.Helper;
+using MultiTools.Models;
 
 namespace MultiTools.Tabs;
 
-public sealed partial class InventorQTTab : TabViewItem, Interfaces.IInitTab, INotifyPropertyChanged
+public sealed partial class InventorQTTab : TabViewItemExtend, Interfaces.IInitTab, INotifyPropertyChanged
 {
+    private DataIQT _masterDataIqt;
 
-    #region PropertyChanged
-    public event PropertyChangedEventHandler PropertyChanged;
-    private void OnPropertyChanged([CallerMemberName] string name = null)
+    private Visibility _DragAndDropVisibility;
+
+    public Visibility DragAndDropVisibility
     {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
-    }
-    #endregion
-
-    DataIQT masterDataIQT = null;
-
-    private bool _IsInterfaceEnabled = true;
-    public bool IsInterfaceEnabled
-    {
-        get { return _IsInterfaceEnabled; }
-        set { _IsInterfaceEnabled = value; OnPropertyChanged(); }
+        get => _DragAndDropVisibility;
+        set
+        {
+            _DragAndDropVisibility = value;
+            OnPropertyChanged(nameof(DragAndDropVisibility));
+        }
     }
 
     public InventorQTTab()
     {
-        this.InitializeComponent();
+        InitializeComponent();
     }
+
     public void InitTabAsync()
     {
+        DragAndDropVisibility = Visibility.Visible;
     }
+
     private void PanelDataI_DragOver(object sender, DragEventArgs e)
     {
         e.AcceptedOperation = DataPackageOperation.Move;
@@ -74,60 +74,72 @@ public sealed partial class InventorQTTab : TabViewItem, Interfaces.IInitTab, IN
     {
         if (!e.DataView.Contains(StandardDataFormats.StorageItems))
         {
-            OpenSimpleMessage("Format non compatible");
+            OpenSimpleMessage(XamlRoot, "Format non compatible");
             return;
         }
+
         var items = await e.DataView.GetStorageItemsAsync();
         if (items.Count != 1)
         {
-            OpenSimpleMessage("Déposer 1 seul fichier à la fois");
+            OpenSimpleMessage(XamlRoot, "Déposer 1 seul fichier à la fois");
             return;
         }
+
         var storageItemDrop = items[0];
         if (storageItemDrop.Name.EndsWith(".idw"))
         {
-            OpenSimpleMessage("Déposer un assemblage ou une pièce, mais pas de plan");
+            OpenSimpleMessage(XamlRoot, "Déposer un assemblage ou une pièce, mais pas de plan");
             return;
         }
-        if (storageItemDrop.Name.EndsWith(".ipt") || storageItemDrop.Name.EndsWith(".iam"))
-        {
-            RemoveAllData();
-            IsInterfaceEnabled = false;
-            masterDataIQT = new DataIQT(storageItemDrop.Path,1);
 
-            IEnumerable<IGrouping<DataIBase.CategoryType, DataIQT>> groups;
-            try
-            {
-                groups = QtManager.GetQtDatas(storageItemDrop.Path).GroupBy(data => data.Category);
-            }
-            catch (System.Exception ex)
-            {
-                IsInterfaceEnabled = true;
-                OpenSimpleMessage($"Erreur!!{ex.Message} ");
-                return;
-            }
-            foreach (DataIBase.CategoryType enumVal in Enum.GetValues(typeof(DataIBase.CategoryType)))
-            {
-                var group = groups.Where(x => x.Key == enumVal).FirstOrDefault();
-                var newDataGridIQT = new DataGridQT(enumVal, group == null ? new() : new(group));
-                newDataGridIQT.MoveData += NewDataGridIQT_MoveData;
-                newDataGridIQT.Selection += NewDataGridIQT_Selection;
-                StackPanelOfBom.Children.Add( newDataGridIQT);
-            }
-                
-            IsInterfaceEnabled = true;
+        if ( storageItemDrop.Path.EndsWith(".iam"))
+        {
+            CreateBoms(storageItemDrop.Path);
         }
+    }
+
+    private void CreateBoms(string pathAssembly)
+    {
+        RemoveAllData();
+        DragAndDropVisibility = Visibility.Collapsed;
+        IsInterfaceEnabled = false;
+        _masterDataIqt = new DataIQT(pathAssembly ,1);
+
+        IEnumerable<IGrouping<DataIBase.CategoryType, DataIQT>> groups;
+        try
+        {
+            groups = QtManager.GetQtDatas(pathAssembly).GroupBy(data => data.Category);
+        }
+        catch (System.Exception ex)
+        {
+            IsInterfaceEnabled = true;
+            OpenSimpleMessage(XamlRoot, $"Erreur!!{ex.Message} ");
+            return;
+        }
+
+        foreach (DataIBase.CategoryType enumVal in Enum.GetValues(typeof(DataIBase.CategoryType)))
+        {
+            var group = groups.Where(x => x.Key == enumVal).FirstOrDefault();
+            var newDataGridIQT = new DataGridQT(enumVal, group == null ? new() : new(group));
+            newDataGridIQT.MoveData += NewDataGridIQT_MoveData;
+            newDataGridIQT.Selection += NewDataGridIQT_Selection;
+            StackPanelOfBom.Children.Add(newDataGridIQT);
+        }
+
+        IsInterfaceEnabled = true;
     }
 
     private void NewDataGridIQT_Selection(DataIBase.CategoryType FromCategoryType)
     {
-        foreach (var dataGridQT in StackPanelOfBom.Children.Cast<DataGridQT>().Where(x => x.category != FromCategoryType))
+        foreach (var dataGridQT in StackPanelOfBom.Children.Cast<DataGridQT>()
+                     .Where(x => x.category != FromCategoryType))
         {
             dataGridQT.RemoveSelection();
         }
     }
 
-    private void NewDataGridIQT_MoveData(DataIQT dataIQT, DataIBase.CategoryType fromCategoryType, DataIBase.CategoryType toCategoryType)
+    private void NewDataGridIQT_MoveData(DataIQT dataIQT, DataIBase.CategoryType fromCategoryType,
+        DataIBase.CategoryType toCategoryType)
     {
         var dataGrids = StackPanelOfBom.Children.Cast<DataGridQT>().ToList();
         var dataGridFrom = dataGrids.First(x => x.category == fromCategoryType);
@@ -141,40 +153,30 @@ public sealed partial class InventorQTTab : TabViewItem, Interfaces.IInitTab, IN
 
     private void RemoveAllData()
     {
-        masterDataIQT = null;
+        _masterDataIqt = null;
         StackPanelOfBom.Children.Clear();
-    }
-
-    private async void OpenSimpleMessage(string Message, string content = null)
-    {
-        ContentDialog dialog = new ContentDialog
-        {
-            XamlRoot = XamlRoot,
-            Title = Message,
-            Content = content,
-            PrimaryButtonText = "Ok",
-            DefaultButton = ContentDialogButton.Primary,
-        };
-        _ = await dialog.ShowAsync();
     }
 
     private async void Button_Click_ExportData(object sender, RoutedEventArgs e)
     {
-        var fulldata = StackPanelOfBom.Children.Cast<DataGridQT>().Where(x => x.IsVisible == true).SelectMany(d=>d.Datas).ToList();
+        var fulldata = StackPanelOfBom.Children.Cast<DataGridQT>().Where(x => x.IsVisible == true)
+            .SelectMany(d => d.Datas).ToList();
         if (fulldata.Count == 0) return;
 
         FileSavePicker savePicker = new Windows.Storage.Pickers.FileSavePicker();
         var hWnd = WinRT.Interop.WindowNative.GetWindowHandle(MainWindow.Instance);
         WinRT.Interop.InitializeWithWindow.Initialize(savePicker, hWnd);
-        savePicker.SuggestedStartLocation = PickerLocationId.ComputerFolder; //System.IO.Path.GetDirectoryName(fulldata[0].FullPathName);
+        savePicker.SuggestedStartLocation =
+            PickerLocationId.ComputerFolder; //System.IO.Path.GetDirectoryName(fulldata[0].FullPathName);
         savePicker.FileTypeChoices.Add("Fichier Excel", new List<string>() { ".xlsx" });
         var dateSave = DateTime.Now;
-        var masterFileName = System.IO.Path.GetFileNameWithoutExtension(masterDataIQT.NameFile);
-        savePicker.SuggestedFileName = "Extraction de " + masterFileName + " le " + dateSave.ToString("yy-MM-dd à HH\\hmm") + ".xlsx";
+        var masterFileName = System.IO.Path.GetFileNameWithoutExtension(_masterDataIqt.NameFile);
+        savePicker.SuggestedFileName = "Extraction de " + masterFileName + " le " +
+                                       dateSave.ToString("yy-MM-dd à HH\\hmm") + ".xlsx";
         StorageFile file = await savePicker.PickSaveFileAsync();
         if (file == null) return;
 
-        CloseXMLHelper.ExportData(fulldata, file,dateSave, masterDataIQT);
+        CloseXMLHelper.ExportData(fulldata, file, dateSave, _masterDataIqt);
 
         ContentDialog dialog = new ContentDialog
         {
@@ -199,14 +201,29 @@ public sealed partial class InventorQTTab : TabViewItem, Interfaces.IInitTab, IN
     {
         PanelDataI_Drop(sender, e);
     }
+
     private class OpenExtractionCommmand : ICommand
     {
         public event EventHandler CanExecuteChanged;
 
         public bool CanExecute(object parameter) => true;
+
         public void Execute(object parameter)
         {
             Process.Start(new ProcessStartInfo { FileName = parameter as string, UseShellExecute = true });
+        }
+    }
+
+    private async void ButtonBase_OnClick_OpenFile(object sender, RoutedEventArgs e)
+    {
+        var file = await GetFileOpenPicker(".iam");
+        if (file == null)
+        {
+            return;
+        }
+        if (file.Name.EndsWith(".iam"))
+        {
+            CreateBoms(file.Path);
         }
     }
 }
