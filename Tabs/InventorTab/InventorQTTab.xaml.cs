@@ -92,40 +92,48 @@ public sealed partial class InventorQTTab : TabViewItemExtend, Interfaces.IInitT
             return;
         }
 
-        if ( storageItemDrop.Path.EndsWith(".iam"))
+        if (storageItemDrop.Path.EndsWith(".iam"))
         {
             CreateBoms(storageItemDrop.Path);
         }
     }
 
-    private void CreateBoms(string pathAssembly)
+    private async void CreateBoms(string pathAssembly)
     {
         RemoveAllData();
         DragAndDropVisibility = Visibility.Collapsed;
         IsInterfaceEnabled = false;
-        _masterDataIqt = new DataIQT(pathAssembly ,1);
-
-        IEnumerable<IGrouping<DataIBase.CategoryType, DataIQT>> groups;
-        try
+        _masterDataIqt = new DataIQT(pathAssembly, 1);
+        var chidlrens = new List<DataGridQT>();
+        
+        await Task.Run(() =>
         {
-            groups = QtManager.GetQtDatas(pathAssembly).GroupBy(data => data.Category);
-        }
-        catch (System.Exception ex)
-        {
-            IsInterfaceEnabled = true;
-            OpenSimpleMessage(XamlRoot, $"Erreur!!{ex.Message} ");
-            return;
-        }
+            IEnumerable<IGrouping<DataIBase.CategoryType, DataIQT>> groups;
+            try
+            {
+                groups = QtManager.GetQtDatas(pathAssembly).GroupBy(data => data.Category);
+            }
+            catch (System.Exception ex)
+            {
+                IsInterfaceEnabled = true;
+                OpenSimpleMessage(XamlRoot, $"Erreur!!{ex.Message} ");
+                return;
+            }
 
-        foreach (DataIBase.CategoryType enumVal in Enum.GetValues(typeof(DataIBase.CategoryType)))
-        {
-            var group = groups.Where(x => x.Key == enumVal).FirstOrDefault();
-            var newDataGridIQT = new DataGridQT(enumVal, group == null ? new() : new(group));
-            newDataGridIQT.MoveData += NewDataGridIQT_MoveData;
-            newDataGridIQT.Selection += NewDataGridIQT_Selection;
-            StackPanelOfBom.Children.Add(newDataGridIQT);
-        }
-
+            foreach (DataIBase.CategoryType enumVal in Enum.GetValues(typeof(DataIBase.CategoryType)))
+            {
+                var group = groups.Where(x => x.Key == enumVal).FirstOrDefault();
+                DispatcherQueue.TryEnqueue(() =>
+                {
+                    var newDataGridIQT = new DataGridQT(enumVal, group == null ? new() : new(group));
+                newDataGridIQT.MoveData += NewDataGridIQT_MoveData;
+                newDataGridIQT.Selection += NewDataGridIQT_Selection;
+                chidlrens.Add(newDataGridIQT);
+                });
+                // StackPanelOfBom.Children.Add(newDataGridIQT);
+            }
+        });
+        chidlrens.ForEach(x => StackPanelOfBom.Children.Add(x));
         IsInterfaceEnabled = true;
     }
 
@@ -159,6 +167,7 @@ public sealed partial class InventorQTTab : TabViewItemExtend, Interfaces.IInitT
 
     private async void Button_Click_ExportData(object sender, RoutedEventArgs e)
     {
+        IsInterfaceEnabled = false;
         var fulldata = StackPanelOfBom.Children.Cast<DataGridQT>().Where(x => x.IsVisible == true)
             .SelectMany(d => d.Datas).ToList();
         if (fulldata.Count == 0) return;
@@ -176,8 +185,12 @@ public sealed partial class InventorQTTab : TabViewItemExtend, Interfaces.IInitT
         StorageFile file = await savePicker.PickSaveFileAsync();
         if (file == null) return;
 
-        CloseXMLHelper.ExportData(fulldata, file, dateSave, _masterDataIqt);
-
+        await Task.Run(() =>
+        {
+            CloseXMLHelper.ExportData(fulldata, file, dateSave, _masterDataIqt);
+        });
+        
+        IsInterfaceEnabled = true;
         ContentDialog dialog = new ContentDialog
         {
             XamlRoot = XamlRoot,
@@ -221,6 +234,7 @@ public sealed partial class InventorQTTab : TabViewItemExtend, Interfaces.IInitT
         {
             return;
         }
+
         if (file.Name.EndsWith(".iam"))
         {
             CreateBoms(file.Path);
