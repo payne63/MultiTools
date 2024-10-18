@@ -25,72 +25,58 @@ using Windows.Storage.FileProperties;
 using DocumentFormat.OpenXml.Spreadsheet;
 using MultiTools.Interfaces;
 using System.Reflection;
-using I=Inventor;
+using I = Inventor;
 using System.Diagnostics;
 using MultiTools.Base;
 using MultiTools.Helper;
 
-// To learn more about WinUI, the WinUI project structure,
-// and more about our project templates, see: http://aka.ms/winui-project-info.
-
 namespace MultiTools.Tabs.InventorTab;
 
-public sealed partial class CleanProjectTab : TabViewItem, Interfaces.IInitTab, INotifyPropertyChanged
+public sealed partial class CleanProjectTab : Interfaces.IInitTab, INotifyPropertyChanged
 {
+    private StorageFile? _mainAssemblyStorageFile;
 
-    #region PropertyChanged
-    public event PropertyChangedEventHandler PropertyChanged;
-    private void OnPropertyChanged([CallerMemberName] string name = null)
+    private readonly HashSet<DataIClean> _allParts = new();
+
+    private ObservableCollection<DataIClean> _orpheansPart = new();
+
+    public ObservableCollection<DataIClean> OrphansPart
     {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+        get => _orpheansPart;
+        set => _orpheansPart = value;
     }
-    #endregion
 
-
-    private StorageFile MainAssemblyFile = null;
-
-    private HashSet<DataIClean> AllParts = new();
-
-    private ObservableCollection<DataIClean> _orpheansPart =new();
-    public ObservableCollection<DataIClean> OrphansPart { get => _orpheansPart; set { _orpheansPart = value; } }
+    public Visibility DragAndDropVisibility => OrphansPart.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
 
     public CleanProjectTab()
     {
         this.InitializeComponent();
-        //OrphansPart.CollectionChanged += (object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e) => { OnPropertyChanged(nameof(DragAndDropVisibility)); };
-        //OrphansPart.CollectionChanged += (object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e) => { OnPropertyChanged(nameof(OrphansPart)); };
     }
-
 
     public async void InitTabAsync()
     {
-        // InventorHelper = await InventorHelper.CreateAsync();
-    }
-
-
-    private bool _IsInterfaceEnabled = true;
-    public bool IsInterfaceEnabled
-    {
-        get => _IsInterfaceEnabled;
-        set
+        OrphansPart.CollectionChanged += (sender, args) =>
         {
-            _IsInterfaceEnabled = value; OnPropertyChanged();
-        }
+            OnPropertyChanged(nameof(DragAndDropVisibility));
+        };
     }
-
 
     private async Task DoTheJob()
     {
         IsInterfaceEnabled = false;
-        var listOfPartAndAssembly = PartsAndAssemblyFindInRoot();
+
+        var listOfPartAndAssembly = await PartsAndAssemblyFindInRoot();
         foreach (var item in listOfPartAndAssembly)
         {
-            //await Task.Run(() =>
-            //{
-            OrphansPart.Add(new DataIClean(item, MainAssemblyFile.Path));
-            //});
-
+            await Task.Run(() =>
+            {
+                DispatcherQueue.TryEnqueue(() =>
+                {
+                    OrphansPart.Add(new DataIClean(item, _mainAssemblyStorageFile.Path));
+                });
+            });
         }
+
         Trace.WriteLine("fin");
         try
         {
@@ -99,11 +85,11 @@ public sealed partial class CleanProjectTab : TabViewItem, Interfaces.IInitTab, 
         catch (System.Exception ex)
         {
             IsInterfaceEnabled = true;
-            OpenSimpleMessage($"Erreur!!{ex.Message} ");
+            OpenSimpleMessage(XamlRoot, $"Erreur!!{ex.Message} ");
             return;
         }
 
-        foreach (var dataIClean in AllParts)
+        foreach (var dataIClean in _allParts)
         {
             if (listOfPartAndAssembly.All(x => x != dataIClean.FullPathName))
             {
@@ -114,40 +100,33 @@ public sealed partial class CleanProjectTab : TabViewItem, Interfaces.IInitTab, 
             //    OrphansPart.Add(new DataIQT(file, 0));
             //}
         }
-        IsInterfaceEnabled = true;
 
+        IsInterfaceEnabled = true;
     }
 
     private async Task getDataIClean()
     {
-        await RecursiveGetDataIClean(MainAssemblyFile.Path);
+        await RecursiveGetDataIClean(_mainAssemblyStorageFile.Path);
     }
 
     private async Task RecursiveGetDataIClean(string path)
     {
-        //var eventCompleted = new TaskCompletionSource<bool>();
-        //InventorHelper.Ready += () =>
-        //{
-        //    eventCompleted.SetResult(true);
-
-        //};
-        //await eventCompleted.Task; // ne fonctionne pas !!!!
-        // while (InventorHelper == null)
-        // {
-        //     await Task.Delay(500);
-        //     Trace.WriteLine("wait");
-        // }
-        var doc = InventorHelper2.GetDocument(path);
-
+        I.Document doc =null;
+        await Task.Run((() =>
+        {
+            doc = InventorHelper2.GetDocument(path);
+        }));
+        
         if (doc is I.AssemblyDocument assemblyDoc)
         {
-            AllParts.Add(new DataIClean(path, MainAssemblyFile.Path));
+            _allParts.Add(new DataIClean(path, _mainAssemblyStorageFile.Path));
             foreach (I.ComponentOccurrence occurrence in assemblyDoc.ComponentDefinition.Occurrences)
             {
                 I.ComponentDefinition compDef = occurrence.Definition;
                 if (compDef is I.PartComponentDefinition partCompDef)
                 {
-                    AllParts.Add (new DataIClean(((I.PartDocument)(partCompDef.Document)).FullFileName, MainAssemblyFile.Path));
+                    _allParts.Add(new DataIClean(((I.PartDocument)(partCompDef.Document)).FullFileName,
+                        _mainAssemblyStorageFile.Path));
                 }
                 else if (compDef is I.AssemblyComponentDefinition assemblyComponent)
                 {
@@ -155,40 +134,25 @@ public sealed partial class CleanProjectTab : TabViewItem, Interfaces.IInitTab, 
                 }
             }
         }
+
         doc.Close();
     }
 
-    public List<string> PartsAndAssemblyFindInRoot()
+    public async Task<List<string>> PartsAndAssemblyFindInRoot()
     {
-        if (MainAssemblyFile == null) return null;
-        return Directory.GetFiles(Path.GetDirectoryName(MainAssemblyFile.Path), "*.*", System.IO.SearchOption.AllDirectories)
-            .Where(path => path.EndsWith(".ipt") || path.EndsWith(".iam"))
-            .Where(path => !path.Contains("OldVersions"))
-            .ToList();
-    }
+        var listOfPartAndAssembly = new List<string>();
+        if (_mainAssemblyStorageFile == null) return listOfPartAndAssembly;
 
-
-    private async Task<StorageFile> GetFileOpenPicker(params String[] filters)
-    {
-        var openPicker = new Windows.Storage.Pickers.FileOpenPicker();
-        var window = App.m_window;
-        var hWnd = WinRT.Interop.WindowNative.GetWindowHandle(window);
-        WinRT.Interop.InitializeWithWindow.Initialize(openPicker, hWnd);
-
-        // Set options for your file picker
-        openPicker.ViewMode = PickerViewMode.Thumbnail;
-        foreach (var filter in filters)
+        Task.Run((() =>
         {
-            openPicker.FileTypeFilter.Add(filter);
-        }
-
-        // Open the picker for the user to pick a file
-        return await openPicker.PickSingleFileAsync();
+            listOfPartAndAssembly = Directory.GetFiles(Path.GetDirectoryName(_mainAssemblyStorageFile.Path), "*.*",
+                    System.IO.SearchOption.AllDirectories)
+                .Where(path => path.EndsWith(".ipt") || path.EndsWith(".iam"))
+                .Where(path => !path.Contains("OldVersions"))
+                .ToList();
+        }));
+        return listOfPartAndAssembly;
     }
-
-    public Visibility DragAndDropVisibility => OrphansPart.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
-
-    // private InventorHelper InventorHelper;
 
     private void TabViewItem_DragOver(object sender, DragEventArgs e)
     {
@@ -199,52 +163,16 @@ public sealed partial class CleanProjectTab : TabViewItem, Interfaces.IInitTab, 
     {
         if (!e.DataView.Contains(StandardDataFormats.StorageItems))
         {
-            OpenSimpleMessage("Format non compatible");
+            OpenSimpleMessage(XamlRoot, "Format non compatible");
             return;
         }
+
         var items = await e.DataView.GetStorageItemsAsync();
-        MainAssemblyFile = items.FirstOrDefault() as StorageFile;
+        _mainAssemblyStorageFile = items.FirstOrDefault() as StorageFile;
 
         await DoTheJob();
     }
 
-    private async void OpenSimpleMessage(string Message, string content = null)
-    {
-        ContentDialog dialog = new ContentDialog
-        {
-            XamlRoot = XamlRoot,
-            Title = Message,
-            Content = content,
-            PrimaryButtonText = "Ok",
-            DefaultButton = ContentDialogButton.Primary,
-        };
-        _ = await dialog.ShowAsync();
-    }
-
-    private async void GetThumbNailAsync(object sender, RoutedEventArgs e)
-    {
-        if (((FrameworkElement)sender).DataContext is DataIQT DataIQTContext)
-        {
-            if (TeachingTipThumbNail.IsOpen == true && ThumbNailPartNumber.Text == DataIQTContext.FileInfoData.Name)
-            {
-                TeachingTipThumbNail.IsOpen = false;
-                return;
-            }
-            var file = await Windows.Storage.StorageFile.GetFileFromPathAsync(DataIQTContext.FileInfoData.FullName);
-            var iconThumbnail = await file.GetThumbnailAsync(ThumbnailMode.SingleItem, 256);
-            var bitmapImage = new BitmapImage();
-            bitmapImage.SetSource(iconThumbnail);
-            if (bitmapImage != null)
-            {
-                DataIQTContext.bitmapImage = bitmapImage;
-                ImageThumbNail.Source = bitmapImage;
-                ThumbNailPartNumber.Text = DataIQTContext.FileInfoData.Name;
-                ThumbNailDescription.Text = string.Empty;
-                ThumbNailCustomer.Text = string.Empty;
-                TeachingTipThumbNail.IsOpen = true;
-            }
-        }
-    }
 
     private void Button_Click_RemoveData(object sender, RoutedEventArgs e) => OrphansPart.Clear();
 
@@ -252,33 +180,91 @@ public sealed partial class CleanProjectTab : TabViewItem, Interfaces.IInitTab, 
     {
         var file = await GetFileOpenPicker(".ipt", ".iam");
         if (file == null) return;
-        MainAssemblyFile = file;
-        await DoTheJob();
+        _mainAssemblyStorageFile = file;
+        // await DoTheJob();
+        await DoTheJob2(file);
     }
 
     private void Button_Click_Remove(object sender, RoutedEventArgs e)
     {
         if (!IsInterfaceEnabled) return;
-        var contextIDWModel = ((FrameworkElement)sender).DataContext as DataIClean;
-        OrphansPart.Remove(contextIDWModel);
+        var contextIdwModel = ((FrameworkElement)sender).DataContext as DataIClean;
+        OrphansPart.Remove(contextIdwModel!);
     }
 
     private void Button_Click_Clean(object sender, RoutedEventArgs e)
     {
         if (OrphansPart.Count == 0) return;
-        var oldPartDirectory = Path.GetDirectoryName(MainAssemblyFile.Path) + @"\AutoOLD\";
+        var oldPartDirectory = Path.GetDirectoryName(_mainAssemblyStorageFile.Path) + @"\AutoOLD\";
         if (!Directory.Exists(oldPartDirectory))
         {
             Directory.CreateDirectory(oldPartDirectory);
         }
+
         foreach (var file in OrphansPart)
         {
             var newPath = oldPartDirectory + file.NameFile;
             File.Move(file.FullPathName, newPath);
         }
+
         OrphansPart.Clear();
     }
 
+    private async Task DoTheJob2(StorageFile storageFileSelect)
+    {
+        var directory = Path.GetDirectoryName(storageFileSelect.Path);
+        List<string> files = new();
+        foreach (var filter in new []{ "*.ipt",  "*.iam"})
+        {
+            files.AddRange(Directory.GetFiles(directory, filter, SearchOption.AllDirectories));
+        }
+        foreach (var file in files.Where(path => !path.Contains("OldVersions")))
+        {
+            var dataIClean = await Task.Run(() => new DataIClean(file, storageFileSelect.Path));
+            OrphansPart.Add(dataIClean);
+        }
+        List<DataIClean> listInAssembly = new();
+        
+        await RecursiveGetChildIClean(storageFileSelect.Path,storageFileSelect.Path,listInAssembly);
+
+        foreach (var dataIClean in OrphansPart)
+        {
+            if (listInAssembly.Any(x => x.FullPathName == dataIClean.FullPathName ))
+            {
+                dataIClean.IsInMainAssembly = true;    
+            }
+        }
+    }
+    
+    private async Task RecursiveGetChildIClean( string pathFile,string pathMainFile, List<DataIClean> fallowedList)
+    {
+        I.Document? document =null;
+        await Task.Run(() =>
+        {
+            document = InventorHelper2.GetDocument(pathFile);
+        });
+        if (document== null) return;
+        
+        fallowedList.Add(new DataIClean(pathFile, pathMainFile));
+        
+        if (document is I.PartDocument ) return;
+        
+        if (document is I.AssemblyDocument assemblyDocument)
+        {
+            foreach (I.ComponentOccurrence occurrence in assemblyDocument.ComponentDefinition.Occurrences)
+            {
+                if (occurrence.Definition is I.PartComponentDefinition partComponentDef)
+                {
+                    fallowedList.Add(new DataIClean(((I.PartDocument)(partComponentDef.Document)).FullFileName,pathMainFile));
+                }
+
+                if (occurrence.Definition is I.AssemblyComponentDefinition assemblyComponentDefinition)
+                {
+                    await RecursiveGetChildIClean((assemblyComponentDefinition.Document as I.AssemblyDocument).FullFileName,pathMainFile,fallowedList);
+                }
+            }    
+        }
+        document.Close();
+
+    }
 }
-
-

@@ -11,30 +11,46 @@ using I = Inventor;
 namespace MultiTools.Base;
 public class DataIClean : DataIBase, IEqualityComparer<DataIClean>
 {
-    private string relativeFolderPath;
+    private string _relativeFolderPath;
     public string RelativeFolderPath
     {
-        get => relativeFolderPath;
+        get => _relativeFolderPath== string.Empty ? @"\" : _relativeFolderPath;
         set
         {
-            relativeFolderPath = value; NotifyPropertyChanged();
+            _relativeFolderPath = value; NotifyPropertyChanged();
         }
     }
+    
+    private bool _isInMainAssembly = false;
+    public bool IsInMainAssembly
+    {
+        get => _isInMainAssembly;
+        set
+        {
+            _isInMainAssembly = value;
+            NotifyPropertyChanged();
+        }
+    }
+    
     public DataIClean(string fullPathDocument, string PathRootDocument)
     {
-        I.ApprenticeServerDocument document = GetAppServer.Open(fullPathDocument);
+        var document = GetAppServer.Open(fullPathDocument);
         Description = (string)document.PropertySets["Design Tracking Properties"].ItemByPropId[29].Value;
         PartNumber = (string)document.PropertySets["Design Tracking Properties"].ItemByPropId[5].Value;
         FullPathName = document.FullDocumentName;
         DocumentType = document.DocumentType;
-        var rootPath = Path.GetPathRoot(PathRootDocument );
-        var pathDocument = Path.GetPathRoot(fullPathDocument);
 
-        relativeFolderPath = pathDocument.Replace(rootPath, "");
+        var rootPath = Path.GetDirectoryName(PathRootDocument );
+        var pathDocument = Path.GetDirectoryName(fullPathDocument);
 
+        _relativeFolderPath = pathDocument?.Replace(rootPath, "");
+        
+        IsInMainAssembly = false;
+        
         document.Close();
         GetAppServer.Close();
     }
+
 
     public bool Equals(DataIClean x, DataIClean y)
     {
