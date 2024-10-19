@@ -111,12 +111,12 @@ public sealed partial class CleanProjectTab : Interfaces.IInitTab, INotifyProper
 
     private async Task RecursiveGetDataIClean(string path)
     {
-        I.Document doc =null;
+        I.Document doc = null;
         await Task.Run((() =>
         {
             doc = InventorHelper2.GetDocument(path);
         }));
-        
+
         if (doc is I.AssemblyDocument assemblyDoc)
         {
             _allParts.Add(new DataIClean(path, _mainAssemblyStorageFile.Path));
@@ -170,7 +170,10 @@ public sealed partial class CleanProjectTab : Interfaces.IInitTab, INotifyProper
         var items = await e.DataView.GetStorageItemsAsync();
         _mainAssemblyStorageFile = items.FirstOrDefault() as StorageFile;
 
-        await DoTheJob();
+        if (_mainAssemblyStorageFile != null)
+        {
+            await DoTheJob2(_mainAssemblyStorageFile);
+        }
     }
 
 
@@ -195,16 +198,27 @@ public sealed partial class CleanProjectTab : Interfaces.IInitTab, INotifyProper
     private void Button_Click_Clean(object sender, RoutedEventArgs e)
     {
         if (OrphansPart.Count == 0) return;
-        var oldPartDirectory = Path.GetDirectoryName(_mainAssemblyStorageFile.Path) + @"\AutoOLD\";
+        var oldPartDirectory = Path.GetDirectoryName(_mainAssemblyStorageFile.Path) + @"\AutoOLD";
         if (!Directory.Exists(oldPartDirectory))
         {
             Directory.CreateDirectory(oldPartDirectory);
         }
 
-        foreach (var file in OrphansPart)
+        foreach (var dataIClean in OrphansPart)
         {
-            var newPath = oldPartDirectory + file.NameFile;
-            File.Move(file.FullPathName, newPath);
+            if (dataIClean.IsInMainAssembly == false)
+            {
+                var newPath = oldPartDirectory
+                    + dataIClean.RelativeFolderPath
+                    + @"\"
+                    + dataIClean.NameFile;
+                var directoryMove = Path.GetDirectoryName(newPath);
+                if (!Directory.Exists(directoryMove))
+                {
+                    Directory.CreateDirectory(directoryMove);
+                } 
+                File.Move(dataIClean.FullPathName, newPath);
+            }
         }
 
         OrphansPart.Clear();
@@ -212,59 +226,86 @@ public sealed partial class CleanProjectTab : Interfaces.IInitTab, INotifyProper
 
     private async Task DoTheJob2(StorageFile storageFileSelect)
     {
+        IsInterfaceEnabled = false;
         var directory = Path.GetDirectoryName(storageFileSelect.Path);
         List<string> files = new();
-        foreach (var filter in new []{ "*.ipt",  "*.iam"})
+        foreach (var filter in new[] { "*.ipt", "*.iam" })
         {
             files.AddRange(Directory.GetFiles(directory, filter, SearchOption.AllDirectories));
         }
+
         foreach (var file in files.Where(path => !path.Contains("OldVersions")))
         {
             var dataIClean = await Task.Run(() => new DataIClean(file, storageFileSelect.Path));
             OrphansPart.Add(dataIClean);
         }
-        List<DataIClean> listInAssembly = new();
-        
-        await RecursiveGetChildIClean(storageFileSelect.Path,storageFileSelect.Path,listInAssembly);
 
-        foreach (var dataIClean in OrphansPart)
+        await foreach (var childString in GetChildPathFromBom(storageFileSelect.Path))
         {
-            if (listInAssembly.Any(x => x.FullPathName == dataIClean.FullPathName ))
+            var matchPart = OrphansPart.FirstOrDefault(o => o.FullPathName == childString);
+            if (matchPart != null)
             {
-                dataIClean.IsInMainAssembly = true;    
+                matchPart.IsInMainAssembly = true;
+            }
+        }
+
+        IsInterfaceEnabled = true;
+    }
+
+    private async IAsyncEnumerable<string> GetChildPathFromBom(string pathFile)
+    {
+        I.ApprenticeServerDocument? document = null;
+        await Task.Run(() =>
+        {
+            document = ApprenticeHelper.GetApprenticeDocument(pathFile);
+        });
+        if (document == null) yield break;
+        yield return pathFile; // ajoute le fichier d'origine
+        if (document.DocumentType == I.DocumentTypeEnum.kAssemblyDocumentObject)
+        {
+            var assemblyDocument = document.ComponentDefinition as I.AssemblyComponentDefinition;
+            var bom = assemblyDocument.BOM;
+            foreach (I.BOMRow bomRow in bom.BOMViews[1].BOMRows)
+            {
+                var FullDocumentName = ((I.ApprenticeServerDocument)(bomRow.ComponentDefinitions[1]).Document)
+                    .FullDocumentName;
+                yield return FullDocumentName;
             }
         }
     }
-    
-    private async Task RecursiveGetChildIClean( string pathFile,string pathMainFile, List<DataIClean> fallowedList)
+
+    private async Task RecursiveGetChildIClean(string pathFile, string pathMainFile, List<DataIClean> fallowedList)
     {
-        I.Document? document =null;
+        I.Document? document = null;
         await Task.Run(() =>
         {
             document = InventorHelper2.GetDocument(pathFile);
         });
-        if (document== null) return;
-        
+        if (document == null) return;
+
         fallowedList.Add(new DataIClean(pathFile, pathMainFile));
-        
-        if (document is I.PartDocument ) return;
-        
+
+        if (document is I.PartDocument) return;
+
         if (document is I.AssemblyDocument assemblyDocument)
         {
             foreach (I.ComponentOccurrence occurrence in assemblyDocument.ComponentDefinition.Occurrences)
             {
                 if (occurrence.Definition is I.PartComponentDefinition partComponentDef)
                 {
-                    fallowedList.Add(new DataIClean(((I.PartDocument)(partComponentDef.Document)).FullFileName,pathMainFile));
+                    fallowedList.Add(new DataIClean(((I.PartDocument)(partComponentDef.Document)).FullFileName,
+                        pathMainFile));
                 }
 
                 if (occurrence.Definition is I.AssemblyComponentDefinition assemblyComponentDefinition)
                 {
-                    await RecursiveGetChildIClean((assemblyComponentDefinition.Document as I.AssemblyDocument).FullFileName,pathMainFile,fallowedList);
+                    await RecursiveGetChildIClean(
+                        (assemblyComponentDefinition.Document as I.AssemblyDocument).FullFileName, pathMainFile,
+                        fallowedList);
                 }
-            }    
+            }
         }
-        document.Close();
 
+        document.Close();
     }
 }

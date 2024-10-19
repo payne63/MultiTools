@@ -103,7 +103,6 @@ namespace MultiTools.Base
                     if (row.BOMStructure == BOMStructureEnum.kPhantomBOMStructure || row.BOMStructure == BOMStructureEnum.kReferenceBOMStructure) continue;
                     try
                     {
-                        var a = row.ComponentDefinitions[1];
                         var FullDocumentName = ((ApprenticeServerDocument)(row.ComponentDefinitions[1]).Document).FullDocumentName;
                         var qtPart = int.Parse(row.TotalQuantity);
                         bom.Add((FullDocumentName, qtPart));

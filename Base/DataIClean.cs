@@ -14,7 +14,7 @@ public class DataIClean : DataIBase, IEqualityComparer<DataIClean>
     private string _relativeFolderPath;
     public string RelativeFolderPath
     {
-        get => _relativeFolderPath== string.Empty ? @"\" : _relativeFolderPath;
+        get => _relativeFolderPath;
         set
         {
             _relativeFolderPath = value; NotifyPropertyChanged();
@@ -39,12 +39,11 @@ public class DataIClean : DataIBase, IEqualityComparer<DataIClean>
         PartNumber = (string)document.PropertySets["Design Tracking Properties"].ItemByPropId[5].Value;
         FullPathName = document.FullDocumentName;
         DocumentType = document.DocumentType;
-
+        NameFile = Path.GetFileName(FullPathName);  
         var rootPath = Path.GetDirectoryName(PathRootDocument );
         var pathDocument = Path.GetDirectoryName(fullPathDocument);
 
         _relativeFolderPath = pathDocument?.Replace(rootPath, "");
-        
         IsInMainAssembly = false;
         
         document.Close();
