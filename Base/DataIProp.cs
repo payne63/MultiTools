@@ -12,7 +12,6 @@ public class DataIProp : DataIBase
     public List<string> bom = new();
 
     private string _customerName;
-
     public string CustomerName
     {
         get
@@ -27,7 +26,6 @@ public class DataIProp : DataIBase
     }
 
     private string _projectName;
-
     public string ProjectName
     {
         get
@@ -42,7 +40,6 @@ public class DataIProp : DataIBase
     }
 
     private string _authorName;
-
     public string AuthorName
     {
         get
@@ -64,7 +61,6 @@ public class DataIProp : DataIBase
     }
 
     private BitmapImage _BitmapImage;
-
     public BitmapImage BitmapImage
     {
         get
@@ -110,6 +106,8 @@ public class DataIProp : DataIBase
         Updated,
         NotUpdateRequired,
     }
+    
+    public I.PropertySets GetPropertySets;
 
     public bool AsTheGoodProperties(string _projectName, string _customerName, string _authorName) =>
         _projectName == ProjectName && _customerName == CustomerName && _authorName == AuthorName;
@@ -124,6 +122,7 @@ public class DataIProp : DataIBase
         NameFile = document.DisplayName;
         FullPathName = Document.FullFileName;
         DocumentType = Document.DocumentType;
+        GetPropertySets = document.PropertySets;
         Description = (string)document.PropertySets["Design Tracking Properties"].ItemByPropId[29].Value;
         PartNumber = (string)document.PropertySets["Design Tracking Properties"].ItemByPropId[5].Value;
         CustomerName = (string)document.PropertySets["Design Tracking Properties"].ItemByPropId[9].Value;

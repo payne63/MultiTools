@@ -10,6 +10,7 @@ using Windows.Storage;
 using Windows.Storage.FileProperties;
 using Windows.Storage.Pickers;
 using CommunityToolkit.WinUI.UI;
+using Inventor;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media.Imaging;
@@ -135,16 +136,11 @@ public sealed partial class PropertiesRenamerTab : TabViewItemExtend, Interfaces
             dataIProp.AuthorName = NewAuthorName.Text;
             await Task.Run(() =>
             {
-                var inventorFile = InventorHelper2.GetDocument(dataIProp.FullPathName);
-                if (inventorFile == null) return;
-                
-                inventorFile.PropertySets["Design Tracking Properties"].ItemByPropId[9].Value = dataIProp.CustomerName;
-                inventorFile.PropertySets["Design Tracking Properties"].ItemByPropId[7].Value = dataIProp.ProjectName;
-                inventorFile.PropertySets["Inventor Summary Information"].ItemByPropId[4].Value = dataIProp.AuthorName;
-
-                inventorFile.Save();
-                inventorFile.Close();
-                // await Task.Delay(200);
+                // var doc = ApprenticeHelper.GetApprenticeDocument(dataIProp.FullPathName);
+                dataIProp.GetPropertySets["Design Tracking Properties"].ItemByPropId[9].Value = dataIProp.CustomerName;
+                dataIProp.GetPropertySets["Design Tracking Properties"].ItemByPropId[7].Value = dataIProp.ProjectName;
+                dataIProp.GetPropertySets["Inventor Summary Information"].ItemByPropId[4].Value = dataIProp.AuthorName;
+                dataIProp.GetPropertySets.FlushToFile();
             });
             dataIProp.Status = DataIProp.StatusEnum.Updated;
             GetProgressRingStatus2(ListViewParts, dataIProp).IsActive = false;
@@ -158,7 +154,15 @@ public sealed partial class PropertiesRenamerTab : TabViewItemExtend, Interfaces
         IsInterfaceEnabled = true;
     }
 
-    private void CloseIApprenticeServerDocument() => SourceFilesCollection.First().Document.Close();
+    private void CloseIApprenticeServerDocument()
+    {
+        foreach (var dataIProp in SourceFilesCollection)
+        {
+            dataIProp.Document.Close();
+        }
+        // SourceFilesCollection.First().Document.Close();
+        ApprenticeHelper.ResetApprenticeServer();
+    }
     
     private void TabViewItem_DragOver(object sender, DragEventArgs e) =>
         e.AcceptedOperation = DataPackageOperation.Move;
