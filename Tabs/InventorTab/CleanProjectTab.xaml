@@ -69,7 +69,20 @@
                         <Viewbox MaxHeight="30" MaxWidth="30" >
                             <SymbolIcon Symbol="Delete"/>
                         </Viewbox>
-                        <TextBlock Text="Remise à Zéro" HorizontalAlignment="Center"/>
+                        <TextBlock Text="Supprimer tout" HorizontalAlignment="Center"/>
+                    </StackPanel>
+                </Button>
+                <Button Margin="10"
+                    Padding="15"
+                    HorizontalAlignment="Stretch"
+                    Click="ButtonBase_OnClick_Restore"
+                    IsEnabled="{x:Bind IsInterfaceEnabled, Mode=OneWay}">
+                    <StackPanel Orientation="Vertical">
+                        <Viewbox MaxHeight="30" MaxWidth="30" >
+                            <FontIcon Glyph="&#xE7A7;" />
+                        </Viewbox>
+                        <TextBlock Text="Restorer un déplacement" HorizontalAlignment="Center"/>
+                        <TextBlock Text="(selection du fichier json)" HorizontalAlignment="Center"/>
                     </StackPanel>
                 </Button>
             </StackPanel>
@@ -78,12 +91,13 @@
             <TextBlock Text="Code" Width="300" VerticalAlignment="Center"/>
             <TextBlock Text="Designation" Width="400" VerticalAlignment="Center"/>
             <TextBlock Text="chemin relatif" Width="300" VerticalAlignment="Center"/>
+            <TextBlock Text="Déplacement" Width="100" VerticalAlignment="Center"/>
         </StackPanel>
         <elements:BackgroundShowVisualElement Grid.Row="1" Grid.Column="1"
                                               ShowDragAndDrop="{x:Bind DragAndDropVisibility, Mode= OneWay}"
                                               ShowBusyRing="{x:Bind IsInterfaceDisabled, Mode=OneWay}"/>
         <ListView ItemsSource="{x:Bind OrphansPart , Mode=OneWay}"
-              x:Name="ListViewLaser"
+              x:Name="ListViewClean"
               Grid.Column="1" Grid.Row="1"
               CanBeScrollAnchor="True"
               ShowsScrollingPlaceholders="True"
@@ -96,16 +110,16 @@
               AllowDrop="True" >
             <ListView.ItemTemplate>
                 <DataTemplate x:DataType="base:DataIClean">
-                    <ListViewItem Margin="3" >
+                    <ListViewItem Margin="3" RightTapped="MyListView_RightTapped" >
                         <ToolTipService.ToolTip>
                             <elements:ToolTipInventor FileInfoData="{x:Bind FileInfoData}"/>
                         </ToolTipService.ToolTip>
                         <StackPanel Orientation="Vertical">
                             <StackPanel Orientation="Horizontal" >
                                 <TextBlock Text="{x:Bind PartNumber}" MinWidth="300" VerticalAlignment="Center"/>
-                                <TextBlock Text="{x:Bind Description}" MinWidth="300" VerticalAlignment="Center"/>
+                                <TextBlock Text="{x:Bind Description}" MinWidth="400" VerticalAlignment="Center"/>
                                 <TextBlock Text="{x:Bind RelativeFolderPath , Mode=OneWay}" MinWidth="300" VerticalAlignment="Center"/>
-                                <ToggleSwitch IsEnabled="False" IsOn="{x:Bind IsInMainAssembly,Mode=OneWay}"/>
+                                <ToggleSwitch IsOn="{x:Bind IsNotInMainAssembly,Mode=TwoWay}" OnContent="OUI" OffContent="non"/>
                                 <Button  Click="Button_Click_Remove" Margin="5,0,5,0"  
                                          IsEnabled="{Binding ElementName=Page, Path=IsInterfaceEnabled ,Mode=OneWay}">
                                     <SymbolIcon Symbol="Delete"

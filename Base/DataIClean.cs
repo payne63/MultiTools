@@ -29,9 +29,16 @@ public class DataIClean : DataIBase, IEqualityComparer<DataIClean>
         {
             _isInMainAssembly = value;
             NotifyPropertyChanged();
+            NotifyPropertyChanged(nameof(IsNotInMainAssembly));
         }
     }
-    
+
+    public bool IsNotInMainAssembly
+    {
+        get => !IsInMainAssembly;
+        set => IsInMainAssembly = !value;
+    }
+
     public DataIClean(string fullPathDocument, string PathRootDocument)
     {
         var document = GetAppServer.Open(fullPathDocument);

@@ -27,8 +27,11 @@ using MultiTools.Interfaces;
 using System.Reflection;
 using I = Inventor;
 using System.Diagnostics;
+using System.Text;
+using System.Text.Json;
 using MultiTools.Base;
 using MultiTools.Helper;
+using MultiTools.Models;
 
 namespace MultiTools.Tabs.InventorTab;
 
@@ -55,109 +58,11 @@ public sealed partial class CleanProjectTab : Interfaces.IInitTab, INotifyProper
 
     public async void InitTabAsync()
     {
-        OrphansPart.CollectionChanged += (sender, args) =>
-        {
-            OnPropertyChanged(nameof(DragAndDropVisibility));
-        };
+        OrphansPart.CollectionChanged += (sender, args) => OnPropertyChanged(nameof(DragAndDropVisibility));
     }
 
-    private async Task DoTheJob()
-    {
-        IsInterfaceEnabled = false;
-
-        var listOfPartAndAssembly = await PartsAndAssemblyFindInRoot();
-        foreach (var item in listOfPartAndAssembly)
-        {
-            await Task.Run(() =>
-            {
-                DispatcherQueue.TryEnqueue(() =>
-                {
-                    OrphansPart.Add(new DataIClean(item, _mainAssemblyStorageFile.Path));
-                });
-            });
-        }
-
-        Trace.WriteLine("fin");
-        try
-        {
-            await getDataIClean();
-        }
-        catch (System.Exception ex)
-        {
-            IsInterfaceEnabled = true;
-            OpenSimpleMessage(XamlRoot, $"Erreur!!{ex.Message} ");
-            return;
-        }
-
-        foreach (var dataIClean in _allParts)
-        {
-            if (listOfPartAndAssembly.All(x => x != dataIClean.FullPathName))
-            {
-                OrphansPart.Add(dataIClean);
-            }
-            //if (groups.All(x => x.FullPathName != file))
-            //{
-            //    OrphansPart.Add(new DataIQT(file, 0));
-            //}
-        }
-
-        IsInterfaceEnabled = true;
-    }
-
-    private async Task getDataIClean()
-    {
-        await RecursiveGetDataIClean(_mainAssemblyStorageFile.Path);
-    }
-
-    private async Task RecursiveGetDataIClean(string path)
-    {
-        I.Document doc = null;
-        await Task.Run((() =>
-        {
-            doc = InventorHelper2.GetDocument(path);
-        }));
-
-        if (doc is I.AssemblyDocument assemblyDoc)
-        {
-            _allParts.Add(new DataIClean(path, _mainAssemblyStorageFile.Path));
-            foreach (I.ComponentOccurrence occurrence in assemblyDoc.ComponentDefinition.Occurrences)
-            {
-                I.ComponentDefinition compDef = occurrence.Definition;
-                if (compDef is I.PartComponentDefinition partCompDef)
-                {
-                    _allParts.Add(new DataIClean(((I.PartDocument)(partCompDef.Document)).FullFileName,
-                        _mainAssemblyStorageFile.Path));
-                }
-                else if (compDef is I.AssemblyComponentDefinition assemblyComponent)
-                {
-                    await RecursiveGetDataIClean(((I.AssemblyDocument)(assemblyComponent.Document)).FullFileName);
-                }
-            }
-        }
-
-        doc.Close();
-    }
-
-    public async Task<List<string>> PartsAndAssemblyFindInRoot()
-    {
-        var listOfPartAndAssembly = new List<string>();
-        if (_mainAssemblyStorageFile == null) return listOfPartAndAssembly;
-
-        Task.Run((() =>
-        {
-            listOfPartAndAssembly = Directory.GetFiles(Path.GetDirectoryName(_mainAssemblyStorageFile.Path), "*.*",
-                    System.IO.SearchOption.AllDirectories)
-                .Where(path => path.EndsWith(".ipt") || path.EndsWith(".iam"))
-                .Where(path => !path.Contains("OldVersions"))
-                .ToList();
-        }));
-        return listOfPartAndAssembly;
-    }
-
-    private void TabViewItem_DragOver(object sender, DragEventArgs e)
-    {
+    private void TabViewItem_DragOver(object sender, DragEventArgs e) =>
         e.AcceptedOperation = DataPackageOperation.Move;
-    }
 
     private async void TabViewItem_Drop(object sender, DragEventArgs e)
     {
@@ -172,20 +77,23 @@ public sealed partial class CleanProjectTab : Interfaces.IInitTab, INotifyProper
 
         if (_mainAssemblyStorageFile != null)
         {
-            await DoTheJob2(_mainAssemblyStorageFile);
+            await CollectAndFill(_mainAssemblyStorageFile);
         }
     }
 
 
-    private void Button_Click_RemoveData(object sender, RoutedEventArgs e) => OrphansPart.Clear();
+    private void Button_Click_RemoveData(object sender, RoutedEventArgs e)
+    {
+        OrphansPart.Clear();
+        _mainAssemblyStorageFile = null;
+    }
 
     private async void Button_Click_SelectFiles(object sender, RoutedEventArgs e)
     {
         var file = await GetFileOpenPicker(".ipt", ".iam");
         if (file == null) return;
         _mainAssemblyStorageFile = file;
-        // await DoTheJob();
-        await DoTheJob2(file);
+        await CollectAndFill(file);
     }
 
     private void Button_Click_Remove(object sender, RoutedEventArgs e)
@@ -195,36 +103,55 @@ public sealed partial class CleanProjectTab : Interfaces.IInitTab, INotifyProper
         OrphansPart.Remove(contextIdwModel!);
     }
 
-    private void Button_Click_Clean(object sender, RoutedEventArgs e)
+    private async void Button_Click_Clean(object sender, RoutedEventArgs e)
     {
         if (OrphansPart.Count == 0) return;
+        if (OrphansPart.All(x => x.IsInMainAssembly))
+        {
+            await OpenSimpleMessage(XamlRoot, "aucun fichier à déplacer");
+            return;
+        }
         var oldPartDirectory = Path.GetDirectoryName(_mainAssemblyStorageFile.Path) + @"\AutoOLD";
         if (!Directory.Exists(oldPartDirectory))
         {
             Directory.CreateDirectory(oldPartDirectory);
         }
 
+        List<CleanHistoryModel> historyFileMoved = new();
         foreach (var dataIClean in OrphansPart)
         {
             if (dataIClean.IsInMainAssembly == false)
             {
                 var newPath = oldPartDirectory
-                    + dataIClean.RelativeFolderPath
-                    + @"\"
-                    + dataIClean.NameFile;
+                              + dataIClean.RelativeFolderPath
+                              + @"\"
+                              + dataIClean.NameFile;
                 var directoryMove = Path.GetDirectoryName(newPath);
                 if (!Directory.Exists(directoryMove))
                 {
                     Directory.CreateDirectory(directoryMove);
-                } 
+                }
+
                 File.Move(dataIClean.FullPathName, newPath);
+                historyFileMoved.Add(new CleanHistoryModel(dataIClean.FullPathName, newPath));
             }
         }
+
+        var jsonString = JsonSerializer.Serialize<List<CleanHistoryModel>>(historyFileMoved,
+            new JsonSerializerOptions { WriteIndented = true });
+        var historyFileName = DateTime.Now.ToString("yy-MM-dd à HH\\hmm") + ".json";
+        await File.WriteAllTextAsync(oldPartDirectory + $"\\Historique_Du_{historyFileName}", jsonString);
+
+
+        var report = new StringBuilder();
+        report.AppendLine("Les fichiers ont ete déplacés:");
+        report.AppendLine($"(fichier d'historique, {historyFileName})");
+        await OpenSimpleMessage(XamlRoot, report.ToString());
 
         OrphansPart.Clear();
     }
 
-    private async Task DoTheJob2(StorageFile storageFileSelect)
+    private async Task CollectAndFill(StorageFile storageFileSelect)
     {
         IsInterfaceEnabled = false;
         var directory = Path.GetDirectoryName(storageFileSelect.Path);
@@ -234,7 +161,7 @@ public sealed partial class CleanProjectTab : Interfaces.IInitTab, INotifyProper
             files.AddRange(Directory.GetFiles(directory, filter, SearchOption.AllDirectories));
         }
 
-        foreach (var file in files.Where(path => !path.Contains("OldVersions")))
+        foreach (var file in files.Where(path => !path.Contains("OldVersions") && !path.Contains("AutoOLD")))
         {
             var dataIClean = await Task.Run(() => new DataIClean(file, storageFileSelect.Path));
             OrphansPart.Add(dataIClean);
@@ -248,7 +175,15 @@ public sealed partial class CleanProjectTab : Interfaces.IInitTab, INotifyProper
                 matchPart.IsInMainAssembly = true;
             }
         }
-
+        
+        var sortableList = new List<DataIClean>(OrphansPart);
+        sortableList.Sort(((a, b) => string.Compare(a.PartNumber, b.PartNumber, StringComparison.Ordinal) ));
+        sortableList.Sort((DataIClean a, DataIClean b) => a.IsInMainAssembly.CompareTo(b.IsInMainAssembly));
+        for (int i = 0; i < sortableList.Count; i++)
+        {
+            OrphansPart.Move(OrphansPart.IndexOf(sortableList[i]), i);
+        }
+        
         IsInterfaceEnabled = true;
     }
 
@@ -274,38 +209,61 @@ public sealed partial class CleanProjectTab : Interfaces.IInitTab, INotifyProper
         }
     }
 
-    private async Task RecursiveGetChildIClean(string pathFile, string pathMainFile, List<DataIClean> fallowedList)
+    private async void ButtonBase_OnClick_Restore(object sender, RoutedEventArgs e)
     {
-        I.Document? document = null;
-        await Task.Run(() =>
+        var jsonFileRestoration = await GetFileOpenPicker(".json");
+        if (jsonFileRestoration == null) return;
+        
+        var file = await File.ReadAllTextAsync(jsonFileRestoration.Path);
+
+        var listRestore = JsonSerializer.Deserialize<List<CleanHistoryModel>>(file);
+        if (listRestore == null) OpenSimpleMessage(XamlRoot, "erreur sur le fichier json");
+
+        var isExeption = false;
+        foreach (var move in listRestore)
         {
-            document = InventorHelper2.GetDocument(pathFile);
-        });
-        if (document == null) return;
-
-        fallowedList.Add(new DataIClean(pathFile, pathMainFile));
-
-        if (document is I.PartDocument) return;
-
-        if (document is I.AssemblyDocument assemblyDocument)
-        {
-            foreach (I.ComponentOccurrence occurrence in assemblyDocument.ComponentDefinition.Occurrences)
+            try
             {
-                if (occurrence.Definition is I.PartComponentDefinition partComponentDef)
-                {
-                    fallowedList.Add(new DataIClean(((I.PartDocument)(partComponentDef.Document)).FullFileName,
-                        pathMainFile));
-                }
-
-                if (occurrence.Definition is I.AssemblyComponentDefinition assemblyComponentDefinition)
-                {
-                    await RecursiveGetChildIClean(
-                        (assemblyComponentDefinition.Document as I.AssemblyDocument).FullFileName, pathMainFile,
-                        fallowedList);
-                }
+                File.Move(move.To, move.From);
+            }
+            catch (Exception exception)
+            {
+                await OpenSimpleMessage(XamlRoot,$"erreur sur le fichier {Path.GetFileName(move.To)} : {exception.Message}");
+                isExeption = true;
             }
         }
 
-        document.Close();
+        if (isExeption == false)
+        {
+            File.Delete(jsonFileRestoration.Path);
+            OpenSimpleMessage(XamlRoot, "fichiers restorés");
+        }
+
     }
+    
+    private void MyListView_RightTapped(object sender, RightTappedRoutedEventArgs e)
+    {
+        if (!IsInterfaceEnabled) return;
+        // Créer un menu contextuel (MenuFlyout)
+        MenuFlyout flyout = new MenuFlyout();
+
+        // Ajouter des éléments au menu
+        MenuFlyoutItem editItem = new MenuFlyoutItem { Text = "Edit" };
+        // editItem.Click += (s, args) => EditItem(sender, e);
+        
+        MenuFlyoutItem deleteItem = new MenuFlyoutItem { Text = "Delete" };
+        // deleteItem.Click += (s, args) => DeleteItem(sender, e);
+        deleteItem.Click += (_,_)=> Button_Click_Remove(sender, e);
+        
+        // Ajouter les éléments au MenuFlyout
+        flyout.Items.Add(editItem);
+        flyout.Items.Add(deleteItem);
+
+        // Obtenir l'élément cliqué
+        ListViewItem clickedItem = (sender as FrameworkElement)?.DataContext as ListViewItem;
+
+        // Afficher le menu contextuel à la position du clic droit
+        flyout.ShowAt(sender as UIElement, e.GetPosition(sender as UIElement));
+    }
+    
 }

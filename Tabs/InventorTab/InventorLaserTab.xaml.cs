@@ -166,11 +166,6 @@ public sealed partial class InventorLaserTab : TabViewItemExtend, Interfaces.IIn
         IsInterfaceEnabled = true;
     }
     
-    // private ProgressRing GetProgressRingStatus(IdwModel idwPrintModel)
-    // {
-    //     var container = ListViewIDW.ContainerFromItem(idwPrintModel) as ListViewItem;
-    //     return container.FindChild<ProgressRing>();
-    // }
 
     private async Task GenerateAllPdfDxfAsync(List<IdwModel> IdwModels)
     {

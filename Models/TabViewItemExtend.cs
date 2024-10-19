@@ -41,7 +41,7 @@ public abstract class TabViewItemExtend : TabViewItem
     }
     
 
-    protected async void OpenSimpleMessage(XamlRoot xamlRoot, string message)
+    protected async Task OpenSimpleMessage(XamlRoot xamlRoot, string message)
     {
         ContentDialog dialog = new ContentDialog
         {
