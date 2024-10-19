@@ -76,6 +76,15 @@ public class InventorHelper2
         return _App?.Documents.Open(fullPathFileName);
     }
 
+    public static async Task OpenDocument(string fullPathFileName)
+    {
+        await Task.Run(() =>
+        {
+            _App?.Documents.Open(fullPathFileName);
+            ShowApp();
+        });
+    }
+
     public static void SavePdf(DrawingDocument drawingDoc, string folderPath)
     {
         var fullName = folderPath + @"\" + Path.GetFileNameWithoutExtension(drawingDoc.DisplayName) + ".pdf";

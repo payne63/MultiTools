@@ -120,11 +120,6 @@
                                 <TextBlock Text="{x:Bind Description}" MinWidth="400" VerticalAlignment="Center"/>
                                 <TextBlock Text="{x:Bind RelativeFolderPath , Mode=OneWay}" MinWidth="300" VerticalAlignment="Center"/>
                                 <ToggleSwitch IsOn="{x:Bind IsNotInMainAssembly,Mode=TwoWay}" OnContent="OUI" OffContent="non"/>
-                                <Button  Click="Button_Click_Remove" Margin="5,0,5,0"  
-                                         IsEnabled="{Binding ElementName=Page, Path=IsInterfaceEnabled ,Mode=OneWay}">
-                                    <SymbolIcon Symbol="Delete"
-                                        ToolTipService.ToolTip="supprimer le plan de la liste"/>
-                                </Button>
                             </StackPanel>
                             <MenuFlyoutSeparator Height="3"/>
                         </StackPanel>

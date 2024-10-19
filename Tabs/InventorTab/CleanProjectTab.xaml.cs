@@ -96,7 +96,7 @@ public sealed partial class CleanProjectTab : Interfaces.IInitTab, INotifyProper
         await CollectAndFill(file);
     }
 
-    private void Button_Click_Remove(object sender, RoutedEventArgs e)
+    private void RemovelistViewItem(object sender, RoutedEventArgs e)
     {
         if (!IsInterfaceEnabled) return;
         var contextIdwModel = ((FrameworkElement)sender).DataContext as DataIClean;
@@ -241,28 +241,22 @@ public sealed partial class CleanProjectTab : Interfaces.IInitTab, INotifyProper
 
     }
     
-    private void MyListView_RightTapped(object sender, RightTappedRoutedEventArgs e)
+    private async void MyListView_RightTapped(object sender, RightTappedRoutedEventArgs e)
     {
         if (!IsInterfaceEnabled) return;
-        // Créer un menu contextuel (MenuFlyout)
+        var dataIClean = (sender as FrameworkElement)?.DataContext as DataIClean;
+        
         MenuFlyout flyout = new MenuFlyout();
-
-        // Ajouter des éléments au menu
-        MenuFlyoutItem editItem = new MenuFlyoutItem { Text = "Edit" };
-        // editItem.Click += (s, args) => EditItem(sender, e);
+        MenuFlyoutItem editItem = new MenuFlyoutItem { Text = "Ouvrir" };
+        editItem.Click += async (s, args) => await InventorHelper2.OpenDocument((dataIClean).FullPathName);
         
         MenuFlyoutItem deleteItem = new MenuFlyoutItem { Text = "Delete" };
-        // deleteItem.Click += (s, args) => DeleteItem(sender, e);
-        deleteItem.Click += (_,_)=> Button_Click_Remove(sender, e);
+        deleteItem.Click += (_,_)=> RemovelistViewItem(sender, e);
         
-        // Ajouter les éléments au MenuFlyout
         flyout.Items.Add(editItem);
         flyout.Items.Add(deleteItem);
 
-        // Obtenir l'élément cliqué
-        ListViewItem clickedItem = (sender as FrameworkElement)?.DataContext as ListViewItem;
 
-        // Afficher le menu contextuel à la position du clic droit
         flyout.ShowAt(sender as UIElement, e.GetPosition(sender as UIElement));
     }
     
