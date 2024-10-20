@@ -1,5 +1,6 @@
 
 using System;
+using System.Threading.Tasks;
 using Inventor;
 
 namespace MultiTools.Helper;
@@ -8,7 +9,9 @@ public static class ApprenticeHelper
 {
     private static ApprenticeServerComponent? _apprenticeServer;
 
-    private static ApprenticeServer GetApprenticeServerComponent() => _apprenticeServer ?? new();
+    private static ApprenticeServerComponent GetApprenticeServerComponent() => _apprenticeServer ?? new();
+
+    public static void PreLoadApprenticeServer() => _ = GetApprenticeServerComponent();
     
     public static ApprenticeServerDrawingDocument? GetApprenticeDrawingDocument(string filePath)
     {
@@ -26,6 +29,17 @@ public static class ApprenticeHelper
         _apprenticeServer = null;
         GC.Collect();
         GC.WaitForPendingFinalizers();
+    }
+
+    public static async Task ResetApprenticeServerAsync()
+    {
+        await Task.Run(() =>
+        {
+            _apprenticeServer?.Close();
+            _apprenticeServer = null;
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+        });
     }
     
 }

@@ -32,7 +32,7 @@ public class DataI : DataIBase, INotifyPropertyChanged
 {
     public static ProjectExplorerTab instanceProjectExplorer;
 
-    public static Dictionary<string, DataI> linkFullPathToData = new();
+    public static Dictionary<string, DataI> DictionaryPathToData = new();
 
     public enum RecursiveType { True, False, OneTime }
 
@@ -119,8 +119,8 @@ public class DataI : DataIBase, INotifyPropertyChanged
         var referencedDocuments = document.ReferencedDocuments.Cast<ApprenticeServerDocument>().Select(rd => rd.FullFileName).ToList();
         GetAppServer.Close();
 
-        if (!linkFullPathToData.ContainsKey(fullPathDocument))
-            linkFullPathToData.Add(fullPathDocument, this);
+        if (!DictionaryPathToData.ContainsKey(fullPathDocument))
+            DictionaryPathToData.Add(fullPathDocument, this);
 
         if (recursive == RecursiveType.True) // Used for Add childrens
         {

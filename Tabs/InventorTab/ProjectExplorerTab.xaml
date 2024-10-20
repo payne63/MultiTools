@@ -130,7 +130,7 @@
                 BorderBrush="{StaticResource AccentAcrylicBackgroundFillColorBaseBrush}"
                 Margin="0,10,10,10">
 
-            <TreeView ItemsSource="{x:Bind DatasI}" 
+            <TreeView ItemsSource="{x:Bind DatasICollection}" 
                       x:Name="treeViewPanelDataI"  
                       SelectionMode="Single" CornerRadius="5" BorderThickness="2"
                       BorderBrush="{StaticResource AccentAcrylicBackgroundFillColorBaseBrush}"
