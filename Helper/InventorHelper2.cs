@@ -10,10 +10,17 @@ namespace MultiTools.Helper;
 
 public class InventorHelper2
 {
+    public enum GetResult
+    {
+        Success,
+        fail,
+        Unknown,
+    }
+    
     private static Application _App;
 
     public static bool IsUse; //TODO create an 'in use' system to avoid collision
-    public static event Action AppReady;
+    // public static event Action AppReady;
 
     public static bool AppIsVisible
     {
@@ -47,9 +54,9 @@ public class InventorHelper2
         _App?.ActiveDocument?.Close(true);
     }
 
-    public static async Task GetInventorAppAsync()
+    public static async Task<GetResult> GetInventorAppAsync()
     {
-        if (_App != null) return;
+        if (_App != null) return GetResult.fail;
         await Task.Run(() =>
         {
             try
@@ -62,13 +69,17 @@ public class InventorHelper2
                 {
                 }
                 _App = instance;
+                return GetResult.Success;
             }
             catch (Exception e)
             {
-                throw new Exception("impossible d'obtenir une app inventor", e);
+                return GetResult.fail; 
+                //throw new Exception("impossible d'obtenir une app inventor", e);
             }
+            
         });
-        AppReady?.Invoke(); // must be outside the task.run
+        // AppReady?.Invoke(); // must be outside the task.run
+        return GetResult.Unknown;
     }
 
     public static Document? GetDocument(string fullPathFileName)

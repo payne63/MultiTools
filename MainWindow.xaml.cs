@@ -51,7 +51,8 @@ public sealed partial class MainWindow : WindowEx, INotifyPropertyChanged
         LoadPaths();
         Instance = this;
         tabViewStaticRef = TabViewMain;
-        InventorHelper2.AppReady += () =>
+        
+        App.AppReady += () =>
         {
             ToggleSwitchInventor.Toggled -= toggleSwitchInventor_Toggled;
             ToggleSwitchInventor.IsOn = true;

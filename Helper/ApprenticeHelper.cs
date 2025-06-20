@@ -9,7 +9,20 @@ public static class ApprenticeHelper
 {
     private static ApprenticeServerComponent? _apprenticeServer;
 
-    private static ApprenticeServerComponent GetApprenticeServerComponent() => _apprenticeServer ?? new();
+    private static ApprenticeServerComponent? GetApprenticeServerComponent()
+    {
+        ApprenticeServerComponent? apprenticeServer = null;
+        try
+        {
+            apprenticeServer = _apprenticeServer ?? new();
+        }
+        catch (Exception e)
+        {
+            return null;
+            // throw;
+        }
+        return apprenticeServer;
+    }
 
     public static void PreLoadApprenticeServer() => _ = GetApprenticeServerComponent();
     
