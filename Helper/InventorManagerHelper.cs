@@ -42,7 +42,6 @@ public class InventorManagerHelper
         this.instanceLaserTab = instanceTab;
     }
 
-    //a verifier
     public InventorManagerHelper(InventorPrintTab instanceTab)
     {
         printerSizeConverter.Add(Inventor.DrawingSheetSizeEnum.kA4DrawingSheetSize, Inventor.PaperSizeEnum.kPaperSizeA4);
