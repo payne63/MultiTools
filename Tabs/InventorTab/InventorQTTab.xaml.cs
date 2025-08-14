@@ -183,7 +183,11 @@ public sealed partial class InventorQTTab : TabViewItemExtend, Interfaces.IInitT
         savePicker.SuggestedFileName = "Extraction de " + masterFileName + " le " +
                                        dateSave.ToString("yy-MM-dd à HH\\hmm") + ".xlsx";
         StorageFile file = await savePicker.PickSaveFileAsync();
-        if (file == null) return;
+         
+        if (file == null) {
+            IsInterfaceEnabled = true;
+            return;
+        }
 
         await Task.Run(() =>
         {
