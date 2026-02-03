@@ -126,7 +126,7 @@ public sealed partial class FolderProjectCreationTab : TabViewItem, Interfaces.I
     {
         if (FolderSelected == null)
         {
-            await OpenSimpleMessage("Veuillez selectioner en premier un r�pertoire cible");
+            await OpenSimpleMessage("Veuillez selectioner en premier un répertoire cible");
             return;
         }
         if (FolderSelected.GetFiles().Length != 0 || FolderSelected.GetDirectories().Length != 0)
@@ -143,24 +143,24 @@ public sealed partial class FolderProjectCreationTab : TabViewItem, Interfaces.I
         var newFolder = FolderSelected.Parent.FullName + $"\\{CodeProject} - {ProjectName} - {CustomerName}";
         if (FolderSelected.FullName != newFolder)
             Directory.Move(FolderSelected.FullName, newFolder);
-        Directory.CreateDirectory(newFolder + $"\\{CodeProject} - Consultations & Commandes");
-        Directory.CreateDirectory(newFolder + $"\\{CodeProject} - Documents contractuels\\{CodeProject} - Documents Client");
-        Directory.CreateDirectory(newFolder + $"\\{CodeProject} - Documents contractuels\\{CodeProject} - Documents Internes");
-        Directory.CreateDirectory(newFolder + $"\\{CodeProject} - Etudes �lectriques\\{CodeProject} - Implantation armoire");
-        Directory.CreateDirectory(newFolder + $"\\{CodeProject} - Etudes �lectriques\\{CodeProject} - Notice");
-        Directory.CreateDirectory(newFolder + $"\\{CodeProject} - Etudes �lectriques\\{CodeProject} - Programme automate");
-        Directory.CreateDirectory(newFolder + $"\\{CodeProject} - Etudes �lectriques\\{CodeProject} - Programme �cran");
-        Directory.CreateDirectory(newFolder + $"\\{CodeProject} - Etudes �lectriques\\{CodeProject} - Sch�ma �lectrique");
-        Directory.CreateDirectory(newFolder + $"\\{CodeProject} - Etudes �lectriques\\{CodeProject} - Sch�ma pneumatique");
-        Directory.CreateDirectory(newFolder + $"\\{CodeProject} - Etudes m�caniques\\{CodeProject} - Composants");
-        Directory.CreateDirectory(newFolder + $"\\{CodeProject} - Etudes m�caniques\\{CodeProject} - Elements client");
-        Directory.CreateDirectory(newFolder + $"\\{CodeProject} - Etudes m�caniques\\{CodeProject} - Plans");
-        Directory.CreateDirectory(newFolder + $"\\{CodeProject} - Suivi\\{CodeProject} - Notice technique");
-        Directory.CreateDirectory(newFolder + $"\\{CodeProject} - Suivi\\{CodeProject} - Photos");
+        Directory.CreateDirectory(newFolder + $"\\Consultations & Commandes");
+        Directory.CreateDirectory(newFolder + $"\\Documents contractuels\\Documents Client");
+        Directory.CreateDirectory(newFolder + $"\\Documents contractuels\\Documents Internes");
+        Directory.CreateDirectory(newFolder + $"\\Etudes électriques\\Implantation armoire");
+        Directory.CreateDirectory(newFolder + $"\\Etudes électriques\\Notice");
+        Directory.CreateDirectory(newFolder + $"\\Etudes électriques\\Programme automate");
+        Directory.CreateDirectory(newFolder + $"\\Etudes électriques\\Programme écran");
+        Directory.CreateDirectory(newFolder + $"\\Etudes électriques\\Schéma électrique");
+        Directory.CreateDirectory(newFolder + $"\\Etudes électriques\\Schéma pneumatique");
+        Directory.CreateDirectory(newFolder + $"\\Etudes mécaniques\\Composants");
+        Directory.CreateDirectory(newFolder + $"\\Etudes mécaniques\\Elements client");
+        Directory.CreateDirectory(newFolder + $"\\Etudes mécaniques\\Plans");
+        Directory.CreateDirectory(newFolder + $"\\Suivi\\Notice technique");
+        Directory.CreateDirectory(newFolder + $"\\Suivi\\Photos");
         IsInterfaceEnabled = true;
         FolderSelectedVisibity = Visibility.Collapsed;
 
-        await OpenSimpleMessage("cr�ation termin�e");
+        await OpenSimpleMessage("création terminée");
     }
 
     private void Button_Click_ClearInfo(object sender, RoutedEventArgs e)

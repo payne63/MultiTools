@@ -56,6 +56,9 @@ public sealed partial class DrawingBuilderTab : TabViewItemExtend, Interfaces.II
         var storageFile = await GetFileOpenPicker(".ipt", ".iam");
         if (storageFile == null) return;
         AddItemsToCollection(new() { storageFile });
+        //var storageFiles = await GetFilesOpenPicker(".ipt", ".iam");
+        //if (storageFiles == null || storageFiles.Count ==0) return;
+        //AddItemsToCollection(new  (storageFiles.ToList()) );
     }
 
 
