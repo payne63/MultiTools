@@ -81,10 +81,11 @@ namespace MultiTools.Base
             Material = (string)document.PropertySets["Design Tracking Properties"].ItemByPropId[20].Value;
             Qt = qt;
 
-            if (DocumentType == DocumentTypeEnum.kPartDocumentObject)
-            {
-                if (document.ComponentDefinition is SheetMetalComponentDefinition sheetMetalComponentDefinition) IsTrueSheetMetal = true;
-            }
+            IsTrueSheetMetal = document.ComponentDefinition is SheetMetalComponentDefinition? true : false;
+            // if (DocumentType == DocumentTypeEnum.kPartDocumentObject)
+            // {
+            //     if (document.ComponentDefinition is SheetMetalComponentDefinition sheetMetalComponentDefinition) IsTrueSheetMetal = true;
+            // }
 
             if (IsCommerceType) { Category = CategoryType.Commerce; GetAppServer.Close(); return; };
             if (IsElementClientType) { Category = CategoryType.ElementClient; GetAppServer.Close(); return; };
