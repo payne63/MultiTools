@@ -200,7 +200,7 @@ public sealed partial class CleanProjectTab : Interfaces.IInitTab, INotifyProper
         {
             var assemblyDocument = document.ComponentDefinition as I.AssemblyComponentDefinition;
             var bom = assemblyDocument.BOM;
-            foreach (I.BOMRow bomRow in bom.BOMViews[1].BOMRows)
+            foreach (I.BOMRow bomRow in bom.BOMViews["Model Data"].BOMRows)
             {
                 var FullDocumentName = ((I.ApprenticeServerDocument)(bomRow.ComponentDefinitions[1]).Document)
                     .FullDocumentName;

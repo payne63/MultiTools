@@ -97,9 +97,10 @@ namespace MultiTools.Base
             if (DocumentType == DocumentTypeEnum.kAssemblyDocumentObject)
             {
                 AssemblyComponentDefinition ass = document.ComponentDefinition as AssemblyComponentDefinition; //convertion en assemblage
-
-                foreach (BOMRow row in ass.BOM.BOMViews[1].BOMRows)// 1 - bom standard - 2 structured - 3 part only (2 et 3 need activation)
+                if (ass == null) { throw new Exception($"Assemblage impossible a convertir en AssemblyComponnentDefinition {NameFile}"); }
+                foreach (BOMRow row in ass.BOM.BOMViews["Model Data"].BOMRows)// 1 - bom standard - 2 structured - 3 part only (2 et 3 need activation)
                 {
+                    
                     if (row.BOMStructure == BOMStructureEnum.kPhantomBOMStructure || row.BOMStructure == BOMStructureEnum.kReferenceBOMStructure) continue;
                     try
                     {
@@ -109,7 +110,7 @@ namespace MultiTools.Base
                     }
                     catch (Exception)
                     {
-                        throw new Exception("Assemblage avec des liens rompus!! Corriger les liens");
+                        throw new Exception($"Assemblage avec des liens rompus!! Corriger les liens. Assemblage {NameFile}");
                     }
 
                 }

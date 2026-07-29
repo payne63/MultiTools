@@ -135,7 +135,7 @@ public class DataIProp : DataIBase
                 ass = document.ComponentDefinition as I.AssemblyComponentDefinition; //convertion en assemblage
 
             foreach (I.BOMRow row in
-                     ass.BOM.BOMViews[1]
+                     ass.BOM.BOMViews["Model Data"]
                          .BOMRows) // 1 - bom standard - 2 structured - 3 part only (2 et 3 need activation)
             {
                 if (row.BOMStructure == I.BOMStructureEnum.kPhantomBOMStructure ||
