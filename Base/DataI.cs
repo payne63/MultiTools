@@ -143,11 +143,12 @@ public class DataI : DataIBase, INotifyPropertyChanged
         if (FullPathName.IndexOf("composants", StringComparison.OrdinalIgnoreCase) >= 0) return CategoryType.Commerce;
         if (FullPathName.IndexOf("Elements client", StringComparison.OrdinalIgnoreCase) >= 0) return CategoryType.ElementClient;
         if (Description.IndexOf("laser", StringComparison.OrdinalIgnoreCase) >= 0) return CategoryType.Laser;
+        if (Description.IndexOf("ASS ", StringComparison.OrdinalIgnoreCase) >= 0) return CategoryType.Assemblage;
         if (ReferencedDataI.Count > 0)
         {
-            if (ReferencedDataI.First().PartNumber[0..7] == PartNumber[0..7])
+            // if (ReferencedDataI.First().PartNumber[0..7] == PartNumber[0..7])
                 return CategoryType.MecanoSoudure;
-            else return CategoryType.Assemblage;
+            // else return CategoryType.Assemblage;
         }
         return CategoryType.Inconnu;
     }

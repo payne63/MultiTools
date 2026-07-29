@@ -94,7 +94,6 @@ namespace MultiTools.Base
             if (IsMecaniqueType) { Category = CategoryType.Mecanique; GetAppServer.Close(); return; };
 
 
-
             if (DocumentType == DocumentTypeEnum.kAssemblyDocumentObject)
             {
                 AssemblyComponentDefinition ass = document.ComponentDefinition as AssemblyComponentDefinition; //convertion en assemblage
@@ -119,13 +118,17 @@ namespace MultiTools.Base
                 var childrens = bom
                     .Select(x => IO.Path.GetFileNameWithoutExtension(x.fullFileName))
                     .Where(x => x.Count() >= 8);
-                if (childrens.Any(x => x[0..7] == PartNumber[0..7]))
-                {
-                    Category = CategoryType.MecanoSoudure;
-                    return;
-                }
-
-                Category = CategoryType.Assemblage;
+                
+                if (IsASSType) { Category = CategoryType.Assemblage; return; };
+                Category = CategoryType.MecanoSoudure;
+                //
+                // if (childrens.Any(x => x[0..7] == PartNumber[0..7]))
+                // {
+                //     Category = CategoryType.MecanoSoudure;
+                //     return;
+                // }
+                //
+                // Category = CategoryType.Assemblage;
                 //GetAppServer.Close();
                 return;
             }
@@ -139,6 +142,7 @@ namespace MultiTools.Base
         public bool IsLaserType => Description.IndexOf("laser", StringComparison.OrdinalIgnoreCase) >= 0;
         private bool IsMecaniqueType => Description.IndexOf("#M", StringComparison.OrdinalIgnoreCase) >= 0;
         private bool IsProfileType => Description.IndexOf("#P", StringComparison.OrdinalIgnoreCase) >= 0;
+        private bool IsASSType => Description.IndexOf("ASS ", StringComparison.OrdinalIgnoreCase) >= 0;
 
         public override string ToString() => $"name:{NameFile} description:{Description} qt:{Qt} nbChild:{ReferencedDocuments.Count}";
 
