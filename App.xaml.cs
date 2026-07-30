@@ -54,7 +54,7 @@ public partial class App : Application
     {
         m_window = new MainWindow();
         m_window.Activate();
-        ((MainWindow)m_window)._currentElementTheme = RequestedTheme == ApplicationTheme.Light? ElementTheme.Light:ElementTheme.Dark;
+        ((MainWindow)m_window).CurrentElementTheme = RequestedTheme == ApplicationTheme.Light? ElementTheme.Light:ElementTheme.Dark;
         LoadIcon("Images\\travail-evolution.ico");
         var result = await InventorHelper2.GetInventorAppAsync();
         switch (result)

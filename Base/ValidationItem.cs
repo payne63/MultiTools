@@ -23,7 +23,6 @@ namespace MultiTools.Base
 			set { _ErrorDescription = value; }
 		}
 
-
 		public Func<DataI, SeverityValidEnum> CheckValidation;
 
         public ValidationItem(string description, string errorDescription, Func<DataI,SeverityValidEnum> checkValidation)

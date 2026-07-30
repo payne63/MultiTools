@@ -22,27 +22,10 @@ public sealed partial class MainWindow : WindowEx, INotifyPropertyChanged
     public static string CompanyDataPath;
     public static string UsersDataPath;
 
-    public ElementTheme _currentElementTheme = ElementTheme.Default;
+    public ElementTheme CurrentElementTheme = ElementTheme.Default;
     
     private CancellationTokenSource ctsVisibilityChangeTask = new();
 
-    // public ObservableCollection<Base.User> UsersName
-    // {
-    //     get => _Users;
-    //     set
-    //     {
-    //         var actualUserName = GetSelectedUser;
-    //         if (_Users != null)
-    //         {
-    //             ComboBoxUsers.SelectedItem = actualUserName;
-    //         }
-    //
-    //         _Users = value;
-    //         OnPropertyChanged();
-    //     }
-    // }
-
-    // public User GetSelectedUser => ComboBoxUsers.SelectedItem as User;
 
     public MainWindow()
     {
@@ -123,43 +106,15 @@ public sealed partial class MainWindow : WindowEx, INotifyPropertyChanged
 
     private void OnPropertyChanged([CallerMemberName] string name = null) =>
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
-
-    // public async void UsersNameUpdate()
-    // {
-    //     UsersName.Clear();
-    //     var data = await JsonHelper.LoadArray<Base.User>(UsersDataPath);
-    //     foreach (var user in data)
-    //     {
-    //         UsersName.Add(user);
-    //     }
-    //
-    //     foreach (var user in ComboBoxUsers.Items)
-    //     {
-    //         Trace.WriteLine(user);
-    //     }
-    //
-    //     ComboBoxUsers.UpdateLayout();
-    // }
-
+    
     private void TabView_TabCloseRequested(TabView sender, TabViewTabCloseRequestedEventArgs args) =>
         sender.TabItems.Remove(args.Tab);
 
-
-    // private void ListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
-    // {
-    //     var listBox = sender as ListBox;
-    //     if (listBox != null)
-    //     {
-    //         Trace.WriteLine(listBox.SelectedItem);
-    //     }
-    // }
-
     private void OnThemeButtonClick(object sender, RoutedEventArgs e)
     {
-        _currentElementTheme = _currentElementTheme == ElementTheme.Dark ? ElementTheme.Light : ElementTheme.Dark;
-        MainPage.RequestedTheme = _currentElementTheme;
+        CurrentElementTheme = CurrentElementTheme == ElementTheme.Dark ? ElementTheme.Light : ElementTheme.Dark;
+        MainPage.RequestedTheme = CurrentElementTheme;
     }
-
 
     private void MainWindow_OnClosed(object sender, WindowEventArgs args)
     {
