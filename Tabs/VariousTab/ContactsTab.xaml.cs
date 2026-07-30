@@ -157,68 +157,68 @@ namespace MultiTools.Tabs.VariousTab
 
         private async void Button_Click_MailQuotation(object sender, RoutedEventArgs e)
         {
-            if (MainWindow.Instance.GetSelectedUser == null)
-            {
-                await MessageUserNotSelected();
-                return;
-            }
-            var contact = ((FrameworkElement)sender).DataContext as Contact;
-            if (contact == null) throw new Exception("impossible de récuperer le datacontext");
-            if (await IsMailisValide(contact.Mail) == false) return;
-            var outlookHelper = new Helper.OutlookHelper();
-            var civilite = contact.IsMale ? "Mr" : "Mme";
-            outlookHelper.ShowNewMailITem(MainWindow.Instance.GetSelectedUser.MailAdress,
-                contact.Mail,
-                "Demande de prix",
-                $"Bonjour {civilite} {contact.Name} <br />" +
-                $" Pouvez vous me faire votre meilleur offre pour les éléments ci dessous: <br />" +
-                $" - <br />" +
-                $"  <br />" +
-                $"  <br />" +
-                $"  <br />");
+            // if (MainWindow.Instance.GetSelectedUser == null)
+            // {
+            //     await MessageUserNotSelected();
+            //     return;
+            // }
+            // var contact = ((FrameworkElement)sender).DataContext as Contact;
+            // if (contact == null) throw new Exception("impossible de récuperer le datacontext");
+            // if (await IsMailisValide(contact.Mail) == false) return;
+            // var outlookHelper = new Helper.OutlookHelper();
+            // var civilite = contact.IsMale ? "Mr" : "Mme";
+            // outlookHelper.ShowNewMailITem(MainWindow.Instance.GetSelectedUser.MailAdress,
+            //     contact.Mail,
+            //     "Demande de prix",
+            //     $"Bonjour {civilite} {contact.Name} <br />" +
+            //     $" Pouvez vous me faire votre meilleur offre pour les éléments ci dessous: <br />" +
+            //     $" - <br />" +
+            //     $"  <br />" +
+            //     $"  <br />" +
+            //     $"  <br />");
         }
         private async void Button_Click_MailOrder(object sender, RoutedEventArgs e)
         {
-            if (MainWindow.Instance.GetSelectedUser == null)
-            {
-                await MessageUserNotSelected();
-                return;
-            }
-            var contact = ((FrameworkElement)sender).DataContext as Contact;
-            if (contact == null) throw new Exception("impossible de récuperer le datacontext");
-            if (await IsMailisValide(contact.Mail) == false) return;
-            var outlookHelper = new Helper.OutlookHelper();
-            var civilite = contact.IsMale ? "Mr" : "Mme";
-            outlookHelper.ShowNewMailITem(MainWindow.Instance.GetSelectedUser.MailAdress,
-                contact.Mail,
-                "Commande",
-                $"Bonjour {civilite} {contact.Name} <br />" +
-                $" Veuillez trouver ci joint la commande AV- <br />" +
-                $"Merci de nous confirmer par retour votre bonne réception <br />" +
-                $"  <br />" +
-                $"  <br />" +
-                $"  <br />",
-                Environment.CurrentDirectory + "\\JsonData\\users.json");
+            // if (MainWindow.Instance.GetSelectedUser == null)
+            // {
+            //     await MessageUserNotSelected();
+            //     return;
+            // }
+            // var contact = ((FrameworkElement)sender).DataContext as Contact;
+            // if (contact == null) throw new Exception("impossible de récuperer le datacontext");
+            // if (await IsMailisValide(contact.Mail) == false) return;
+            // var outlookHelper = new Helper.OutlookHelper();
+            // var civilite = contact.IsMale ? "Mr" : "Mme";
+            // outlookHelper.ShowNewMailITem(MainWindow.Instance.GetSelectedUser.MailAdress,
+            //     contact.Mail,
+            //     "Commande",
+            //     $"Bonjour {civilite} {contact.Name} <br />" +
+            //     $" Veuillez trouver ci joint la commande AV- <br />" +
+            //     $"Merci de nous confirmer par retour votre bonne réception <br />" +
+            //     $"  <br />" +
+            //     $"  <br />" +
+            //     $"  <br />",
+            //     Environment.CurrentDirectory + "\\JsonData\\users.json");
         }
 
         private async void Button_Click_Mail(object sender, RoutedEventArgs e)
         {
-            if (MainWindow.Instance.GetSelectedUser == null)
-            {
-                await MessageUserNotSelected();
-                return;
-            }
-            var contact = ((FrameworkElement)sender).DataContext as Contact;
-            if (contact == null) throw new Exception("impossible de récuperer le datacontext");
-            if (await IsMailisValide(contact.Mail) == false) return;
-            var outlookHelper = new Helper.OutlookHelper();
-            var civilite = contact.IsMale ? "Mr" : "Mme";
-            outlookHelper.ShowNewMailITem(MainWindow.Instance.GetSelectedUser.MailAdress,
-                contact.Mail,
-                "Information",
-                $"Bonjour {civilite} {contact.Name} <br />" +
-                $"  <br />" +
-                $"  <br />");
+            // if (MainWindow.Instance.GetSelectedUser == null)
+            // {
+            //     await MessageUserNotSelected();
+            //     return;
+            // }
+            // var contact = ((FrameworkElement)sender).DataContext as Contact;
+            // if (contact == null) throw new Exception("impossible de récuperer le datacontext");
+            // if (await IsMailisValide(contact.Mail) == false) return;
+            // var outlookHelper = new Helper.OutlookHelper();
+            // var civilite = contact.IsMale ? "Mr" : "Mme";
+            // outlookHelper.ShowNewMailITem(MainWindow.Instance.GetSelectedUser.MailAdress,
+            //     contact.Mail,
+            //     "Information",
+            //     $"Bonjour {civilite} {contact.Name} <br />" +
+            //     $"  <br />" +
+            //     $"  <br />");
         }
 
         private void UpdateCVS()

@@ -21,7 +21,9 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.Foundation;
-using Windows.Foundation.Collections;
+using Windows.Foundation.Collections; 
+using DocumentFormat.OpenXml.Math;
+using MultiTools.Helper;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -42,17 +44,34 @@ public partial class App : Application
         this.InitializeComponent();
     }
 
+    public static event Action? AppReady ;
+
     /// <summary>
     /// Invoked when the application is launched.
     /// </summary>
     /// <param name="args">Details about the launch request and process.</param>
-    protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
+    protected async override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
     {
         m_window = new MainWindow();
         m_window.Activate();
         ((MainWindow)m_window)._currentElementTheme = RequestedTheme == ApplicationTheme.Light? ElementTheme.Light:ElementTheme.Dark;
         LoadIcon("Images\\travail-evolution.ico");
+        var result = await InventorHelper2.GetInventorAppAsync();
+        switch (result)
+        {
+            case InventorHelper2.GetResult.Success:
+                AppReady?.Invoke();
+                break;
+            case InventorHelper2.GetResult.fail:
+                break;
+            case InventorHelper2.GetResult.Unknown:
+                break;
+            default:
+                throw new ArgumentOutOfRangeException();
+        }
+        
     }
+    
 
     public static Window m_window;
 

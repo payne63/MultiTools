@@ -34,6 +34,15 @@ public sealed partial class NewTabButton : Button
 
     public bool isBetaVersion { get; set; }
 
+    public NewTabButton()
+    {
+        InitializeComponent();
+        GlyphsIconTab   = string.Empty;
+        Title = string.Empty;
+        Description = string.Empty;
+        _tabViewItemToLoad = null;
+        isBetaVersion = false;
+    }
 
     public NewTabButton(Type tabType, string description = null, bool isBetaVersion = false)
     {

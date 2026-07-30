@@ -62,43 +62,43 @@
                 </TeachingTip>
             </StackPanel>
         </Border>
-        <ListView ItemsSource="{x:Bind Users}" x:Name="ListViewUsers" Grid.Column="1" Grid.Row="0"
-                  CanBeScrollAnchor="True"
-                  ShowsScrollingPlaceholders="True"
-                  SelectionMode="Single"
-                  BorderThickness="2"
-                  BorderBrush="{StaticResource AccentAcrylicBackgroundFillColorBaseBrush}"
-                  CornerRadius="5"
-                  Margin="0,10,10,10">
-            <ListView.ItemTemplate>
-                <DataTemplate x:DataType="base:User">
-                    <ListViewItem Margin="5,5,5,5" >
-                        <StackPanel Orientation="Horizontal"  >
-                            <Viewbox Height="30">
-                                <FontIcon Glyph="&#xE8D4;" Foreground="{StaticResource AccentTextFillColorTertiaryBrush }"/>
-                            </Viewbox>
-                            <Button Margin="5" >
-                                <StackPanel Orientation="Horizontal" >
-                                    <TextBlock Text="Nom:" VerticalAlignment="Center"/>
-                                    <TextBox Text="{x:Bind Name, Mode=TwoWay}" VerticalAlignment="Center"/>
-                                </StackPanel>
-                            </Button>
-                            <Button Margin="5">
-                                <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="Adresse Mail:" VerticalAlignment="Center"/>
-                                    <TextBox Text="{x:Bind MailAdress, Mode=TwoWay}" VerticalAlignment="Center"/>
-                                </StackPanel>
-                            </Button>
-                            <Button Margin="5">
-                                <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="Document Achat:" VerticalAlignment="Center"/>
-                                    <TextBox Text="{x:Bind DocumentBuyPath, Mode=TwoWay}" VerticalAlignment="Center"/>
-                                </StackPanel>
-                            </Button>
-                        </StackPanel>
-                    </ListViewItem>
-                </DataTemplate>
-            </ListView.ItemTemplate>
-        </ListView>
+        <!-- <ListView ItemsSource="{x:Bind Users}" x:Name="ListViewUsers" Grid.Column="1" Grid.Row="0" -->
+        <!--           CanBeScrollAnchor="True" -->
+        <!--           ShowsScrollingPlaceholders="True" -->
+        <!--           SelectionMode="Single" -->
+        <!--           BorderThickness="2" -->
+        <!--           BorderBrush="{StaticResource AccentAcrylicBackgroundFillColorBaseBrush}" -->
+        <!--           CornerRadius="5" -->
+        <!--           Margin="0,10,10,10"> -->
+        <!--     <ListView.ItemTemplate> -->
+        <!--         <DataTemplate x:DataType="base:User"> -->
+        <!--             <ListViewItem Margin="5,5,5,5" > -->
+        <!--                 <StackPanel Orientation="Horizontal"  > -->
+        <!--                     <Viewbox Height="30"> -->
+        <!--                         <FontIcon Glyph="&#xE8D4;" Foreground="{StaticResource AccentTextFillColorTertiaryBrush }"/> -->
+        <!--                     </Viewbox> -->
+        <!--                     <Button Margin="5" > -->
+        <!--                         <StackPanel Orientation="Horizontal" > -->
+        <!--                             <TextBlock Text="Nom:" VerticalAlignment="Center"/> -->
+        <!--                             <TextBox Text="{x:Bind Name, Mode=TwoWay}" VerticalAlignment="Center"/> -->
+        <!--                         </StackPanel> -->
+        <!--                     </Button> -->
+        <!--                     <Button Margin="5"> -->
+        <!--                         <StackPanel Orientation="Horizontal"> -->
+        <!--                             <TextBlock Text="Adresse Mail:" VerticalAlignment="Center"/> -->
+        <!--                             <TextBox Text="{x:Bind MailAdress, Mode=TwoWay}" VerticalAlignment="Center"/> -->
+        <!--                         </StackPanel> -->
+        <!--                     </Button> -->
+        <!--                     <Button Margin="5"> -->
+        <!--                         <StackPanel Orientation="Horizontal"> -->
+        <!--                             <TextBlock Text="Document Achat:" VerticalAlignment="Center"/> -->
+        <!--                             <TextBox Text="{x:Bind DocumentBuyPath, Mode=TwoWay}" VerticalAlignment="Center"/> -->
+        <!--                         </StackPanel> -->
+        <!--                     </Button> -->
+        <!--                 </StackPanel> -->
+        <!--             </ListViewItem> -->
+        <!--         </DataTemplate> -->
+        <!--     </ListView.ItemTemplate> -->
+        <!-- </ListView> -->
     </Grid>
 </TabViewItem>

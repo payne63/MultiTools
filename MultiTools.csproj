@@ -4,7 +4,7 @@
     <OutputType>WinExe</OutputType>
     <TargetFramework>net6.0-windows10.0.19041.0</TargetFramework>
     <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
-    <RootNamespace>SplittableDataGridSAmple</RootNamespace>
+    <RootNamespace>MultiTools</RootNamespace>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <Platforms>x86;x64;ARM64</Platforms>
     <RuntimeIdentifiers>win10-x86;win10-x64;win10-arm64</RuntimeIdentifiers>
@@ -15,6 +15,7 @@
     <WindowsAppSDKSelfContained>true</WindowsAppSDKSelfContained>
     <ApplicationIcon>Images\cropped-copietravail-evolution6.ico</ApplicationIcon>
     <WindowsSdkPackageVersion>10.0.19041.38</WindowsSdkPackageVersion>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
     <Compile Remove="Helper\ExcelHelper.cs" />
@@ -26,10 +27,13 @@
     <None Remove="DialogPage\UpdateContactDialogPage.xaml" />
     <None Remove="Elements\DataGridQT.xaml" />
     <None Remove="Elements\DependencyControl.xaml" />
+    <None Remove="Elements\DragAndDropVisual.xaml" />
     <None Remove="Elements\NewTabButton.xaml" />
+    <None Remove="Elements\DragAndDropElement.xaml" />
     <None Remove="Elements\OpenNewTab.xaml" />
     <None Remove="Elements\ProjectExplorerElements.xaml" />
     <None Remove="Elements\TestControlWithConverter.xaml" />
+    <None Remove="Elements\ToolTipInventor.xaml" />
     <None Remove="forms\MenuTabView.xaml" />
     <None Remove="Pages\WelcomePage.xaml" />
     <None Remove="Services\MarshalService.xaml" />
@@ -70,6 +74,10 @@
     <Page Update="Tabs\VariousTab\ParameterTab.xaml">
       <SubType>Designer</SubType>
     </Page>
+    <Page Update="Elements\NewTabButton.xaml">
+        <SubType>Designer</SubType>
+    </Page>
+
   </ItemGroup>
   <ItemGroup>
     <COMReference Include="Microsoft.Office.Interop.Outlook">
@@ -141,11 +149,15 @@
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Autodesk.Inventor.Interop">
-      <HintPath>..\..\..\..\..\Program Files\Autodesk\Inventor 2019\Bin\Public Assemblies\Autodesk.Inventor.Interop.dll</HintPath>
+<!--      <HintPath>..\..\..\..\..\Program Files\Autodesk\Inventor 2019\Bin\Public Assemblies\Autodesk.Inventor.Interop.dll</HintPath>-->
+      <HintPath>Assemblies\inventor2025\autodesk.inventor.interop.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
     <Page Update="Elements\NewTabButton.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Elements\BackgroundShowVisualElement.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Update="Elements\ProjectExplorerElements.xaml">
@@ -158,6 +170,9 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Update="Elements\DataGridQT.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Elements\ToolTipInventor.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <None Update="Images\AvitechLogo.png">
@@ -304,5 +319,11 @@
   -->
   <PropertyGroup Condition="'$(DisableHasPackageAndPublishMenuAddedByProject)'!='true' and '$(EnableMsixTooling)'=='true'">
     <HasPackageAndPublishMenu>true</HasPackageAndPublishMenu>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x64' ">
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x64' ">
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 </Project>

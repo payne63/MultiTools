@@ -81,10 +81,11 @@ namespace MultiTools.Base
             Material = (string)document.PropertySets["Design Tracking Properties"].ItemByPropId[20].Value;
             Qt = qt;
 
-            if (DocumentType == DocumentTypeEnum.kPartDocumentObject)
-            {
-                if (document.ComponentDefinition is SheetMetalComponentDefinition sheetMetalComponentDefinition) IsTrueSheetMetal = true;
-            }
+            IsTrueSheetMetal = document.ComponentDefinition is SheetMetalComponentDefinition? true : false;
+            // if (DocumentType == DocumentTypeEnum.kPartDocumentObject)
+            // {
+            //     if (document.ComponentDefinition is SheetMetalComponentDefinition sheetMetalComponentDefinition) IsTrueSheetMetal = true;
+            // }
 
             if (IsCommerceType) { Category = CategoryType.Commerce; GetAppServer.Close(); return; };
             if (IsElementClientType) { Category = CategoryType.ElementClient; GetAppServer.Close(); return; };
@@ -93,24 +94,25 @@ namespace MultiTools.Base
             if (IsMecaniqueType) { Category = CategoryType.Mecanique; GetAppServer.Close(); return; };
 
 
-
             if (DocumentType == DocumentTypeEnum.kAssemblyDocumentObject)
             {
                 AssemblyComponentDefinition ass = document.ComponentDefinition as AssemblyComponentDefinition; //convertion en assemblage
-
+                if (ass == null) { throw new Exception($"Assemblage impossible a convertir en AssemblyComponnentDefinition {NameFile}"); }
                 foreach (BOMRow row in ass.BOM.BOMViews[1].BOMRows)// 1 - bom standard - 2 structured - 3 part only (2 et 3 need activation)
                 {
                     if (row.BOMStructure == BOMStructureEnum.kPhantomBOMStructure || row.BOMStructure == BOMStructureEnum.kReferenceBOMStructure) continue;
+                    // if (row.BOMStructure == BOMStructureEnum.kPurchasedBOMStructure)
+                    // { Category = CategoryType.Commerce; GetAppServer.Close();return; }
                     try
                     {
-                        var a = row.ComponentDefinitions[1];
-                        var FullDocumentName = ((ApprenticeServerDocument)(row.ComponentDefinitions[1]).Document).FullDocumentName;
+                        var Childdocument = row.ComponentDefinitions[1].Document;
+                        var FullDocumentName = ((ApprenticeServerDocument)Childdocument).FullDocumentName;
                         var qtPart = int.Parse(row.TotalQuantity);
                         bom.Add((FullDocumentName, qtPart));
                     }
                     catch (Exception)
                     {
-                        throw new Exception("Assemblage avec des liens rompus!! Corriger les liens");
+                        throw new Exception($"Assemblage avec des liens rompus!! Corriger les liens. Assemblage {NameFile}");
                     }
 
                 }
@@ -119,13 +121,17 @@ namespace MultiTools.Base
                 var childrens = bom
                     .Select(x => IO.Path.GetFileNameWithoutExtension(x.fullFileName))
                     .Where(x => x.Count() >= 8);
-                if (childrens.Any(x => x[0..7] == PartNumber[0..7]))
-                {
-                    Category = CategoryType.MecanoSoudure;
-                    return;
-                }
-
-                Category = CategoryType.Assemblage;
+                
+                if (IsASSType) { Category = CategoryType.Assemblage; return; };
+                Category = CategoryType.MecanoSoudure;
+                //
+                // if (childrens.Any(x => x[0..7] == PartNumber[0..7]))
+                // {
+                //     Category = CategoryType.MecanoSoudure;
+                //     return;
+                // }
+                //
+                // Category = CategoryType.Assemblage;
                 //GetAppServer.Close();
                 return;
             }
@@ -139,6 +145,7 @@ namespace MultiTools.Base
         public bool IsLaserType => Description.IndexOf("laser", StringComparison.OrdinalIgnoreCase) >= 0;
         private bool IsMecaniqueType => Description.IndexOf("#M", StringComparison.OrdinalIgnoreCase) >= 0;
         private bool IsProfileType => Description.IndexOf("#P", StringComparison.OrdinalIgnoreCase) >= 0;
+        private bool IsASSType => Description.IndexOf("ASS ", StringComparison.OrdinalIgnoreCase) >= 0;
 
         public override string ToString() => $"name:{NameFile} description:{Description} qt:{Qt} nbChild:{ReferencedDocuments.Count}";
 

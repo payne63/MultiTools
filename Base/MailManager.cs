@@ -13,64 +13,65 @@ namespace MultiTools.Base
     {
         public static async Task CreateMailQuotation(object sender, RoutedEventArgs e)
         {
-            if (IsUserIsNotSelected()) return;
-
-            var contact = ((FrameworkElement)sender).DataContext as Contact;
-            if (contact == null) throw new Exception("impossible de récuperer le datacontext");
-            if (await IsMailisValide(contact.Mail, ((FrameworkElement)sender).XamlRoot) == false) return;
-            var outlookHelper = new Helper.OutlookHelper();
-            var civilite = contact.IsMale ? "Mr" : "Mme";
-            outlookHelper.ShowNewMailITem(MainWindow.Instance.GetSelectedUser.MailAdress,
-                contact.Mail,
-                "Demande de prix",
-                $"Bonjour {civilite} {contact.Name} <br />" +
-                $" Pouvez vous me faire votre meilleur offre pour les éléments ci dessous: <br />" +
-                $" - <br />" +
-                $"  <br />" +
-                $"  <br />" +
-                $"  <br />");
+            // if (IsUserIsNotSelected()) return;
+            //
+            // var contact = ((FrameworkElement)sender).DataContext as Contact;
+            // if (contact == null) throw new Exception("impossible de récuperer le datacontext");
+            // if (await IsMailisValide(contact.Mail, ((FrameworkElement)sender).XamlRoot) == false) return;
+            // var outlookHelper = new Helper.OutlookHelper();
+            // var civilite = contact.IsMale ? "Mr" : "Mme";
+            // outlookHelper.ShowNewMailITem(MainWindow.Instance.GetSelectedUser.MailAdress,
+            //     contact.Mail,
+            //     "Demande de prix",
+            //     $"Bonjour {civilite} {contact.Name} <br />" +
+            //     $" Pouvez vous me faire votre meilleur offre pour les éléments ci dessous: <br />" +
+            //     $" - <br />" +
+            //     $"  <br />" +
+            //     $"  <br />" +
+            //     $"  <br />");
         }
         public static async Task CreateMailOrder(object sender, RoutedEventArgs e)
         {
-            if (IsUserIsNotSelected()) return;
-
-            var contact = ((FrameworkElement)sender).DataContext as Contact;
-            if (contact == null) throw new Exception("impossible de récuperer le datacontext");
-            if (await IsMailisValide(contact.Mail, ((FrameworkElement)sender).XamlRoot) == false) return;
-            var outlookHelper = new Helper.OutlookHelper();
-            var civilite = contact.IsMale ? "Mr" : "Mme";
-            outlookHelper.ShowNewMailITem(MainWindow.Instance.GetSelectedUser.MailAdress,
-                contact.Mail,
-                "Commande",
-                $"Bonjour {civilite} {contact.Name} <br />" +
-                $" Veuillez trouver ci joint la commande AV- <br />" +
-                $"Merci de nous confirmer par retour votre bonne réception <br />" +
-                $"  <br />" +
-                $"  <br />" +
-                $"  <br />",
-                Environment.CurrentDirectory + "\\JsonData\\users.json");
+            // if (IsUserIsNotSelected()) return;
+            //
+            // var contact = ((FrameworkElement)sender).DataContext as Contact;
+            // if (contact == null) throw new Exception("impossible de récuperer le datacontext");
+            // if (await IsMailisValide(contact.Mail, ((FrameworkElement)sender).XamlRoot) == false) return;
+            // var outlookHelper = new Helper.OutlookHelper();
+            // var civilite = contact.IsMale ? "Mr" : "Mme";
+            // outlookHelper.ShowNewMailITem(MainWindow.Instance.GetSelectedUser.MailAdress,
+            //     contact.Mail,
+            //     "Commande",
+            //     $"Bonjour {civilite} {contact.Name} <br />" +
+            //     $" Veuillez trouver ci joint la commande AV- <br />" +
+            //     $"Merci de nous confirmer par retour votre bonne réception <br />" +
+            //     $"  <br />" +
+            //     $"  <br />" +
+            //     $"  <br />",
+            //     Environment.CurrentDirectory + "\\JsonData\\users.json");
         }
 
         public static async Task CreateMail(object sender, RoutedEventArgs e)
         {
-            if (IsUserIsNotSelected()) return;
-
-            var contact = ((FrameworkElement)sender).DataContext as Contact;
-            if (contact == null) throw new Exception("impossible de récuperer le datacontext");
-            if (await IsMailisValide(contact.Mail,((FrameworkElement)sender).XamlRoot) == false) return;
-            var outlookHelper = new Helper.OutlookHelper();
-            var civilite = contact.IsMale ? "Mr" : "Mme";
-            outlookHelper.ShowNewMailITem(MainWindow.Instance.GetSelectedUser.MailAdress,
-                contact.Mail,
-                "Information",
-                $"Bonjour {civilite} {contact.Name} <br />" +
-                $"  <br />" +
-                $"  <br />");
+            // if (IsUserIsNotSelected()) return;
+            //
+            // var contact = ((FrameworkElement)sender).DataContext as Contact;
+            // if (contact == null) throw new Exception("impossible de récuperer le datacontext");
+            // if (await IsMailisValide(contact.Mail,((FrameworkElement)sender).XamlRoot) == false) return;
+            // var outlookHelper = new Helper.OutlookHelper();
+            // var civilite = contact.IsMale ? "Mr" : "Mme";
+            // outlookHelper.ShowNewMailITem(MainWindow.Instance.GetSelectedUser.MailAdress,
+            //     contact.Mail,
+            //     "Information",
+            //     $"Bonjour {civilite} {contact.Name} <br />" +
+            //     $"  <br />" +
+            //     $"  <br />");
         }
 
         private static bool IsUserIsNotSelected()
         {
-            return MainWindow.Instance.GetSelectedUser == null;
+            // return MainWindow.Instance.GetSelectedUser == null;
+            return false;
         }
 
         private static async Task<bool> IsMailisValide(string mail,XamlRoot xamlRoot)

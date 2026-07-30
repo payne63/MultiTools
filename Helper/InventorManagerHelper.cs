@@ -20,6 +20,7 @@ using MultiTools.DialogPage;
 
 namespace AvitechTools.Models;
 
+[Obsolete("use InventorHelper2",true)]
 public class InventorManagerHelper
 {
     InventorLaserTab instanceLaserTab;
@@ -65,16 +66,16 @@ public class InventorManagerHelper
     /// Réalise l'ouverture des fichiers et les exports
     /// </summary>
     /// <param name="NbExportationToDo"></param>
-    public async Task GenerateFile(List<IDWModel> listIDWModels)
+    public async Task GenerateFile(List<IdwModel> listIDWModels)
     {
-        instanceLaserTab.IsInderterminateProgressBar = true;
-        instanceLaserTab.ProgressBarStatus = "Démarrage Inventor";
+        // instanceLaserTab.IsInderterminateProgressBar = true;
+        // instanceLaserTab.ProgressBarStatus = "Démarrage Inventor";
 
-        await Task.Run(() => StartInventorNewInstance(instanceLaserTab.IsViewApp));
+        // await Task.Run(() => StartInventorNewInstance(instanceLaserTab.IsViewApp));
 
-        instanceLaserTab.ProgressBarStatus = "Creation des PDF/DXF";
-        instanceLaserTab.IsInderterminateProgressBar = false;
-        instanceLaserTab.ProgressBarValue = 0;
+        // instanceLaserTab.ProgressBarStatus = "Creation des PDF/DXF";
+        // instanceLaserTab.IsInderterminateProgressBar = false;
+        // instanceLaserTab.ProgressBarValue = 0;
 
         int NbExportationToDo = instanceLaserTab.NbPDFDrawing + instanceLaserTab.NbDXFDrawing;
         int NbJobDone = 0;
@@ -88,7 +89,7 @@ public class InventorManagerHelper
         if (listIDWModels.Exists(x => x.MakeDXF) && !Directory.Exists(DXFFolder)) Directory.CreateDirectory(DXFFolder);
 
 
-        foreach (IDWModel plan in listIDWModels)
+        foreach (IdwModel plan in listIDWModels)
         {
             if (!plan.MakePDF && !plan.MakeDXF) continue; // si pas de pdf ni de dxf on passe au fichier suivant
 
@@ -100,13 +101,13 @@ public class InventorManagerHelper
             if (plan.MakePDF)
             {
                 NbJobDone++;
-                instanceLaserTab.ProgressBarValue = (NbJobDone * 100) / NbExportationToDo;
+                // instanceLaserTab.ProgressBarValue = (NbJobDone * 100) / NbExportationToDo;
                 await Task.Run(() => SavePDF(drawingDoc, PDFFolder));
             }
             if (plan.MakeDXF)
             {
                 NbJobDone++;
-                instanceLaserTab.ProgressBarValue = (NbJobDone * 100) / NbExportationToDo;
+                // instanceLaserTab.ProgressBarValue = (NbJobDone * 100) / NbExportationToDo;
                 await Task.Run(() => SaveDXF(drawingDoc, DXFFolder));
             }
             drawingDoc.Close();
@@ -117,7 +118,7 @@ public class InventorManagerHelper
 
         if (instanceLaserTab.IsZipCompres)
         {
-            instanceLaserTab.ProgressBarStatus = "Compression Zip";
+            // instanceLaserTab.ProgressBarStatus = "Compression Zip";
             if (Directory.Exists(PDFFolder))
             {
                 if (Directory.GetFiles(PDFFolder).Length != 0)
@@ -136,11 +137,11 @@ public class InventorManagerHelper
                 }
             }
         }
-        await Task.Delay(1000);
-        instanceLaserTab.ProgressBarStatus = @"Creation Terminée";
-        await Task.Delay(1500);
-        instanceLaserTab.ProgressBarValue = 0;
-        instanceLaserTab.ProgressBarStatus = string.Empty;
+        // await Task.Delay(1000);
+        // instanceLaserTab.ProgressBarStatus = @"Creation Terminée";
+        // await Task.Delay(1500);
+        // instanceLaserTab.ProgressBarValue = 0;
+        // instanceLaserTab.ProgressBarStatus = string.Empty;
     }
 
     /// <summary>
@@ -236,35 +237,31 @@ public class InventorManagerHelper
         return ActualApp;
     }
 
-    public async Task PrintList(List<IDWPrintModel> listIDWPrinterModel)
-    {
-        instancePrintTab.ProgressBarStatus = "Démarrage Inventor";
-        await Task.Run(() => StartInventorNewInstance(instancePrintTab.IsViewApp));
-        instancePrintTab.ProgressBarStatus = "Impression en cours";
-        var NbPrintDone = 0;
-        var NbPrintToDo = listIDWPrinterModel.Where(x => x.IsPrint).Count();
-        foreach (IDWPrintModel plan in listIDWPrinterModel)
-        {
-            if (plan.IsPrint)
-            {
-                Inventor.Documents doc = app.Documents;
-                await Task.Run(() => doc.Open(plan.FileInfoData.FullName));
-                Inventor.DrawingDocument documentToPrint = (Inventor.DrawingDocument)app.ActiveDocument;
-                if (await Print(documentToPrint, plan.PageNumber)) NbPrintDone++;
-                instancePrintTab.ProgressBarValue = (NbPrintDone * 100) / NbPrintToDo;
-                doc.CloseAll();
-            }
-        }
-
-        app.Quit();
-        app = null;
-
-        await Task.Delay(1000);
-        instancePrintTab.ProgressBarStatus = @"Impression terminée";
-        await Task.Delay(1500);
-        instancePrintTab.ProgressBarValue = 0;
-        instancePrintTab.ProgressBarStatus = string.Empty;
-    }
+    // public async Task PrintList(List<IdwPrintModel> listIDWPrinterModel)
+    // {
+    //     var NbPrintDone = 0;
+    //     var NbPrintToDo = listIDWPrinterModel.Where(x => x.IsPrint).Count();
+    //     foreach (IdwPrintModel plan in listIDWPrinterModel)
+    //     {
+    //         if (plan.IsPrint)
+    //         {
+    //             Inventor.Documents doc = app.Documents;
+    //             await Task.Run(() => doc.Open(plan.FileInfoData.FullName));
+    //             Inventor.DrawingDocument documentToPrint = (Inventor.DrawingDocument)app.ActiveDocument;
+    //             if (await Print(documentToPrint, plan.PageNumber)) NbPrintDone++;
+    //             doc.CloseAll();
+    //         }
+    //     }
+    //
+    //     app.Quit();
+    //     app = null;
+    //
+    //     await Task.Delay(1000);
+    //     instancePrintTab.ProgressBarStatus = @"Impression terminée";
+    //     await Task.Delay(1500);
+    //     instancePrintTab.ProgressBarValue = 0;
+    //     instancePrintTab.ProgressBarStatus = string.Empty;
+    // }
 
     /// <summary>
     /// Imprime le document avec les paramètres du cartouche

@@ -32,7 +32,7 @@ public class DataI : DataIBase, INotifyPropertyChanged
 {
     public static ProjectExplorerTab instanceProjectExplorer;
 
-    public static Dictionary<string, DataI> linkFullPathToData = new();
+    public static Dictionary<string, DataI> DictionaryPathToData = new();
 
     public enum RecursiveType { True, False, OneTime }
 
@@ -119,8 +119,8 @@ public class DataI : DataIBase, INotifyPropertyChanged
         var referencedDocuments = document.ReferencedDocuments.Cast<ApprenticeServerDocument>().Select(rd => rd.FullFileName).ToList();
         GetAppServer.Close();
 
-        if (!linkFullPathToData.ContainsKey(fullPathDocument))
-            linkFullPathToData.Add(fullPathDocument, this);
+        if (!DictionaryPathToData.ContainsKey(fullPathDocument))
+            DictionaryPathToData.Add(fullPathDocument, this);
 
         if (recursive == RecursiveType.True) // Used for Add childrens
         {
@@ -143,11 +143,12 @@ public class DataI : DataIBase, INotifyPropertyChanged
         if (FullPathName.IndexOf("composants", StringComparison.OrdinalIgnoreCase) >= 0) return CategoryType.Commerce;
         if (FullPathName.IndexOf("Elements client", StringComparison.OrdinalIgnoreCase) >= 0) return CategoryType.ElementClient;
         if (Description.IndexOf("laser", StringComparison.OrdinalIgnoreCase) >= 0) return CategoryType.Laser;
+        if (Description.IndexOf("ASS ", StringComparison.OrdinalIgnoreCase) >= 0) return CategoryType.Assemblage;
         if (ReferencedDataI.Count > 0)
         {
-            if (ReferencedDataI.First().PartNumber[0..7] == PartNumber[0..7])
+            // if (ReferencedDataI.First().PartNumber[0..7] == PartNumber[0..7])
                 return CategoryType.MecanoSoudure;
-            else return CategoryType.Assemblage;
+            // else return CategoryType.Assemblage;
         }
         return CategoryType.Inconnu;
     }
@@ -170,8 +171,13 @@ public class DataI : DataIBase, INotifyPropertyChanged
         foreach (var drawing in drawingDocuments)
         {
             var flyOutItem = new MenuFlyoutItem { Text = drawing.NameFile, Icon = new FontIcon { Glyph = "\uEC88" } };
-            flyOutItem.Click += (object sender, RoutedEventArgs e) => InventorManagerHelper.GetActualInventorApp()?.Documents.Open(drawing.FullPathName);
-            menuFlyout.Items.Add(flyOutItem);
+            flyOutItem.Click += (object sender, RoutedEventArgs e) =>
+            {
+                InventorHelper2.GetDocument(drawing.FullPathName);
+                InventorHelper2.ShowApp();
+                // InventorManagerHelper.GetActualInventorApp()?.Documents.Open(drawing.FullPathName);
+                menuFlyout.Items.Add(flyOutItem);
+            };
         }
         if (menuFlyout.Items.Count == 0) { menuFlyout.Items.Add(new MenuFlyoutItem { Text = "Aucun plan !", Icon = new FontIcon { Glyph = "\uE783" } }); };
         return menuFlyout;

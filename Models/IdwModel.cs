@@ -6,7 +6,7 @@ using System.Runtime.CompilerServices;
 
 namespace MultiTools.Models
 {
-    public class IDWModel : INotifyPropertyChanged
+    public class IdwModel : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
         protected void OnPropertyChanged([CallerMemberName] string name = null)
@@ -33,12 +33,20 @@ namespace MultiTools.Models
             get { return _MakeDXF; }
             set { _MakeDXF = value; OnPropertyChanged(); }
         }
-
-        public IDWModel(FileInfo fileInfo,PropertyChangedEventHandler propertyChangedEventHandler)
+        
+        private bool _buttonEnable;
+        public bool ButtonEnable
+        {
+            get => _buttonEnable;
+            set { _buttonEnable = value; OnPropertyChanged(); }
+        }
+        
+        public IdwModel(FileInfo fileInfo,PropertyChangedEventHandler propertyChangedEventHandler)
         {
             FileInfoData = fileInfo;
             AutoSelectPDFStatus();
             AutoSelectDXFStatus();
+            ButtonEnable = true;
             PropertyChanged += propertyChangedEventHandler;
         }
 

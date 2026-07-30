@@ -1,9 +1,9 @@
 {
   "profiles": {
-    "SplittableDataGridSAmple (Package)": {
+    "MultiTools (Package)": {
       "commandName": "MsixPackage"
     },
-    "SplittableDataGridSAmple (Unpackaged)": {
+    "MultiTools (Unpackaged)": {
       "commandName": "Project"
     }
   }

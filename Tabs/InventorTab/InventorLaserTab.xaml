@@ -1,13 +1,14 @@
 ﻿<!-- Copyright (c) Microsoft Corporation and Contributors. -->
 <!-- Licensed under the MIT License. -->
 
-<TabViewItem
+<model:TabViewItemExtend
     x:Class="MultiTools.Tabs.InventorTab.InventorLaserTab"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:MultiTools.Tabs"
     xmlns:model="using:MultiTools.Models"
     xmlns:base="using:MultiTools.Base"
+    xmlns:element="using:MultiTools.Elements"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
@@ -34,23 +35,32 @@
                     Margin="10" 
                     HorizontalAlignment="Stretch"
                     Padding="15"
-                    Drop="TabViewItem_Drop" 
-                    DragOver="TabViewItem_DragOver"
+                    Click="ButtonPickFile"
                     AllowDrop="True" 
                     IsEnabled="{x:Bind IsInterfaceEnabled, Mode=OneWay}">
                     <StackPanel Orientation="Vertical" >
                         <Viewbox MaxHeight="40" MaxWidth="40" >
-                            <SymbolIcon Symbol="NewWindow"  />
+                            <FontIcon Glyph="&#xE8A5;"  />
                         </Viewbox>
-                        <TextBlock Text="Glisser Deposer" HorizontalAlignment="Center" />
-                        <TextBlock Text="vos fichiers" HorizontalAlignment="Center" />
-                        <TextBlock Text="(répertoire ou fichiers)" HorizontalAlignment="Center"/>
+                        <TextBlock Text="Selectionner" HorizontalAlignment="Center" />
+                        <TextBlock Text="des fichiers" HorizontalAlignment="Center" />
                     </StackPanel>
                 </Button>
-                <CheckBox Content="Voir l'application" HorizontalAlignment="Center"
-                          IsChecked="{x:Bind IsViewApp, Mode=TwoWay}"
-                          ToolTipService.ToolTip="Permet de voir l'application durant la generation des fichiers"
-                          IsEnabled="{x:Bind IsInterfaceEnabled, Mode=OneWay}"/>
+                <Button
+                    Margin="10" 
+                    HorizontalAlignment="Stretch"
+                    Padding="15"
+                    Click="ButtonPickFolder"
+                    AllowDrop="True" 
+                    IsEnabled="{x:Bind IsInterfaceEnabled, Mode=OneWay}">
+                    <StackPanel Orientation="Vertical" >
+                        <Viewbox MaxHeight="40" MaxWidth="40" >
+                            <FontIcon Glyph="&#xE8B7;" />
+                        </Viewbox>
+                        <TextBlock Text="Selectionner" HorizontalAlignment="Center" />
+                        <TextBlock Text="un repertoire" HorizontalAlignment="Center" />
+                    </StackPanel>
+                </Button>
                 <CheckBox Content="Compression Zip" HorizontalAlignment="Center"
                           IsChecked="{x:Bind IsZipCompres, Mode=TwoWay}"
                           ToolTipService.ToolTip="Creer une archive ZIP des répertoires PDF et DXF"
@@ -58,19 +68,13 @@
                 <Button 
                     Margin="10" 
                     HorizontalAlignment="Stretch"
-                    Click="Button_Click_GeneratePDFDXF">
+                    Click="Button_Click_GeneratePdfDxf">
                     <StackPanel Orientation="Vertical" >
                         <Viewbox MaxHeight="30" MaxWidth="30" Margin="10" >
                             <FontIcon  Glyph="&#xE945;" />
                         </Viewbox>
                         <TextBlock Text="Démarrer la génération" HorizontalAlignment="Center"/>
                         <TextBlock Text="des PDF et DXF" HorizontalAlignment="Center" />
-                        <ProgressBar x:Name="progressBar" 
-                                     Margin="0,10,0,10"
-                                     Value="{x:Bind ProgressBarValue, Mode=OneWay}"
-                                     Minimum="0" Maximum="100"
-                                     IsIndeterminate="{x:Bind IsInderterminateProgressBar, Mode=OneWay}"/>
-                        <TextBlock Text="{x:Bind ProgressBarStatus, Mode=OneWay}" HorizontalAlignment="Center" Margin="5"/>
                     </StackPanel>
                 </Button>
                 <Grid>
@@ -125,7 +129,10 @@
                 </DropDownButton.Flyout>
             </DropDownButton>
         </StackPanel>
-        <ListView ItemsSource="{x:Bind IDWModels}"
+        <element:BackgroundShowVisualElement Grid.Row="1" Grid.Column="1"
+                                             ShowDragAndDrop="{x:Bind DragAndDropVisibility, Mode=OneWay}"
+                                             ShowBusyRing="{x:Bind IsInterfaceDisabled, Mode=OneWay}"/>
+        <ListView ItemsSource="{x:Bind IdwModels}"
                       x:Name="ListViewIDW"
                       Grid.Column="1" Grid.Row="1"
                       CanBeScrollAnchor="True"
@@ -136,27 +143,32 @@
                       Margin="0,10,10,10"
                       Drop="TabViewItem_Drop" 
                       DragOver="TabViewItem_DragOver"
-                      AllowDrop="True" IsEnabled="{x:Bind IsInterfaceEnabled, Mode=OneWay}">
+                      AllowDrop="True">
             <ListView.ItemTemplate>
-                <DataTemplate x:DataType="model:IDWModel">
+                <DataTemplate x:DataType="model:IdwModel">
                     <ListViewItem Margin="3" >
+                        <ToolTipService.ToolTip>
+                            <element:ToolTipInventor FileInfoData="{x:Bind FileInfoData}"/>
+                        </ToolTipService.ToolTip>
                         <StackPanel Orientation="Vertical">
                             <StackPanel Orientation="Horizontal" >
                                 <TextBlock Text="{x:Bind Name}" MinWidth="300" VerticalAlignment="Center"/>
+                                <ProgressRing x:Name="ProgressRingStatus" IsActive="False" Margin="10,0,10,0"/>
                                 <CheckBox Content="PDF" IsChecked="{x:Bind MakePDF, Mode=TwoWay}"
-                                      Checked="CheckBox_Checked_PDFChange" 
-                                      Unchecked="CheckBox_Checked_PDFChange"/>
+                                          Checked="CheckBox_Checked_PDFChange" 
+                                          Unchecked="CheckBox_Checked_PDFChange"
+                                          IsEnabled="{x:Bind ButtonEnable, Mode=OneWay}"/>
                                 <CheckBox Content="DXF" IsChecked="{x:Bind MakeDXF, Mode=TwoWay}"
                                       Checked="CheckBox_Checked_DXFChange" 
-                                      Unchecked="CheckBox_Checked_DXFChange"/>
-                                <Button x:Name="VisualButton" Click="GetThumbNailAsync" Margin="5,0,5,0">
-                                    <FontIcon Glyph="&#xE7B3;" ToolTipService.ToolTip="Aperçu"/>
-                                </Button>
-                                <Button  Click="Button_Click_OpenDrawing" Margin="5,0,5,0">
+                                      Unchecked="CheckBox_Checked_DXFChange"
+                                      IsEnabled="{x:Bind ButtonEnable, Mode=OneWay}"/>
+                                <Button  Click="Button_Click_OpenDrawing" Margin="5,0,5,0"
+                                        IsEnabled="{x:Bind ButtonEnable, Mode=OneWay}" >
                                     <SymbolIcon Symbol="OpenFile" 
                                                 ToolTipService.ToolTip="ouvrir le plan"/>
                                 </Button>
-                                <Button  Click="Button_Click_Remove" Margin="5,0,5,0">
+                                <Button  Click="Button_Click_Remove" Margin="5,0,5,0"
+                                         IsEnabled="{x:Bind ButtonEnable, Mode=OneWay}">
                                     <SymbolIcon Symbol="Delete"
                                                 ToolTipService.ToolTip="supprimer le plan de la liste"/>
                                 </Button>
@@ -167,18 +179,5 @@
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
-        <TeachingTip x:Name="TeachingTipThumbNail"
-                     PreferredPlacement="Right">
-            <TeachingTip.HeroContent>
-                <Image x:Name="ImageThumbNail" />
-            </TeachingTip.HeroContent>
-            <TeachingTip.Content>
-                <StackPanel Orientation="Vertical">
-                    <TextBlock x:Name="ThumbNailPartNumber" HorizontalAlignment="Center"/>
-                    <TextBlock x:Name="ThumbNailDescription" HorizontalAlignment="Center"/>
-                    <TextBlock x:Name="ThumbNailCustomer" HorizontalAlignment="Center"/>
-                </StackPanel>
-            </TeachingTip.Content>
-        </TeachingTip>
     </Grid>
-</TabViewItem>
+</model:TabViewItemExtend>

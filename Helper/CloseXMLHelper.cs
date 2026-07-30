@@ -41,7 +41,7 @@ public class CloseXMLHelper
         var rowOfTable = table.RowCount();
         for (var i = 0; i < rowOfTable-1; i++)
         {
-            var startCellule = 7; // attention à mettre à jour lord d'un rajout de ligne au dessus.
+            var startCellule = 7; // attention à mettre à jour lors d'un rajout de ligne au dessus.
             var cell = sheet.Cell("A" + (i + startCellule).ToString());
             cell.SetHyperlink(new XLHyperlink(datas[i].FullPathName));
             cell.Style.Font.FontColor = XLColor.Black;

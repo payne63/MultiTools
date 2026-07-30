@@ -11,9 +11,10 @@ using Inventor;
 using MultiTools.Base;
 
 namespace MultiTools.Helper;
-internal class DXFBuilderHelper
+internal class DXFBuilderHelper 
 {
-    private static Application InventorApp;
+    
+    // private static Application InventorApp ;
     private static Inventor.Sheet sheet;
     private enum CartesianAxis
     {
@@ -21,9 +22,10 @@ internal class DXFBuilderHelper
         Y = 1,
         Z = 2
     }
-    public static DrawingDocument BuildTrueSheetMetal(InventorHelper inventorHelper, string PartPath, string templatePath = @"C:\Users\Public\Documents\Autodesk\Inventor 2019\Templates\Metric\ISO.idw")
+    
+    public static DrawingDocument BuildTrueSheetMetal ( Application InventorApp, string PartPath, string templatePath = @"C:\Users\Public\Documents\Autodesk\Inventor 2019\Templates\Metric\ISO.idw")
     {
-        InventorApp = inventorHelper.App;
+        // InventorApp = inventorHelper.App;
         if (InventorApp == null) { throw new Exception("application inventor non disponible"); }
         var partDocument = InventorApp.Documents.Open(PartPath, true) as PartDocument;
         var dataSheetMetal = FlatCheck(partDocument);
@@ -41,7 +43,7 @@ internal class DXFBuilderHelper
         var zoom = DefineZoom(dataSheetMetal);
 
 
-        (DrawingView frontView, DrawingView sideView) = CreateView(sheet, partDocument, zoom, dataSheetMetal.TurnView);
+        (DrawingView frontView, DrawingView sideView) = CreateView(InventorApp, sheet, partDocument, zoom, dataSheetMetal.TurnView);
         if (dataSheetMetal.TurnView)
         {
             dataSheetMetal.TurnSwap();
@@ -53,13 +55,13 @@ internal class DXFBuilderHelper
         {
             throw new Exception("Erreur, Aucunes géometries existantes !");
         }
-        CreateHorizontalDimension(frontView, intentsFrontView);
-        CreateVerticalDimension(frontView, intentsFrontView);
+        CreateHorizontalDimension(InventorApp, frontView, intentsFrontView);
+        CreateVerticalDimension(InventorApp, frontView, intentsFrontView);
 
         var intentsSideView = GetIntents(sideView);
-        CreateHorizontalDimension(sideView, intentsSideView);
+        CreateHorizontalDimension(InventorApp, sideView, intentsSideView);
 
-        var transientGeometry = InventorApp.TransientGeometry;
+        var transientGeometry = InventorApp.TransientGeometry; 
         sheet.DrawingNotes.GeneralNotes.AddFitted(transientGeometry.CreatePoint2d(4, 5), dataSheetMetal.ToString());
         partDocument.Close();
         return drawingDoc;
@@ -145,7 +147,7 @@ internal class DXFBuilderHelper
         }
     }
 
-    private static (DrawingView frontView, DrawingView sideView) CreateView(Inventor.Sheet sheet, PartDocument partDocument, double zoom, bool turnView , ViewOrientationTypeEnum viewOrientationTypeEnum = ViewOrientationTypeEnum.kDefaultViewOrientation )
+    private static (DrawingView frontView, DrawingView sideView) CreateView(Application InventorApp, Inventor.Sheet sheet, PartDocument partDocument, double zoom, bool turnView , ViewOrientationTypeEnum viewOrientationTypeEnum = ViewOrientationTypeEnum.kDefaultViewOrientation )
     {
         var transientGeometry = InventorApp.TransientGeometry;
         var positionFrontView = transientGeometry.CreatePoint2d(21d / 2, (29.7d - 4d) / 2 + 4);
@@ -163,7 +165,7 @@ internal class DXFBuilderHelper
         return (FrontView, sideView);
     }
 
-    private static void CreateHorizontalDimension(DrawingView view, List<GeometryIntent> intents)
+    private static void CreateHorizontalDimension(Application InventorApp, DrawingView view, List<GeometryIntent> intents)
     {
         var orderedIntentsInX = intents.Where(x => x.PointOnSheet != null).OrderBy(x => x.PointOnSheet.X).ToList();
         var distanceFromView = 1.2d - 0.6d;
@@ -175,7 +177,7 @@ internal class DXFBuilderHelper
         sheet.DrawingDimensions.GeneralDimensions.AddLinear(pointText, pointLeft, pointRight, DimensionTypeEnum.kHorizontalDimensionType);
     }
 
-    private static void CreateVerticalDimension(DrawingView view, List<GeometryIntent> intents)
+    private static void CreateVerticalDimension(Application InventorApp, DrawingView view, List<GeometryIntent> intents)
     {
         var orderedIntentsInY = intents.Where(x => x.PointOnSheet != null).OrderBy(x => x.PointOnSheet.Y).ToList();
         var distanceFromView = 1.2d - 0.6d;
@@ -242,9 +244,9 @@ internal class DXFBuilderHelper
         sheetMetalComponentDefinition.DataIO.WriteDataToFile(dxfFormat, $"E:\\testPlan\\P641-050-01 {thickness}mm.dxf");
     }
 
-    internal static DrawingDocument BuildNotSheetMetal(InventorHelper inventorHelper, string PartPath, string templatePath = @"C:\Users\Public\Documents\Autodesk\Inventor 2019\Templates\Metric\ISO.idw")
+    internal static DrawingDocument BuildNotSheetMetal(Application InventorApp, string PartPath, string templatePath = @"C:\Users\Public\Documents\Autodesk\Inventor 2019\Templates\Metric\ISO.idw")
     {
-        InventorApp = inventorHelper.App;
+        // InventorApp = inventorHelper.App;
         if (InventorApp == null) { throw new Exception("application inventor non disponible"); }
         var partDocument = InventorApp.Documents.Open(PartPath, true) as PartDocument;
         var rangeBox = partDocument.ComponentDefinition.RangeBox;
@@ -287,18 +289,18 @@ internal class DXFBuilderHelper
 
         };
 
-        (DrawingView frontView, DrawingView sideView) = CreateView(sheet, partDocument, zoom, dataSheetMetal.TurnView,orientationView);
+        (DrawingView frontView, DrawingView sideView) = CreateView(InventorApp, sheet, partDocument, zoom, dataSheetMetal.TurnView,orientationView);
         if (dataSheetMetal.TurnView)
         {
             dataSheetMetal.TurnSwap();
         }
 
         var intentsFrontView = GetIntents(frontView);
-        CreateHorizontalDimension(frontView, intentsFrontView);
-        CreateVerticalDimension(frontView, intentsFrontView);
+        CreateHorizontalDimension(InventorApp, frontView, intentsFrontView);
+        CreateVerticalDimension(InventorApp, frontView, intentsFrontView);
 
         var intentsSideView = GetIntents(sideView);
-        CreateHorizontalDimension(sideView, intentsSideView);
+        CreateHorizontalDimension(InventorApp, sideView, intentsSideView);
 
         var transientGeometry = InventorApp.TransientGeometry;
         sheet.DrawingNotes.GeneralNotes.AddFitted(transientGeometry.CreatePoint2d(4, 5), dataSheetMetal.ToString());
