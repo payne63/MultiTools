@@ -2,6 +2,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
+<!--    <TargetFramework>net6.0-windows</TargetFramework>-->
     <TargetFramework>net6.0-windows10.0.19041.0</TargetFramework>
     <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
     <RootNamespace>MultiTools</RootNamespace>
@@ -51,6 +52,522 @@
     <None Remove="Tabs\Test2Tab.xaml" />
     <None Remove="Tabs\Test3Tab.xaml" />
     <None Remove="bin\x64\Release\net6.0-windows10.0.19041.0\win10-x64\**" />
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\af-ZA\Microsoft.ui.xaml.dll.mui">
+      <Link>lang\af-ZA\Microsoft.ui.xaml.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\af-ZA\Microsoft.UI.Xaml.Phone.dll.mui">
+      <Link>lang\af-ZA\Microsoft.UI.Xaml.Phone.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\am-ET\Microsoft.ui.xaml.dll.mui">
+      <Link>lang\am-ET\Microsoft.ui.xaml.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\am-ET\Microsoft.UI.Xaml.Phone.dll.mui">
+      <Link>lang\am-ET\Microsoft.UI.Xaml.Phone.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\ar-SA\Microsoft.ui.xaml.dll.mui">
+      <Link>lang\ar-SA\Microsoft.ui.xaml.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\ar-SA\Microsoft.UI.Xaml.Phone.dll.mui">
+      <Link>lang\ar-SA\Microsoft.UI.Xaml.Phone.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\as-IN\Microsoft.ui.xaml.dll.mui">
+      <Link>lang\as-IN\Microsoft.ui.xaml.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\as-IN\Microsoft.UI.Xaml.Phone.dll.mui">
+      <Link>lang\as-IN\Microsoft.UI.Xaml.Phone.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\az-Latn-AZ\Microsoft.ui.xaml.dll.mui">
+      <Link>lang\az-Latn-AZ\Microsoft.ui.xaml.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\az-Latn-AZ\Microsoft.UI.Xaml.Phone.dll.mui">
+      <Link>lang\az-Latn-AZ\Microsoft.UI.Xaml.Phone.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\bg-BG\Microsoft.ui.xaml.dll.mui">
+      <Link>lang\bg-BG\Microsoft.ui.xaml.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\bg-BG\Microsoft.UI.Xaml.Phone.dll.mui">
+      <Link>lang\bg-BG\Microsoft.UI.Xaml.Phone.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\bn-IN\Microsoft.ui.xaml.dll.mui">
+      <Link>lang\bn-IN\Microsoft.ui.xaml.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\bn-IN\Microsoft.UI.Xaml.Phone.dll.mui">
+      <Link>lang\bn-IN\Microsoft.UI.Xaml.Phone.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\bs-Latn-BA\Microsoft.ui.xaml.dll.mui">
+      <Link>lang\bs-Latn-BA\Microsoft.ui.xaml.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\bs-Latn-BA\Microsoft.UI.Xaml.Phone.dll.mui">
+      <Link>lang\bs-Latn-BA\Microsoft.UI.Xaml.Phone.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\ca-Es-VALENCIA\Microsoft.ui.xaml.dll.mui">
+      <Link>lang\ca-Es-VALENCIA\Microsoft.ui.xaml.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\ca-Es-VALENCIA\Microsoft.UI.Xaml.Phone.dll.mui">
+      <Link>lang\ca-Es-VALENCIA\Microsoft.UI.Xaml.Phone.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\ca-ES\Microsoft.ui.xaml.dll.mui">
+      <Link>lang\ca-ES\Microsoft.ui.xaml.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\ca-ES\Microsoft.UI.Xaml.Phone.dll.mui">
+      <Link>lang\ca-ES\Microsoft.UI.Xaml.Phone.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\cs-CZ\Microsoft.ui.xaml.dll.mui">
+      <Link>lang\cs-CZ\Microsoft.ui.xaml.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\cs-CZ\Microsoft.UI.Xaml.Phone.dll.mui">
+      <Link>lang\cs-CZ\Microsoft.UI.Xaml.Phone.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\cy-GB\Microsoft.ui.xaml.dll.mui">
+      <Link>lang\cy-GB\Microsoft.ui.xaml.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\cy-GB\Microsoft.UI.Xaml.Phone.dll.mui">
+      <Link>lang\cy-GB\Microsoft.UI.Xaml.Phone.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\da-DK\Microsoft.ui.xaml.dll.mui">
+      <Link>lang\da-DK\Microsoft.ui.xaml.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\da-DK\Microsoft.UI.Xaml.Phone.dll.mui">
+      <Link>lang\da-DK\Microsoft.UI.Xaml.Phone.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\de-DE\Microsoft.ui.xaml.dll.mui">
+      <Link>lang\de-DE\Microsoft.ui.xaml.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\de-DE\Microsoft.UI.Xaml.Phone.dll.mui">
+      <Link>lang\de-DE\Microsoft.UI.Xaml.Phone.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\el-GR\Microsoft.ui.xaml.dll.mui">
+      <Link>lang\el-GR\Microsoft.ui.xaml.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\el-GR\Microsoft.UI.Xaml.Phone.dll.mui">
+      <Link>lang\el-GR\Microsoft.UI.Xaml.Phone.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\en-GB\Microsoft.ui.xaml.dll.mui">
+      <Link>lang\en-GB\Microsoft.ui.xaml.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\en-GB\Microsoft.UI.Xaml.Phone.dll.mui">
+      <Link>lang\en-GB\Microsoft.UI.Xaml.Phone.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\en-us\Microsoft.ui.xaml.dll.mui">
+      <Link>lang\en-us\Microsoft.ui.xaml.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\en-us\Microsoft.UI.Xaml.Phone.dll.mui">
+      <Link>lang\en-us\Microsoft.UI.Xaml.Phone.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\es-ES\Microsoft.ui.xaml.dll.mui">
+      <Link>lang\es-ES\Microsoft.ui.xaml.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\es-ES\Microsoft.UI.Xaml.Phone.dll.mui">
+      <Link>lang\es-ES\Microsoft.UI.Xaml.Phone.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\es-MX\Microsoft.ui.xaml.dll.mui">
+      <Link>lang\es-MX\Microsoft.ui.xaml.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\es-MX\Microsoft.UI.Xaml.Phone.dll.mui">
+      <Link>lang\es-MX\Microsoft.UI.Xaml.Phone.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\et-EE\Microsoft.ui.xaml.dll.mui">
+      <Link>lang\et-EE\Microsoft.ui.xaml.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\et-EE\Microsoft.UI.Xaml.Phone.dll.mui">
+      <Link>lang\et-EE\Microsoft.UI.Xaml.Phone.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\eu-ES\Microsoft.ui.xaml.dll.mui">
+      <Link>lang\eu-ES\Microsoft.ui.xaml.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\eu-ES\Microsoft.UI.Xaml.Phone.dll.mui">
+      <Link>lang\eu-ES\Microsoft.UI.Xaml.Phone.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\fa-IR\Microsoft.ui.xaml.dll.mui">
+      <Link>lang\fa-IR\Microsoft.ui.xaml.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\fa-IR\Microsoft.UI.Xaml.Phone.dll.mui">
+      <Link>lang\fa-IR\Microsoft.UI.Xaml.Phone.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\fi-FI\Microsoft.ui.xaml.dll.mui">
+      <Link>lang\fi-FI\Microsoft.ui.xaml.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\fi-FI\Microsoft.UI.Xaml.Phone.dll.mui">
+      <Link>lang\fi-FI\Microsoft.UI.Xaml.Phone.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\fil-PH\Microsoft.ui.xaml.dll.mui">
+      <Link>lang\fil-PH\Microsoft.ui.xaml.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\fil-PH\Microsoft.UI.Xaml.Phone.dll.mui">
+      <Link>lang\fil-PH\Microsoft.UI.Xaml.Phone.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\fr-CA\Microsoft.ui.xaml.dll.mui">
+      <Link>lang\fr-CA\Microsoft.ui.xaml.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\fr-CA\Microsoft.UI.Xaml.Phone.dll.mui">
+      <Link>lang\fr-CA\Microsoft.UI.Xaml.Phone.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\fr-FR\Microsoft.ui.xaml.dll.mui">
+      <Link>lang\fr-FR\Microsoft.ui.xaml.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\fr-FR\Microsoft.UI.Xaml.Phone.dll.mui">
+      <Link>lang\fr-FR\Microsoft.UI.Xaml.Phone.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\ga-IE\Microsoft.ui.xaml.dll.mui">
+      <Link>lang\ga-IE\Microsoft.ui.xaml.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\ga-IE\Microsoft.UI.Xaml.Phone.dll.mui">
+      <Link>lang\ga-IE\Microsoft.UI.Xaml.Phone.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\gd-gb\Microsoft.ui.xaml.dll.mui">
+      <Link>lang\gd-gb\Microsoft.ui.xaml.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\gd-gb\Microsoft.UI.Xaml.Phone.dll.mui">
+      <Link>lang\gd-gb\Microsoft.UI.Xaml.Phone.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\gl-ES\Microsoft.ui.xaml.dll.mui">
+      <Link>lang\gl-ES\Microsoft.ui.xaml.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\gl-ES\Microsoft.UI.Xaml.Phone.dll.mui">
+      <Link>lang\gl-ES\Microsoft.UI.Xaml.Phone.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\gu-IN\Microsoft.ui.xaml.dll.mui">
+      <Link>lang\gu-IN\Microsoft.ui.xaml.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\gu-IN\Microsoft.UI.Xaml.Phone.dll.mui">
+      <Link>lang\gu-IN\Microsoft.UI.Xaml.Phone.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\he-IL\Microsoft.ui.xaml.dll.mui">
+      <Link>lang\he-IL\Microsoft.ui.xaml.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\he-IL\Microsoft.UI.Xaml.Phone.dll.mui">
+      <Link>lang\he-IL\Microsoft.UI.Xaml.Phone.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\hi-IN\Microsoft.ui.xaml.dll.mui">
+      <Link>lang\hi-IN\Microsoft.ui.xaml.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\hi-IN\Microsoft.UI.Xaml.Phone.dll.mui">
+      <Link>lang\hi-IN\Microsoft.UI.Xaml.Phone.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\hr-HR\Microsoft.ui.xaml.dll.mui">
+      <Link>lang\hr-HR\Microsoft.ui.xaml.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\hr-HR\Microsoft.UI.Xaml.Phone.dll.mui">
+      <Link>lang\hr-HR\Microsoft.UI.Xaml.Phone.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\hu-HU\Microsoft.ui.xaml.dll.mui">
+      <Link>lang\hu-HU\Microsoft.ui.xaml.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\hu-HU\Microsoft.UI.Xaml.Phone.dll.mui">
+      <Link>lang\hu-HU\Microsoft.UI.Xaml.Phone.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\hy-AM\Microsoft.ui.xaml.dll.mui">
+      <Link>lang\hy-AM\Microsoft.ui.xaml.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\hy-AM\Microsoft.UI.Xaml.Phone.dll.mui">
+      <Link>lang\hy-AM\Microsoft.UI.Xaml.Phone.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\id-ID\Microsoft.ui.xaml.dll.mui">
+      <Link>lang\id-ID\Microsoft.ui.xaml.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\id-ID\Microsoft.UI.Xaml.Phone.dll.mui">
+      <Link>lang\id-ID\Microsoft.UI.Xaml.Phone.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\is-IS\Microsoft.ui.xaml.dll.mui">
+      <Link>lang\is-IS\Microsoft.ui.xaml.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\is-IS\Microsoft.UI.Xaml.Phone.dll.mui">
+      <Link>lang\is-IS\Microsoft.UI.Xaml.Phone.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\it-IT\Microsoft.ui.xaml.dll.mui">
+      <Link>lang\it-IT\Microsoft.ui.xaml.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\it-IT\Microsoft.UI.Xaml.Phone.dll.mui">
+      <Link>lang\it-IT\Microsoft.UI.Xaml.Phone.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\ja-JP\Microsoft.ui.xaml.dll.mui">
+      <Link>lang\ja-JP\Microsoft.ui.xaml.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\ja-JP\Microsoft.UI.Xaml.Phone.dll.mui">
+      <Link>lang\ja-JP\Microsoft.UI.Xaml.Phone.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\ka-GE\Microsoft.ui.xaml.dll.mui">
+      <Link>lang\ka-GE\Microsoft.ui.xaml.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\ka-GE\Microsoft.UI.Xaml.Phone.dll.mui">
+      <Link>lang\ka-GE\Microsoft.UI.Xaml.Phone.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\kk-KZ\Microsoft.ui.xaml.dll.mui">
+      <Link>lang\kk-KZ\Microsoft.ui.xaml.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\kk-KZ\Microsoft.UI.Xaml.Phone.dll.mui">
+      <Link>lang\kk-KZ\Microsoft.UI.Xaml.Phone.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\km-KH\Microsoft.ui.xaml.dll.mui">
+      <Link>lang\km-KH\Microsoft.ui.xaml.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\km-KH\Microsoft.UI.Xaml.Phone.dll.mui">
+      <Link>lang\km-KH\Microsoft.UI.Xaml.Phone.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\kn-IN\Microsoft.ui.xaml.dll.mui">
+      <Link>lang\kn-IN\Microsoft.ui.xaml.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\kn-IN\Microsoft.UI.Xaml.Phone.dll.mui">
+      <Link>lang\kn-IN\Microsoft.UI.Xaml.Phone.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\ko-KR\Microsoft.ui.xaml.dll.mui">
+      <Link>lang\ko-KR\Microsoft.ui.xaml.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\ko-KR\Microsoft.UI.Xaml.Phone.dll.mui">
+      <Link>lang\ko-KR\Microsoft.UI.Xaml.Phone.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\kok-IN\Microsoft.ui.xaml.dll.mui">
+      <Link>lang\kok-IN\Microsoft.ui.xaml.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\kok-IN\Microsoft.UI.Xaml.Phone.dll.mui">
+      <Link>lang\kok-IN\Microsoft.UI.Xaml.Phone.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\lb-LU\Microsoft.ui.xaml.dll.mui">
+      <Link>lang\lb-LU\Microsoft.ui.xaml.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\lb-LU\Microsoft.UI.Xaml.Phone.dll.mui">
+      <Link>lang\lb-LU\Microsoft.UI.Xaml.Phone.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\lo-LA\Microsoft.ui.xaml.dll.mui">
+      <Link>lang\lo-LA\Microsoft.ui.xaml.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\lo-LA\Microsoft.UI.Xaml.Phone.dll.mui">
+      <Link>lang\lo-LA\Microsoft.UI.Xaml.Phone.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\lt-LT\Microsoft.ui.xaml.dll.mui">
+      <Link>lang\lt-LT\Microsoft.ui.xaml.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\lt-LT\Microsoft.UI.Xaml.Phone.dll.mui">
+      <Link>lang\lt-LT\Microsoft.UI.Xaml.Phone.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\lv-LV\Microsoft.ui.xaml.dll.mui">
+      <Link>lang\lv-LV\Microsoft.ui.xaml.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\lv-LV\Microsoft.UI.Xaml.Phone.dll.mui">
+      <Link>lang\lv-LV\Microsoft.UI.Xaml.Phone.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\mi-NZ\Microsoft.ui.xaml.dll.mui">
+      <Link>lang\mi-NZ\Microsoft.ui.xaml.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\mi-NZ\Microsoft.UI.Xaml.Phone.dll.mui">
+      <Link>lang\mi-NZ\Microsoft.UI.Xaml.Phone.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\mk-MK\Microsoft.ui.xaml.dll.mui">
+      <Link>lang\mk-MK\Microsoft.ui.xaml.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\mk-MK\Microsoft.UI.Xaml.Phone.dll.mui">
+      <Link>lang\mk-MK\Microsoft.UI.Xaml.Phone.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\ml-IN\Microsoft.ui.xaml.dll.mui">
+      <Link>lang\ml-IN\Microsoft.ui.xaml.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\ml-IN\Microsoft.UI.Xaml.Phone.dll.mui">
+      <Link>lang\ml-IN\Microsoft.UI.Xaml.Phone.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\mr-IN\Microsoft.ui.xaml.dll.mui">
+      <Link>lang\mr-IN\Microsoft.ui.xaml.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\mr-IN\Microsoft.UI.Xaml.Phone.dll.mui">
+      <Link>lang\mr-IN\Microsoft.UI.Xaml.Phone.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\ms-MY\Microsoft.ui.xaml.dll.mui">
+      <Link>lang\ms-MY\Microsoft.ui.xaml.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\ms-MY\Microsoft.UI.Xaml.Phone.dll.mui">
+      <Link>lang\ms-MY\Microsoft.UI.Xaml.Phone.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\mt-MT\Microsoft.ui.xaml.dll.mui">
+      <Link>lang\mt-MT\Microsoft.ui.xaml.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\mt-MT\Microsoft.UI.Xaml.Phone.dll.mui">
+      <Link>lang\mt-MT\Microsoft.UI.Xaml.Phone.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\nb-NO\Microsoft.ui.xaml.dll.mui">
+      <Link>lang\nb-NO\Microsoft.ui.xaml.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\nb-NO\Microsoft.UI.Xaml.Phone.dll.mui">
+      <Link>lang\nb-NO\Microsoft.UI.Xaml.Phone.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\ne-NP\Microsoft.ui.xaml.dll.mui">
+      <Link>lang\ne-NP\Microsoft.ui.xaml.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\ne-NP\Microsoft.UI.Xaml.Phone.dll.mui">
+      <Link>lang\ne-NP\Microsoft.UI.Xaml.Phone.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\nl-NL\Microsoft.ui.xaml.dll.mui">
+      <Link>lang\nl-NL\Microsoft.ui.xaml.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\nl-NL\Microsoft.UI.Xaml.Phone.dll.mui">
+      <Link>lang\nl-NL\Microsoft.UI.Xaml.Phone.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\nn-NO\Microsoft.ui.xaml.dll.mui">
+      <Link>lang\nn-NO\Microsoft.ui.xaml.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\nn-NO\Microsoft.UI.Xaml.Phone.dll.mui">
+      <Link>lang\nn-NO\Microsoft.UI.Xaml.Phone.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\or-IN\Microsoft.ui.xaml.dll.mui">
+      <Link>lang\or-IN\Microsoft.ui.xaml.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\or-IN\Microsoft.UI.Xaml.Phone.dll.mui">
+      <Link>lang\or-IN\Microsoft.UI.Xaml.Phone.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\pa-IN\Microsoft.ui.xaml.dll.mui">
+      <Link>lang\pa-IN\Microsoft.ui.xaml.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\pa-IN\Microsoft.UI.Xaml.Phone.dll.mui">
+      <Link>lang\pa-IN\Microsoft.UI.Xaml.Phone.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\pl-PL\Microsoft.ui.xaml.dll.mui">
+      <Link>lang\pl-PL\Microsoft.ui.xaml.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\pl-PL\Microsoft.UI.Xaml.Phone.dll.mui">
+      <Link>lang\pl-PL\Microsoft.UI.Xaml.Phone.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\pt-BR\Microsoft.ui.xaml.dll.mui">
+      <Link>lang\pt-BR\Microsoft.ui.xaml.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\pt-BR\Microsoft.UI.Xaml.Phone.dll.mui">
+      <Link>lang\pt-BR\Microsoft.UI.Xaml.Phone.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\pt-PT\Microsoft.ui.xaml.dll.mui">
+      <Link>lang\pt-PT\Microsoft.ui.xaml.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\pt-PT\Microsoft.UI.Xaml.Phone.dll.mui">
+      <Link>lang\pt-PT\Microsoft.UI.Xaml.Phone.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\quz-PE\Microsoft.ui.xaml.dll.mui">
+      <Link>lang\quz-PE\Microsoft.ui.xaml.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\quz-PE\Microsoft.UI.Xaml.Phone.dll.mui">
+      <Link>lang\quz-PE\Microsoft.UI.Xaml.Phone.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\ro-RO\Microsoft.ui.xaml.dll.mui">
+      <Link>lang\ro-RO\Microsoft.ui.xaml.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\ro-RO\Microsoft.UI.Xaml.Phone.dll.mui">
+      <Link>lang\ro-RO\Microsoft.UI.Xaml.Phone.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\ru-RU\Microsoft.ui.xaml.dll.mui">
+      <Link>lang\ru-RU\Microsoft.ui.xaml.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\ru-RU\Microsoft.UI.Xaml.Phone.dll.mui">
+      <Link>lang\ru-RU\Microsoft.UI.Xaml.Phone.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\sk-SK\Microsoft.ui.xaml.dll.mui">
+      <Link>lang\sk-SK\Microsoft.ui.xaml.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\sk-SK\Microsoft.UI.Xaml.Phone.dll.mui">
+      <Link>lang\sk-SK\Microsoft.UI.Xaml.Phone.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\sl-SI\Microsoft.ui.xaml.dll.mui">
+      <Link>lang\sl-SI\Microsoft.ui.xaml.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\sl-SI\Microsoft.UI.Xaml.Phone.dll.mui">
+      <Link>lang\sl-SI\Microsoft.UI.Xaml.Phone.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\sq-AL\Microsoft.ui.xaml.dll.mui">
+      <Link>lang\sq-AL\Microsoft.ui.xaml.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\sq-AL\Microsoft.UI.Xaml.Phone.dll.mui">
+      <Link>lang\sq-AL\Microsoft.UI.Xaml.Phone.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\sr-Cyrl-BA\Microsoft.ui.xaml.dll.mui">
+      <Link>lang\sr-Cyrl-BA\Microsoft.ui.xaml.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\sr-Cyrl-BA\Microsoft.UI.Xaml.Phone.dll.mui">
+      <Link>lang\sr-Cyrl-BA\Microsoft.UI.Xaml.Phone.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\sr-Cyrl-RS\Microsoft.ui.xaml.dll.mui">
+      <Link>lang\sr-Cyrl-RS\Microsoft.ui.xaml.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\sr-Cyrl-RS\Microsoft.UI.Xaml.Phone.dll.mui">
+      <Link>lang\sr-Cyrl-RS\Microsoft.UI.Xaml.Phone.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\sr-Latn-RS\Microsoft.ui.xaml.dll.mui">
+      <Link>lang\sr-Latn-RS\Microsoft.ui.xaml.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\sr-Latn-RS\Microsoft.UI.Xaml.Phone.dll.mui">
+      <Link>lang\sr-Latn-RS\Microsoft.UI.Xaml.Phone.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\sv-SE\Microsoft.ui.xaml.dll.mui">
+      <Link>lang\sv-SE\Microsoft.ui.xaml.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\sv-SE\Microsoft.UI.Xaml.Phone.dll.mui">
+      <Link>lang\sv-SE\Microsoft.UI.Xaml.Phone.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\ta-IN\Microsoft.ui.xaml.dll.mui">
+      <Link>lang\ta-IN\Microsoft.ui.xaml.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\ta-IN\Microsoft.UI.Xaml.Phone.dll.mui">
+      <Link>lang\ta-IN\Microsoft.UI.Xaml.Phone.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\te-IN\Microsoft.ui.xaml.dll.mui">
+      <Link>lang\te-IN\Microsoft.ui.xaml.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\te-IN\Microsoft.UI.Xaml.Phone.dll.mui">
+      <Link>lang\te-IN\Microsoft.UI.Xaml.Phone.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\th-TH\Microsoft.ui.xaml.dll.mui">
+      <Link>lang\th-TH\Microsoft.ui.xaml.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\th-TH\Microsoft.UI.Xaml.Phone.dll.mui">
+      <Link>lang\th-TH\Microsoft.UI.Xaml.Phone.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\tr-TR\Microsoft.ui.xaml.dll.mui">
+      <Link>lang\tr-TR\Microsoft.ui.xaml.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\tr-TR\Microsoft.UI.Xaml.Phone.dll.mui">
+      <Link>lang\tr-TR\Microsoft.UI.Xaml.Phone.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\tt-RU\Microsoft.ui.xaml.dll.mui">
+      <Link>lang\tt-RU\Microsoft.ui.xaml.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\tt-RU\Microsoft.UI.Xaml.Phone.dll.mui">
+      <Link>lang\tt-RU\Microsoft.UI.Xaml.Phone.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\ug-CN\Microsoft.ui.xaml.dll.mui">
+      <Link>lang\ug-CN\Microsoft.ui.xaml.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\ug-CN\Microsoft.UI.Xaml.Phone.dll.mui">
+      <Link>lang\ug-CN\Microsoft.UI.Xaml.Phone.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\uk-UA\Microsoft.ui.xaml.dll.mui">
+      <Link>lang\uk-UA\Microsoft.ui.xaml.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\uk-UA\Microsoft.UI.Xaml.Phone.dll.mui">
+      <Link>lang\uk-UA\Microsoft.UI.Xaml.Phone.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\ur-PK\Microsoft.ui.xaml.dll.mui">
+      <Link>lang\ur-PK\Microsoft.ui.xaml.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\ur-PK\Microsoft.UI.Xaml.Phone.dll.mui">
+      <Link>lang\ur-PK\Microsoft.UI.Xaml.Phone.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\uz-Latn-UZ\Microsoft.ui.xaml.dll.mui">
+      <Link>lang\uz-Latn-UZ\Microsoft.ui.xaml.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\uz-Latn-UZ\Microsoft.UI.Xaml.Phone.dll.mui">
+      <Link>lang\uz-Latn-UZ\Microsoft.UI.Xaml.Phone.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\vi-VN\Microsoft.ui.xaml.dll.mui">
+      <Link>lang\vi-VN\Microsoft.ui.xaml.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\vi-VN\Microsoft.UI.Xaml.Phone.dll.mui">
+      <Link>lang\vi-VN\Microsoft.UI.Xaml.Phone.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\zh-CN\Microsoft.ui.xaml.dll.mui">
+      <Link>lang\zh-CN\Microsoft.ui.xaml.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\zh-CN\Microsoft.UI.Xaml.Phone.dll.mui">
+      <Link>lang\zh-CN\Microsoft.UI.Xaml.Phone.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\zh-TW\Microsoft.ui.xaml.dll.mui">
+      <Link>lang\zh-TW\Microsoft.ui.xaml.dll.mui</Link>
+    </None>
+    <None Include="..\..\..\.nuget\packages\microsoft.windowsappsdk.winui\2.3.0\runtimes-framework\win-x64\native\zh-TW\Microsoft.UI.Xaml.Phone.dll.mui">
+      <Link>lang\zh-TW\Microsoft.UI.Xaml.Phone.dll.mui</Link>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Page Remove="Services\MarshalService.xaml" />
@@ -108,12 +625,12 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="ClosedXML" Version="0.104.0-rc1" />
+    <PackageReference Include="ClosedXML" Version="0.105.1" />
     <PackageReference Include="CommunityToolkit.WinUI.UI" Version="7.1.2" />
     <PackageReference Include="CommunityToolkit.WinUI.UI.Controls" Version="7.1.2" />
     <PackageReference Include="CommunityToolkit.WinUI.UI.Controls.DataGrid" Version="7.1.2" />
-    <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.6.240829007" />
-    <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.1742" />
+    <PackageReference Include="Microsoft.WindowsAppSDK" Version="2.3.1" />
+    <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.28000.2526" />
     <PackageReference Include="MsgReader" Version="4.4.15" />
     <PackageReference Include="PInvoke.User32" Version="0.7.124" />
     <PackageReference Include="stdole" Version="17.5.33428.366" />
@@ -149,12 +666,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Update="Elements\ProjectExplorerElements.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Update="DialogPage\UpdateContactDialogPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Update="DialogPage\NewCompanyDialogPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Update="Elements\DataGridQT.xaml">
@@ -233,23 +744,10 @@
     <Page Update="Pages\WelcomePage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Update="Services\PrintPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <None Update="test.dxf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <Page Update="Window\ParameterWindow.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="Elements\DependencyControl.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="Elements\TestControlWithConverter.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
@@ -261,6 +759,7 @@
   <ItemGroup>
     <Folder Include=".vscode\" />
     <Folder Include="bin\x64\Release\net6.0-windows10.0.19041.0\" />
+    <Folder Include="lang\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Update="Properties\Resources.Designer.cs">

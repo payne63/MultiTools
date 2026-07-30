@@ -23,7 +23,6 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using MultiTools.Elements;
 using MultiTools.Tabs.InventorTab;
-using MultiTools.Tabs.TestTab;
 
 namespace MultiTools.Tabs;
 
@@ -44,11 +43,6 @@ public sealed partial class OpenNewTab : TabViewItem, Interfaces.IInitTab
 
     private void PopulateElements()
     {
-        // JobElements.Clear();
-        // JobElements.Add(new NewTabButton(typeof(ParameterTab), "Réglage des options", true));
-        // JobElements.Add(new NewTabButton(typeof(ContactsTab), "Contacts", true));
-        // JobElements.Add(new NewTabButton(typeof(Contacts2Tab), "Contacts 2", true));
-        // JobElements.Add(new NewTabButton(typeof(FolderProjectCreationTab), "creation d'un répertoire Projet"));
         
         JobElementsInventor.Clear();
         JobElementsInventor.Add(new NewTabButton(typeof(ProjectExplorerTab), "Exploration d'un assemblage"));
@@ -58,9 +52,6 @@ public sealed partial class OpenNewTab : TabViewItem, Interfaces.IInitTab
         JobElementsInventor.Add(new NewTabButton(typeof(CleanProjectTab), "supprime les pièces orphelines"));
         JobElementsInventor.Add(new NewTabButton(typeof(PropertiesRenamerTab), "Renomme les champs"));
         JobElementsInventor.Add(new NewTabButton(typeof(DrawingBuilderTab), "Generation automatique DXF"));
-        //JobElements.Add(new NewTabButton(typeof(Test1Tab),"test1"));
-        //JobElements.Add(new NewTabButton(typeof(Test2Tab),"Test2"));
-        //JobElements.Add(new NewTabButton(typeof(Test3Tab),"Test3"));
     }
 
     public void InitTabAsync() => PopulateElements();

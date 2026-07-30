@@ -1,5 +1,4 @@
 ﻿using ABI.Windows.UI;
-using AvitechTools.Models;
 using Inventor;
 using Microsoft.Office.Interop.Outlook;
 using Microsoft.UI;

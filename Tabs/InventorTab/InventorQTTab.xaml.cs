@@ -170,7 +170,10 @@ public sealed partial class InventorQTTab : TabViewItemExtend, Interfaces.IInitT
         IsInterfaceEnabled = false;
         var fulldata = StackPanelOfBom.Children.Cast<DataGridQT>().Where(x => x.IsVisible == true)
             .SelectMany(d => d.Datas).ToList();
-        if (fulldata.Count == 0) return;
+        if (fulldata.Count == 0) {
+            IsInterfaceEnabled = true;
+            return;
+        }
 
         FileSavePicker savePicker = new Windows.Storage.Pickers.FileSavePicker();
         var hWnd = WinRT.Interop.WindowNative.GetWindowHandle(MainWindow.Instance);

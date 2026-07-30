@@ -22,7 +22,6 @@ public sealed partial class MainWindow : WindowEx, INotifyPropertyChanged
     public static string CompanyDataPath;
     public static string UsersDataPath;
 
-    private ObservableCollection<Base.User> _Users = new();
     public ElementTheme _currentElementTheme = ElementTheme.Default;
     
     private CancellationTokenSource ctsVisibilityChangeTask = new();

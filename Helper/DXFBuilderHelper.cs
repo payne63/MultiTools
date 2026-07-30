@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using AvitechTools.Models;
 using DocumentFormat.OpenXml.Drawing;
 using DocumentFormat.OpenXml.Spreadsheet;
 using Inventor;
@@ -16,12 +15,6 @@ internal class DXFBuilderHelper
     
     // private static Application InventorApp ;
     private static Inventor.Sheet sheet;
-    private enum CartesianAxis
-    {
-        X = 0,
-        Y = 1,
-        Z = 2
-    }
     
     public static DrawingDocument BuildTrueSheetMetal ( Application InventorApp, string PartPath, string templatePath = @"C:\Users\Public\Documents\Autodesk\Inventor 2019\Templates\Metric\ISO.idw")
     {
