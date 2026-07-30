@@ -23,7 +23,6 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using MultiTools.Elements;
 using MultiTools.Tabs.InventorTab;
-using MultiTools.Tabs.VariousTab;
 using MultiTools.Tabs.TestTab;
 
 namespace MultiTools.Tabs;
@@ -37,12 +36,6 @@ public sealed partial class OpenNewTab : TabViewItem, Interfaces.IInitTab
         set;
     } = new();
 
-    public ObservableCollection<NewTabButton> JobElements
-    {
-        get;
-        set;
-    } = new();
-
     public OpenNewTab()
     {
         this.InitializeComponent();
@@ -51,15 +44,16 @@ public sealed partial class OpenNewTab : TabViewItem, Interfaces.IInitTab
 
     private void PopulateElements()
     {
+        // JobElements.Clear();
+        // JobElements.Add(new NewTabButton(typeof(ParameterTab), "Réglage des options", true));
+        // JobElements.Add(new NewTabButton(typeof(ContactsTab), "Contacts", true));
+        // JobElements.Add(new NewTabButton(typeof(Contacts2Tab), "Contacts 2", true));
+        // JobElements.Add(new NewTabButton(typeof(FolderProjectCreationTab), "creation d'un répertoire Projet"));
+        
         JobElementsInventor.Clear();
-        JobElements.Clear();
         JobElementsInventor.Add(new NewTabButton(typeof(ProjectExplorerTab), "Exploration d'un assemblage"));
-        JobElements.Add(new NewTabButton(typeof(ParameterTab), "Réglage des options", true));
-        JobElements.Add(new NewTabButton(typeof(ContactsTab), "Contacts", true));
-        JobElements.Add(new NewTabButton(typeof(Contacts2Tab), "Contacts 2", true));
         JobElementsInventor.Add(new NewTabButton(typeof(InventorLaserTab), "Creation DXF PDF"));
         JobElementsInventor.Add(new NewTabButton(typeof(InventorPrintTab), "Impression des plans Inventor"));
-        JobElements.Add(new NewTabButton(typeof(FolderProjectCreationTab), "creation d'un répertoire Projet"));
         JobElementsInventor.Add(new NewTabButton(typeof(InventorQTTab), "Extrait la Nommenclature"));
         JobElementsInventor.Add(new NewTabButton(typeof(CleanProjectTab), "supprime les pièces orphelines"));
         JobElementsInventor.Add(new NewTabButton(typeof(PropertiesRenamerTab), "Renomme les champs"));
@@ -74,10 +68,8 @@ public sealed partial class OpenNewTab : TabViewItem, Interfaces.IInitTab
     private void Button_Click_AvitechLink(object sender, RoutedEventArgs e) =>
         Process.Start("explorer", @"https://www.avitech-france.fr/avitech/");
 
-
     private void Button_Click_RepoLink(object sender, RoutedEventArgs e) =>
         Process.Start("explorer", @"https://github.com/payne63/MultiTools");
-
 
     private async void Button_Click_Support(object sender, RoutedEventArgs e)
     {

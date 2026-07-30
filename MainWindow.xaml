@@ -13,7 +13,7 @@
     Closed="MainWindow_OnClosed"
     MinWidth="820"
     MinHeight="900"
-    Width="1800"
+    Width="1500"
     Height="1000"
     Title="MultiTools">
     <Page x:Name="MainPage" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
@@ -43,15 +43,7 @@
                                               Width="150" />
                             </StackPanel>
                         </Border>
-                        <!-- <ComboBox x:Name="ComboBoxUsers" -->
-                        <!--           ItemsSource="{x:Bind UsersName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" -->
-                        <!--           DisplayMemberPath="Name" -->
-                        <!--           SelectionChanged="ListBox_SelectionChanged" -->
-                        <!--           PlaceholderText="Sélectionner un utilisateur" -->
-                        <!--           VerticalAlignment="Center" -->
-                        <!--           HorizontalAlignment="Right" -->
-                        <!--           Width="250"> -->
-                        <!-- </ComboBox> -->
+
                         <Button
                             x:Name="ThemeButton"
                             Height="32"

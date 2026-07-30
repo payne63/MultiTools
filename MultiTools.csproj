@@ -62,18 +62,6 @@
     <Page Update="Tabs\InventorTab\InventorQTTab.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="Tabs\VariousTab\Contacts2Tab.xaml">
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Update="Tabs\VariousTab\ContactsTab.xaml">
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Update="Tabs\VariousTab\FolderProjectCreationTab.xaml">
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Update="Tabs\VariousTab\ParameterTab.xaml">
-      <SubType>Designer</SubType>
-    </Page>
     <Page Update="Elements\NewTabButton.xaml">
         <SubType>Designer</SubType>
     </Page>
