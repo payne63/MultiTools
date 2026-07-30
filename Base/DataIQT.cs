@@ -98,13 +98,15 @@ namespace MultiTools.Base
             {
                 AssemblyComponentDefinition ass = document.ComponentDefinition as AssemblyComponentDefinition; //convertion en assemblage
                 if (ass == null) { throw new Exception($"Assemblage impossible a convertir en AssemblyComponnentDefinition {NameFile}"); }
-                foreach (BOMRow row in ass.BOM.BOMViews["Model Data"].BOMRows)// 1 - bom standard - 2 structured - 3 part only (2 et 3 need activation)
+                foreach (BOMRow row in ass.BOM.BOMViews[1].BOMRows)// 1 - bom standard - 2 structured - 3 part only (2 et 3 need activation)
                 {
-                    
                     if (row.BOMStructure == BOMStructureEnum.kPhantomBOMStructure || row.BOMStructure == BOMStructureEnum.kReferenceBOMStructure) continue;
+                    // if (row.BOMStructure == BOMStructureEnum.kPurchasedBOMStructure)
+                    // { Category = CategoryType.Commerce; GetAppServer.Close();return; }
                     try
                     {
-                        var FullDocumentName = ((ApprenticeServerDocument)(row.ComponentDefinitions[1]).Document).FullDocumentName;
+                        var Childdocument = row.ComponentDefinitions[1].Document;
+                        var FullDocumentName = ((ApprenticeServerDocument)Childdocument).FullDocumentName;
                         var qtPart = int.Parse(row.TotalQuantity);
                         bom.Add((FullDocumentName, qtPart));
                     }
