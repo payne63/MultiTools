@@ -41,20 +41,21 @@ public sealed partial class OpenNewTab : TabViewItem, Interfaces.IInitTab
         InitTabAsync();
     }
 
-    private void PopulateElements()
-    {
-        
-        JobElementsInventor.Clear();
-        JobElementsInventor.Add(new NewTabButton(typeof(ProjectExplorerTab), "Exploration d'un assemblage"));
-        JobElementsInventor.Add(new NewTabButton(typeof(InventorLaserTab), "Creation DXF PDF"));
-        JobElementsInventor.Add(new NewTabButton(typeof(InventorPrintTab), "Impression des plans Inventor"));
-        JobElementsInventor.Add(new NewTabButton(typeof(InventorQTTab), "Extrait la Nommenclature"));
-        JobElementsInventor.Add(new NewTabButton(typeof(CleanProjectTab), "supprime les pièces orphelines"));
-        JobElementsInventor.Add(new NewTabButton(typeof(PropertiesRenamerTab), "Renomme les champs"));
-        JobElementsInventor.Add(new NewTabButton(typeof(DrawingBuilderTab), "Generation automatique DXF"));
-    }
+    // private void PopulateElements()
+    // {
+    //     
+    //     JobElementsInventor.Clear();
+    //     JobElementsInventor.Add(new NewTabButton(typeof(ProjectExplorerTab), "Exploration d'un assemblage"));
+    //     JobElementsInventor.Add(new NewTabButton(typeof(InventorLaserTab), "Creation DXF PDF"));
+    //     JobElementsInventor.Add(new NewTabButton(typeof(InventorPrintTab), "Impression des plans Inventor"));
+    //     JobElementsInventor.Add(new NewTabButton(typeof(InventorQTTab), "Extrait la Nommenclature"));
+    //     JobElementsInventor.Add(new NewTabButton(typeof(CleanProjectTab), "supprime les pièces orphelines"));
+    //     JobElementsInventor.Add(new NewTabButton(typeof(PropertiesRenamerTab), "Renomme les champs"));
+    //     JobElementsInventor.Add(new NewTabButton(typeof(DrawingBuilderTab), "Generation automatique DXF"));
+    // }
 
-    public void InitTabAsync() => PopulateElements();
+    public void InitTabAsync() {}
+
 
     private void Button_Click_AvitechLink(object sender, RoutedEventArgs e) =>
         Process.Start("explorer", @"https://www.avitech-france.fr/avitech/");

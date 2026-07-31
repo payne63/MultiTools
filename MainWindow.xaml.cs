@@ -9,7 +9,10 @@ using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using MultiTools.Base;
+using MultiTools.Elements;
 using MultiTools.Helper;
+using MultiTools.Tabs;
+using MultiTools.Tabs.InventorTab;
 using WinUIEx;
 
 namespace MultiTools;
@@ -26,14 +29,18 @@ public sealed partial class MainWindow : WindowEx, INotifyPropertyChanged
     
     private CancellationTokenSource ctsVisibilityChangeTask = new();
 
+    public ObservableCollection<NewTabButton> JobElementsInventor
+    {
+        get;
+        set;
+    } = new();
 
     public MainWindow()
     {
         this.InitializeComponent();
-        LoadPaths();
         Instance = this;
         tabViewStaticRef = TabViewMain;
-        
+        PopulateElements();
         App.AppReady += () =>
         {
             ToggleSwitchInventor.Toggled -= toggleSwitchInventor_Toggled;
@@ -59,6 +66,19 @@ public sealed partial class MainWindow : WindowEx, INotifyPropertyChanged
         
         // UsersNameUpdate();
         //ExtendsContentIntoTitleBar = true;
+    }
+    
+    private void PopulateElements()
+    {
+        
+        JobElementsInventor.Clear();
+        JobElementsInventor.Add(new NewTabButton(typeof(ProjectExplorerTab), "Exploration d'un assemblage"));
+        JobElementsInventor.Add(new NewTabButton(typeof(InventorLaserTab), "Creation DXF PDF"));
+        JobElementsInventor.Add(new NewTabButton(typeof(InventorPrintTab), "Impression des plans Inventor"));
+        JobElementsInventor.Add(new NewTabButton(typeof(InventorQTTab), "Extrait la Nommenclature"));
+        JobElementsInventor.Add(new NewTabButton(typeof(CleanProjectTab), "supprime les pièces orphelines"));
+        JobElementsInventor.Add(new NewTabButton(typeof(PropertiesRenamerTab), "Renomme les champs"));
+        JobElementsInventor.Add(new NewTabButton(typeof(DrawingBuilderTab), "Generation automatique DXF"));
     }
 
     private void VisibilityChangedEvent(CancellationToken token)
@@ -88,18 +108,7 @@ public sealed partial class MainWindow : WindowEx, INotifyPropertyChanged
         ToggleSwitchInventor.Toggled += toggleSwitchInventor_Toggled;
     }
 
-    private static void LoadPaths()
-    {
-        ContactsDataPath =
-            System.IO.Path.Combine(System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
-                "JsonData\\contacts.json");
-        CompanyDataPath =
-            System.IO.Path.Combine(System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
-                "JsonData\\companys.json");
-        UsersDataPath =
-            System.IO.Path.Combine(System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
-                "JsonData\\users.json");
-    }
+
 
 
     public event PropertyChangedEventHandler PropertyChanged;

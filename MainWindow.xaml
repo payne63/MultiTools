@@ -22,7 +22,24 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
-            <TabView x:Name="TabViewMain" Grid.Row="0"
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="400"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            
+            <ScrollViewer VerticalScrollBarVisibility="Auto" BorderThickness="2" Grid.Row="0" Grid.Column="0" 
+                          BorderBrush="{StaticResource AccentAcrylicBackgroundFillColorBaseBrush}"
+                          CornerRadius="20" Margin="20">
+                <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Stretch" >
+                    <Border BorderBrush="{x:Null}" Height="100">
+                        <TextBlock Text="Outils Inventor" FontSize="25" FontWeight="Bold"
+                                   HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                    <GridView ItemsSource="{x:Bind JobElementsInventor}"  SelectionMode="None" />
+                </StackPanel>
+            </ScrollViewer>
+            
+            <TabView x:Name="TabViewMain" Grid.Row="0" Grid.Column="1"
                      VerticalAlignment="Stretch"
                      IsAddTabButtonVisible="False"
                      TabCloseRequested="TabView_TabCloseRequested"
