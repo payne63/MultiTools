@@ -23,18 +23,18 @@
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="400"/>
+                <ColumnDefinition Width="200"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             
             <ScrollViewer VerticalScrollBarVisibility="Auto" BorderThickness="2" Grid.Row="0" Grid.Column="0" 
                           BorderBrush="{StaticResource AccentAcrylicBackgroundFillColorBaseBrush}"
-                          CornerRadius="20" Margin="20">
+                          CornerRadius="20,0,20,0" Margin="5">
                 <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Stretch" >
-                    <Border BorderBrush="{x:Null}" Height="100">
-                        <TextBlock Text="Outils Inventor" FontSize="25" FontWeight="Bold"
-                                   HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                    </Border>
+                    <!-- <Border BorderBrush="{x:Null}" Height="100"> -->
+                    <!--     <TextBlock Text="Outils Inventor" FontSize="25" FontWeight="Bold" -->
+                    <!--                HorizontalAlignment="Center" VerticalAlignment="Center"/> -->
+                    <!-- </Border> -->
                     <GridView ItemsSource="{x:Bind JobElementsInventor}"  SelectionMode="None" />
                 </StackPanel>
             </ScrollViewer>
@@ -50,14 +50,14 @@
                         <Border Margin="10,0" HorizontalAlignment="Center" VerticalAlignment="Center" Background="{ThemeResource AccentAcrylicBackgroundFillColorDefaultBrush}">
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock VerticalAlignment="Center" Text="Etat Inventor"  Padding="10,0" />
-                                <ToggleSwitch Name="ToggleSwitchInventor" OffContent="démarrage" OnContent="Prêt"
-                                              ToolTipService.ToolTip="état de l'application Inventor" Width="150" />
+                                <ToggleSwitch Name="ToggleSwitchInventor" OffContent=" " OnContent=" "
+                                              ToolTipService.ToolTip="état de l'application Inventor" Width="60" MinWidth="60"/>
 
-                                <FontIcon Glyph="&#xE890;" />
-                                <ToggleSwitch Name="ToggleSwitchShowInventor" OffContent="Invisible"
-                                              OnContent="Visible"
+                                <FontIcon Glyph="&#xE890;" Margin="0,0,5,0"/>
+                                <ToggleSwitch Name="ToggleSwitchShowInventor" OffContent=" "
+                                              OnContent=" "
                                               ToolTipService.ToolTip="Modifie la visibilité de l'application Inventor"
-                                              Width="150" />
+                                              Width="60" MinWidth="60" />
                             </StackPanel>
                         </Border>
 

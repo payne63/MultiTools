@@ -76,15 +76,26 @@ public sealed partial class NewTabButton : Button
 
     private void Button_PointerEntered(object sender, PointerRoutedEventArgs e)
     {
-        StoryboardMoveLeft.Children[0].SetValue(DoubleAnimation.FromProperty, Translation.X);
-        StoryboardMoveLeft.Children[0].SetValue(DoubleAnimation.ToProperty, 20);
-        StoryboardMoveLeft.Begin();
+        // if (StoryboardMoveLeft.GetCurrentState() != ClockState.Active) {
+        //     StoryboardMoveLeft.Begin();
+        // }
+        ZoomX.Children[0].SetValue(DoubleAnimation.ToProperty, 1.2);
+        ZoomX.Begin(); 
+        ZoomY.Children[0].SetValue(DoubleAnimation.ToProperty, 1.2); 
+        ZoomY.Begin();
     }
 
     private void Button_PointerExited(object sender, PointerRoutedEventArgs e)
     {
-        StoryboardMoveLeft.Children[0].SetValue(DoubleAnimation.FromProperty, Translation.X);
-        StoryboardMoveLeft.Children[0].SetValue(DoubleAnimation.ToProperty, 0);
-        StoryboardMoveLeft.Begin();
+        // StoryboardMoveLeft.Children[0].SetValue(DoubleAnimation.FromProperty, Translation.X);
+        // StoryboardMoveLeft.Children[0].SetValue(DoubleAnimation.ToProperty, 0);
+        // StoryboardMoveLeft.Begin();
+        // StoryboardBackMoveLeft.Begin();
+        ZoomX.Children[0].SetValue(DoubleAnimation.FromProperty,ScaleZoom.ScaleX);
+        ZoomX.Children[0].SetValue(DoubleAnimation.ToProperty, 1);
+        ZoomX.Begin(); 
+        ZoomY.Children[0].SetValue(DoubleAnimation.FromProperty,ScaleZoom.ScaleY);
+        ZoomY.Children[0].SetValue(DoubleAnimation.ToProperty, 1); 
+        ZoomY.Begin();
     }
 }

@@ -6,46 +6,61 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    Click="Button_Click" MinWidth="30"  CornerRadius="15,0,15,0" Margin="10" MinHeight="70"
+    Click="Button_Click" MinWidth="30"  CornerRadius="15,0,15,0" Margin="2" MinHeight="70"
     Background="{ThemeResource AccentAcrylicBackgroundFillColorDefaultBrush}" 
     PointerEntered="Button_PointerEntered"
     PointerExited="Button_PointerExited"
-    BorderThickness="2" 
+    BorderThickness="2"
+    Width="150"
+    Height="115"
+    ToolTipService.ToolTip="{x:Bind Description}"
     >
     <Button.Resources>
-        <Storyboard x:Name="StoryboardMoveLeft">
-            <DoubleAnimation Storyboard.TargetName="Translation" Storyboard.TargetProperty="X" From="0" To="200" Duration="0:0:0.5" >
+        <!-- <Storyboard x:Name="StoryboardMoveLeft"> -->
+        <!--     <DoubleAnimation Storyboard.TargetName="Translation" Storyboard.TargetProperty="X" From="0" To="20" Duration="0:0:0.5" AutoReverse="True" > -->
+        <!--         <DoubleAnimation.EasingFunction> -->
+        <!--             <CircleEase EasingMode="EaseInOut" /> -->
+        <!--         </DoubleAnimation.EasingFunction> -->
+        <!--     </DoubleAnimation> -->
+        <!-- </Storyboard> -->
+        <!-- <Storyboard x:Name="StoryboardBackMoveLeft"> -->
+        <!--     <DoubleAnimation Storyboard.TargetName="Translation" Storyboard.TargetProperty="X" From="20" To="0" Duration="0:0:0.5"> -->
+        <!--         <DoubleAnimation.EasingFunction> -->
+        <!--             <CircleEase EasingMode="EaseInOut"/> -->
+        <!--         </DoubleAnimation.EasingFunction> -->
+        <!--     </DoubleAnimation> -->
+        <!-- </Storyboard> -->
+        <Storyboard x:Name="ZoomX" TargetName="ScaleZoom" TargetProperty="ScaleX">
+            <DoubleAnimation From="1" To="1.1" Duration="0:0:0.2" >
                 <DoubleAnimation.EasingFunction>
-                    <CircleEase EasingMode="EaseInOut" />
+                    <CircleEase EasingMode="EaseInOut"/>
+                </DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+        </Storyboard>
+        <Storyboard x:Name="ZoomY" TargetName="ScaleZoom" TargetProperty="ScaleY">
+            <DoubleAnimation From="1" To="1.1" Duration="0:0:0.2" >
+                <DoubleAnimation.EasingFunction>
+                    <CircleEase EasingMode="EaseInOut"/>
                 </DoubleAnimation.EasingFunction>
             </DoubleAnimation>
         </Storyboard>
     </Button.Resources>
-    
     <Grid >
         <Grid.RenderTransform>
-            <TranslateTransform x:Name="Translation"/>
+            <!-- <TranslateTransform x:Name="Translation"/> -->
+            <ScaleTransform x:Name="ScaleZoom" CenterX="45" CenterY="50"></ScaleTransform>
         </Grid.RenderTransform>
-        <StackPanel Orientation="Horizontal" Margin="0,6,12,6" HorizontalAlignment="Left" x:Name="aa">
-
-            <Button CornerRadius="10,0,10,0">
-            <Viewbox MaxHeight="40" MaxWidth="40" HorizontalAlignment="Left" >
-                <FontIcon Glyph="{x:Bind GlyphsIconTab}"/>
-
-            </Viewbox>
+        <StackPanel Orientation="Vertical" Margin="0,6,12,6" HorizontalAlignment="Center" >
+            <Button CornerRadius="10,0,10,0" HorizontalAlignment="Center" Click="Button_Click">
+                <Viewbox MaxHeight="30" MaxWidth="30" HorizontalAlignment="Center" Margin="2">
+                    <FontIcon Glyph="{x:Bind GlyphsIconTab}"/>
+                </Viewbox>
             </Button>
-            <StackPanel Margin="20,0,0,0" HorizontalAlignment="Stretch">
-                <TextBlock Text="{x:Bind Title}" 
-                       Style="{StaticResource SubtitleTextBlockStyle}"
-                       TextWrapping="Wrap"
-                       TextTrimming="WordEllipsis"
-                       />
-                <TextBlock Text="{x:Bind Description}" 
-                       TextWrapping="Wrap" 
-                       HorizontalAlignment="Left" 
-                       Style="{StaticResource BodyTextBlockStyle}"
-                       Width="200"/>
-            </StackPanel>
+            <TextBlock Text="{x:Bind Title}" 
+                Style="{StaticResource BodyStrongTextBlockStyle}"
+  
+                HorizontalAlignment="Center"
+            />
         </StackPanel>
         <TextBlock Text="BETA VERSION" Rotation="-30" 
                    Foreground="{StaticResource TextOnAccentFillColorPrimaryBrush}"

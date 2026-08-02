@@ -8,14 +8,12 @@
     xmlns:controls="using:Microsoft.UI.Xaml.Controls"
     xmlns:local="using:MultiTools">
     <Application.Resources>
-
-        <controls:XamlControlsResources>
-            <controls:XamlControlsResources.MergedDictionaries>
-                <ResourceDictionary>
-                    <x:Double x:Key="ContentDialogMaxWidth">1500</x:Double>
-                </ResourceDictionary>
-                
-            </controls:XamlControlsResources.MergedDictionaries>
-        </controls:XamlControlsResources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <XamlControlsResources xmlns="using:Microsoft.UI.Xaml.Controls" />
+            </ResourceDictionary.MergedDictionaries>
+        
+            <x:Double x:Key="ContentDialogMaxWidth">1500</x:Double>
+        </ResourceDictionary>
     </Application.Resources>
 </Application>
